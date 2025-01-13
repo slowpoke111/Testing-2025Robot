@@ -4,9 +4,8 @@ import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.VisionSubsystem;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
-
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.geometry.Translation2d;
