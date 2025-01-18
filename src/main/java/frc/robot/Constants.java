@@ -19,8 +19,8 @@ public final class Constants {
 
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
-    public static final double LIMELIGHT_LENS_HEIGHT = 10; //Find later
-    public static final double LIMELIGHT_ANGLE = 30;//Find later
+    public static final double LIMELIGHT_LENS_HEIGHT = 11.5; //Find later
+    public static final double LIMELIGHT_ANGLE = 50;//Find later
 
     public static final double REEF_APRILTAG_HEIGHT = 6.875;
     public static final double PROCCESSOR_APRILTAG_HEIGHT = 45.875;
