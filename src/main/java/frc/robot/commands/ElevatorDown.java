@@ -6,35 +6,46 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.math.controller.PIDController;
+import frc.robot.Constants.ElevatorConstants;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorDown extends Command {
+public class ElevatorDown extends PIDCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ElevatorSubsystem m_elevator;
-  private boolean shouldGoToTop = true;
-  
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ElevatorDown (ElevatorSubsystem elevator) {
-    m_elevator = elevator;
-    this.shouldGoToTop = shouldGoToTop;
-    //INSERT CODE HERE
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(elevator);
-  }
+      private final ElevatorSubsystem m_elevator;
+  
+      /**
+       * Creates a new ElevatorUp command.
+       *
+       * @param targetHeight The target height for the elevator.
+       * @param elevator The elevator subsystem used by this command.
+       */
+      public ElevatorDown(DoubleSupplier targetHeight, ElevatorSubsystem elevator) {
+          super(
+              new PIDController(ElevatorConstants.elevatorP, ElevatorConstants.elevatorI, ElevatorConstants.elevatorD),
+              elevator::getHeight,
+              targetHeight::getAsDouble,
+              elevator::setElevator,
+              elevator
+          );
+          m_elevator = elevator;
+          
+          getController().setTolerance(ElevatorConstants.elevatorPosTolerance, ElevatorConstants.elevatorVelTolerance);
+        
+          // Use addRequirements() here to declare subsystem dependencies.
+          addRequirements(elevator);
+      }
+  
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(!shouldGoToTop){
-        // I am unsure how exactly we are integrating PIDs into running the elevator, so this is temporary
-        m_elevator.runElevator(TEMPORARY NUMBER);
-      }
+   
 
+  }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
