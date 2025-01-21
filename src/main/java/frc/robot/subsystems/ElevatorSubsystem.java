@@ -25,6 +25,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void setHeight(double targetHeight) {
     heightController.setSetpoint(targetHeight);
   }
+  public void changeHeight(double deltaHeight) {
+    heightController.setSetpoint(heightController.getSetpoint() + deltaHeight);
+  }
 
   @Override
   public void periodic() {
