@@ -1,15 +1,12 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
@@ -27,19 +24,16 @@ public class VisionSubsystem extends SubsystemBase {
         return;
       }
 
-    public double getDistance(int pipelineID, double goalHeight) {
+    public Distance getDistance(int pipelineID, double goalHeight) {
         setPipelineIndex(pipelineID);
 
-        Angle targetAngleOffset = getTY();
+        Angle angleToGoal = getTY().plus(VisionConstants.LIMELIGHT_ANGLE);
 
-        Angle limelightMountAngle = Angle.ofBaseUnits(VisionConstants.LIMELIGHT_ANGLE,Degrees);
+        Distance lensHeight = VisionConstants.LIMELIGHT_LENS_HEIGHT;
 
-        Angle angleToGoal = targetAngleOffset.plus(limelightMountAngle);
-
-        double lensHeight = VisionConstants.LIMELIGHT_LENS_HEIGHT;
-
-        double distance = (goalHeight - lensHeight) / Math.tan(angleToGoal.in(Radians));
-        return distance;
+        double distance = (goalHeight - lensHeight.in(Inches)) / Math.tan(angleToGoal.in(Radians));
+        Distance distanceUnit = Distance.ofBaseUnits(distance, Inches);
+        return distanceUnit;
     }
 
 

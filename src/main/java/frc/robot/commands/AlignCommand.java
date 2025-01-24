@@ -3,9 +3,7 @@ package frc.robot.commands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.VisionSubsystem;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -67,7 +65,7 @@ public class AlignCommand extends Command {
         m_Vision.setPipelineIndex(pipelineID);
         
         aimController.reset(0);
-        rangeController.reset(m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT).in(Meters)); //Init dist
+        rangeController.reset(m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT.in(Inches)).in(Inches)); //Init dist
         
         aimController.setGoal(0); // tx=0 is centered
         rangeController.setGoal(holdDistance.in(Meters));
@@ -76,7 +74,7 @@ public class AlignCommand extends Command {
     @Override
     public void execute() {
         Angle tx = m_Vision.getTX();
-        Distance currentDistance = m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT);
+        Distance currentDistance = m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT.in(Inches));
 
         double rotationOutput = aimController.calculate(tx.in(Radians));
         double rangeOutput = rangeController.calculate(currentDistance.in(Meters));
@@ -102,9 +100,9 @@ public class AlignCommand extends Command {
         return aimController.atGoal() && rangeController.atGoal();
     }
 
-    public AlignCommand withTolerance(double aimToleranceDeg, double rangeToleranceMeters) {
-        aimController.setTolerance(Math.toRadians(aimToleranceDeg));
-        rangeController.setTolerance(rangeToleranceMeters);
+    public AlignCommand withTolerance(Angle aimTolerance, Distance rangeTolerance) {
+        aimController.setTolerance(aimTolerance.in(Radians));
+        rangeController.setTolerance(rangeTolerance.in(Meters));
         return this;
     }
 }
