@@ -26,7 +26,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final VisionSubsystem m_Vision = new VisionSubsystem();
-  private final NetworkTableInstance m_NetworkTableInstance = NetworkTableInstance.create();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -51,10 +50,10 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
-    m_driverController.y().whileTrue(new PrintCommand(""+m_NetworkTableInstance.getTable("limelight-a").getEntry("ty").getDouble(-1000)));
-    m_driverController.a().whileTrue(new PrintCommand(m_Vision.getDistance(9,Constants.VisionConstants.CORAL_APRILTAG_HEIGHT)+""));
-    m_driverController.x().whileTrue(new PrintCommand(LimelightHelpers.getTA("limelight-a")+""));
-    m_driverController.b().whileTrue(new PrintCommand(LimelightHelpers.getTV("limelight-a")+""));
+    m_driverController.y().whileTrue(new PrintCommand("TY: "+m_Vision.getTY()));
+    m_driverController.a().whileTrue(new PrintCommand("Distance: "+ m_Vision.getDistance(9,Constants.VisionConstants.CORAL_APRILTAG_HEIGHT)));
+    m_driverController.x().whileTrue(new PrintCommand("TA: "+ m_Vision.getTA()));
+    m_driverController.b().whileTrue(new PrintCommand("Target Found: "+m_Vision.isTarget()));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());

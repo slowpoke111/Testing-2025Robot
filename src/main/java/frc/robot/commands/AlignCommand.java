@@ -43,7 +43,7 @@ public class AlignCommand extends Command {
         this.holdDistance = holdDistance;
         this.pipelineID = pipelineID;
         
-        this.m_alignRequest = new SwerveRequest.FieldCentric().withDeadband(TunerConstants.kSpeedAt12VoltsMps * 0.1).withRotationalDeadband(0.1);
+        this.m_alignRequest = new SwerveRequest.FieldCentric().withDeadband(Double.parseDouble(TunerConstants.kSpeedAt12Volts.toString()) * 0.1).withRotationalDeadband(0.1);
 
         aimController = new ProfiledPIDController(AIM_P, AIM_I, AIM_D, new TrapezoidProfile.Constraints(MAX_AIM_VELOCITY, MAX_AIM_ACCELERATION));
 
