@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -57,7 +56,7 @@ public class AlignCommand extends Command {
 
     @Override
     public void initialize() {
-        LimelightHelpers.setPipelineIndex(VisionConstants.LIMELIGHT_NAME, this.pipelineID);
+        m_Vision.setPipelineIndex(pipelineID);
         
         aimController.reset(0);
         rangeController.reset(m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT)); //Init dist
@@ -68,7 +67,7 @@ public class AlignCommand extends Command {
 
     @Override
     public void execute() {
-        double tx = m_Vision.getTX(VisionConstants.LIMELIGHT_NAME);
+        double tx = m_Vision.getTX();
         double currentDistance = m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT);
 
         double rotationOutput = aimController.calculate(Math.toRadians(tx));
