@@ -3,19 +3,27 @@ package frc.robot.commands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.VisionSubsystem;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radians;
+
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.units.measure.*;
 
 import frc.robot.Constants.VisionConstants;
 
 public class AlignCommand extends Command {
     private final VisionSubsystem m_Vision;
-    private final SwerveDrivetrain m_Swerve;
-    private final double holdDistance;
+    private final SwerveDrivetrain<TalonFX, TalonFX, CANcoder> m_Swerve;
+    private final Distance holdDistance;
     private final int pipelineID;
     private final SwerveRequest.FieldCentric m_alignRequest;
 
@@ -37,13 +45,13 @@ public class AlignCommand extends Command {
     private static final double RANGE_I = 0.01;
     private static final double RANGE_D = 0.05;
 
-    public AlignCommand(VisionSubsystem vision, SwerveDrivetrain swerve, double holdDistance, int pipelineID) {
+    public AlignCommand(VisionSubsystem vision, SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve, Distance holdDistance, int pipelineID) {
         m_Vision = vision;
         m_Swerve = swerve;
         this.holdDistance = holdDistance;
         this.pipelineID = pipelineID;
         
-        this.m_alignRequest = new SwerveRequest.FieldCentric().withDeadband(Double.parseDouble(TunerConstants.kSpeedAt12Volts.toString()) * 0.1).withRotationalDeadband(0.1);
+        this.m_alignRequest = new SwerveRequest.FieldCentric().withDeadband(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1).withRotationalDeadband(0.1);
 
         aimController = new ProfiledPIDController(AIM_P, AIM_I, AIM_D, new TrapezoidProfile.Constraints(MAX_AIM_VELOCITY, MAX_AIM_ACCELERATION));
 
@@ -59,19 +67,19 @@ public class AlignCommand extends Command {
         m_Vision.setPipelineIndex(pipelineID);
         
         aimController.reset(0);
-        rangeController.reset(m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT)); //Init dist
+        rangeController.reset(m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT).in(Meters)); //Init dist
         
         aimController.setGoal(0); // tx=0 is centered
-        rangeController.setGoal(holdDistance);
+        rangeController.setGoal(holdDistance.in(Meters));
     }
 
     @Override
     public void execute() {
-        double tx = m_Vision.getTX();
-        double currentDistance = m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT);
+        Angle tx = m_Vision.getTX();
+        Distance currentDistance = m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT);
 
-        double rotationOutput = aimController.calculate(Math.toRadians(tx));
-        double rangeOutput = rangeController.calculate(currentDistance);
+        double rotationOutput = aimController.calculate(tx.in(Radians));
+        double rangeOutput = rangeController.calculate(currentDistance.in(Meters));
 
         Translation2d translation = new Translation2d(rangeOutput, 0);
                 
