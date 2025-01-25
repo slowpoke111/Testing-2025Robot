@@ -11,54 +11,36 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.playingwithfusion.*;
 
 
 import com.ctre.phoenix.motorcontrol.can.*;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+
 
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
-  private final CANSparkMax m_elevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotorPort);
-  
-  private final Encoder m_elevatorEncoder =
-    new Encoder(
-      ElevatorConstants.kEncoderPorts[0],
-      ElevatorConstants.kEncoderPorts[1],
-      ElevatorConstants.kEncoderReversed);
+  private final TalonFX m_elevatorMotor;
     
   private final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
-  private final PIDController m_elevatorFeedback = new PIDController(ElevatorConstants.elevatorP, 0.0, 0.0);
+  private final PIDController m_elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
   public ElevatorSubsystem() {
+    m_elevatorMotor = new TalonFX(ElevatorConstants.kMotorID);
     m_elevatorFeedback.setTolerance(ElevatorConstants.kElevatorToleranceRPS);
-    m_elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
 }
-
-  public ElevatorSubsystem() {
-    m_elevatorFeedback.setTolerance(ElevatorConstants.kElevatorToleranceRPS);
-    m_elevatorEncoder.setDistancePerPulse(ElevatorConstants.kEncoderDistancePerPulse);
-    
-
-  }
-  
  
-  public void setElevator(double speed) {
+  public void setElevator(double setpointRotationsPerSecond) {
     run(
       () -> {
         m_elevatorMotor.set(
           m_elevatorFeedforward.calculate(setpointRotationsPerSecond)
             + m_elevatorFeedback.calculate(
-              m_elevatorEncoder.getRate(), setPointRotationsPerSecond));
+              m_elevatorMotor.get(), setpointRotationsPerSecond));
       });
-          
+    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor.set(1));
     }
-  public double getHeight() {
-    //Unsure how we will get the height in order to raise the elevator by the correct amount, so I have it here as an encoder
-    return m_elevatorMotor.getEncoder().getPosition();
-  }
+ 
 
     @Override
     public void periodic() {

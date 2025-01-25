@@ -15,5 +15,24 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+
   }
+  public static final class ElevatorConstants {
+    /** All values are placeholders for now*/
+    public static final double elevatorP = 0;
+    public static final double elevatorI = 0;
+    public static final double elevatorD = 0;
+    public static final double elevatorPosTolerance = 1;
+    public static final double elevatorVelTolerance = 1;
+    public static final double kElevatorMotorPort = 0;
+    public static final int[] kEncoderPorts = {0, 1};
+    public static final boolean kEncoderReversed = false;
+    public static final double kEncoderDistancePerPulse = 1;
+    public static final double kS = 0;
+    public static final double kG = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
+    public static final double kElevatorToleranceRPS = 0;
+    
+  } 
 }
