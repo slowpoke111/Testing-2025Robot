@@ -2,8 +2,17 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.security.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.DoubleTopic;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.TimestampedDouble;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Distance;
@@ -13,11 +22,13 @@ import frc.robot.Constants.VisionConstants;
 public class VisionSubsystem extends SubsystemBase {
     private final NetworkTableInstance m_NetworkTableInstance;
     private final NetworkTable m_limelightNT;
+    private DoubleSubscriber ty;
 
     public VisionSubsystem() {
         m_NetworkTableInstance = NetworkTableInstance.getDefault();
+        
         m_limelightNT = m_NetworkTableInstance.getTable("limelight-a");
-
+        ty = m_limelightNT.getDoubleTopic("ty").subscribe(-2000);
     }
     
     public void periodic() {
@@ -46,7 +57,7 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public Angle getTY(){
-        return Angle.ofBaseUnits(m_limelightNT.getEntry("ty").getDouble(-1000.0), Degrees);
+        return Angle.ofBaseUnits(m_limelightNT.getEntry("ty").getDouble(-2.0), Degrees);
     }
 
     public Dimensionless getTA(){
@@ -57,8 +68,10 @@ public class VisionSubsystem extends SubsystemBase {
         return m_limelightNT.getEntry("tv").getBoolean(false);
     }
 
-    
-
+    public String getKeys(){
+        return m_limelightNT.getKeys().toString();
+        
+    }
 }
 
 

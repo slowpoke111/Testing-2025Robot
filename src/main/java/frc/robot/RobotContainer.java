@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Arrays;
 import edu.wpi.first.net.PortForwarder;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
@@ -51,9 +52,9 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
-    m_driverController.y().whileTrue(new PrintCommand("TY: "+m_Vision.getTY()));
-    m_driverController.a().whileTrue(new PrintCommand("Distance: "+ m_Vision.getDistance(9,Constants.VisionConstants.CORAL_APRILTAG_HEIGHT.in(Inches))));
-    m_driverController.x().whileTrue(new PrintCommand("TA: "+ m_Vision.getTA()));
+    m_driverController.y().whileTrue(new PrintCommand("TY: "+m_Vision.getTY().toString()));
+    m_driverController.a().whileTrue(new PrintCommand("Keys: "+ m_Vision.getKeys()));
+    m_driverController.x().whileTrue(new PrintCommand("TA: "+ m_Vision.getTA().toString()));
     m_driverController.b().whileTrue(new PrintCommand("Target Found: "+m_Vision.isTarget()));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
