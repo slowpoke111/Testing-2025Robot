@@ -4,7 +4,10 @@ import static edu.wpi.first.units.Units.*;
 
 import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+
+import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoubleSubscriber;
@@ -13,6 +16,7 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TimestampedDouble;
+import edu.wpi.first.networktables.Topic;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Distance;
@@ -68,9 +72,15 @@ public class VisionSubsystem extends SubsystemBase {
         return m_limelightNT.getEntry("tv").getBoolean(false);
     }
 
-    public String getKeys(){
-        return m_limelightNT.getKeys().toString();
-        
+    public ArrayList<String> getKeys(){
+
+        //Topic[] x = m_NetworkTableInstance.getTopics();
+        ArrayList<String> y = new ArrayList<>();
+        //for (Topic i:x){
+        //    y.add(i.getName());
+        //}
+
+        return y;
     }
 }
 

@@ -6,8 +6,11 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -52,10 +55,7 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
-    m_driverController.y().whileTrue(new PrintCommand("TY: "+m_Vision.getTY().toString()));
-    m_driverController.a().whileTrue(new PrintCommand("Keys: "+ m_Vision.getKeys()));
-    m_driverController.x().whileTrue(new PrintCommand("TA: "+ m_Vision.getTA().toString()));
-    m_driverController.b().whileTrue(new PrintCommand("Target Found: "+m_Vision.isTarget()));
+    m_driverController.a().onTrue(new PrintCommand(Double.toString(NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0))));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
