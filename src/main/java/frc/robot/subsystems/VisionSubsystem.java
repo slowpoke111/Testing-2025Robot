@@ -3,9 +3,11 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import java.security.Timestamp;
+import java.text.NumberFormat.Style;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.function.DoubleSupplier;
 
 import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 
@@ -20,67 +22,60 @@ import edu.wpi.first.networktables.Topic;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
 public class VisionSubsystem extends SubsystemBase {
-    private final NetworkTableInstance m_NetworkTableInstance;
-    private final NetworkTable m_limelightNT;
-    private DoubleSubscriber ty;
+    private final DoubleSupplier txSupplier;
+    private final DoubleSupplier tySupplier;
 
-    public VisionSubsystem() {
-        m_NetworkTableInstance = NetworkTableInstance.getDefault();
-        
-        m_limelightNT = m_NetworkTableInstance.getTable("limelight-a");
-        ty = m_limelightNT.getDoubleTopic("ty").subscribe(-2000);
+    private double TX_value;
+    private double TY_value;
+
+    public VisionSubsystem(DoubleSupplier txSupplier, DoubleSupplier tySupplier) {
+        this.txSupplier = txSupplier;
+        this.tySupplier = tySupplier;
     }
-    
+
     public void periodic() {
-        return;
-      }
+        this.TX_value = txSupplier.getAsDouble();
+        this.TY_value = tySupplier.getAsDouble();
+        System.out.println("TX: " + TX_value + ", TY: " + TY_value);
+    }
 
     public Distance getDistance(int pipelineID, double goalHeight) {
-        setPipelineIndex(pipelineID);
 
-        Angle angleToGoal = getTY().plus(VisionConstants.LIMELIGHT_ANGLE);
+       Angle angleToGoal = Angle.ofBaseUnits(getTY(),Degrees).plus(VisionConstants.LIMELIGHT_ANGLE);
 
-        Distance lensHeight = VisionConstants.LIMELIGHT_LENS_HEIGHT;
+       Distance lensHeight = VisionConstants.LIMELIGHT_LENS_HEIGHT;
 
-        double distance = (goalHeight - lensHeight.in(Inches)) / Math.tan(angleToGoal.in(Radians));
-        Distance distanceUnit = Distance.ofBaseUnits(distance, Inches);
-        return distanceUnit;
+       double distance = (goalHeight - lensHeight.in(Inches)) / Math.tan(angleToGoal.in(Radians));
+       Distance distanceUnit = Distance.ofBaseUnits(distance, Inches);
+       return distanceUnit;
     }
 
 
-    public void setPipelineIndex(int i){
-        m_limelightNT.getEntry("pipeline").setNumber(i);
-    }
+    public void setPipelineIndex(int i){};
 
-    public Angle getTX(){
-        return Angle.ofBaseUnits(m_limelightNT.getEntry("tx").getDouble(-1000.0), Degrees);
+    public double getTX() {
+        return this.TX_value;
     }
-
-    public Angle getTY(){
-        return Angle.ofBaseUnits(m_limelightNT.getEntry("ty").getDouble(-2.0), Degrees);
+    
+    public double getTY() {
+        return this.TY_value;
     }
 
     public Dimensionless getTA(){
-        return Dimensionless.ofBaseUnits(m_limelightNT.getEntry("ta").getDouble(-1), Percent);
+        return Dimensionless.ofBaseUnits(0.0, Percent);
     }
 
     public boolean isTarget(){
-        return m_limelightNT.getEntry("tv").getBoolean(false);
+        return false;
     }
 
-    public ArrayList<String> getKeys(){
-
-        //Topic[] x = m_NetworkTableInstance.getTopics();
-        ArrayList<String> y = new ArrayList<>();
-        //for (Topic i:x){
-        //    y.add(i.getName());
-        //}
-
-        return y;
+    public String getKeys(){
+        return NetworkTableInstance.getDefault().getTable("limelight").getKeys().toString();
     }
 }
 

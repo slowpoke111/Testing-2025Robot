@@ -73,7 +73,7 @@ public class AlignCommand extends Command {
 
     @Override
     public void execute() {
-        Angle tx = m_Vision.getTX();
+        Angle tx = Angle.ofBaseUnits(m_Vision.getTX(),Degrees);
         Distance currentDistance = m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT.in(Inches));
 
         double rotationOutput = aimController.calculate(tx.in(Radians));
