@@ -41,24 +41,18 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
         this.TX_value = txSupplier.getAsDouble();
         this.TY_value = tySupplier.getAsDouble();
+        System.out.println("TX: " + TX_value + ", TY: " + TY_value);
     }
 
-    public double getDistance(double goalHeight) {
-        double targetOffsetAngle_Vertical = getTY();
+    public Distance getDistance(int pipelineID, double goalHeight) {
 
-        double limelightMountAngleDegrees = 45.0; 
+       Angle angleToGoal = Angle.ofBaseUnits(getTY(),Degrees).plus(VisionConstants.LIMELIGHT_ANGLE);
 
-        double limelightLensHeightInches = 33.0; 
-    
-        double goalHeightInches = 36.0; 
-    
-        double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-        double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-    
-        //calculate distance
-        double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+       Distance lensHeight = VisionConstants.LIMELIGHT_LENS_HEIGHT;
 
-        return distanceFromLimelightToGoalInches;
+       double distance = (goalHeight - lensHeight.in(Inches)) / Math.tan(angleToGoal.in(Radians));
+       Distance distanceUnit = Distance.ofBaseUnits(distance, Inches);
+       return distanceUnit;
     }
 
 
@@ -84,3 +78,5 @@ public class VisionSubsystem extends SubsystemBase {
         return NetworkTableInstance.getDefault().getTable("limelight").getKeys().toString();
     }
 }
+
+

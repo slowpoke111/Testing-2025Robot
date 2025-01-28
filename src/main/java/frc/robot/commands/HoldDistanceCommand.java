@@ -44,17 +44,19 @@ public class HoldDistanceCommand extends Command {
 
     @Override
     public void initialize() {
-        m_pidController.reset(m_Vision.getDistance(VisionConstants.CORAL_APRILTAG_HEIGHT.in(Inches))*0.0254);
+        m_pidController.reset(m_Vision.getDistance(0, VisionConstants.CORAL_APRILTAG_HEIGHT.in(Inches)).in(Meters));
     }
 
     @Override
     public void execute() {
-        double currentDistance = m_Vision.getDistance(VisionConstants.CORAL_APRILTAG_HEIGHT.in(Inches))*0.0254;
+        double currentDistance = m_Vision.getDistance(0, VisionConstants.CORAL_APRILTAG_HEIGHT.in(Inches)).in(Meters);
         double velocityOutput = m_pidController.calculate(currentDistance);
 
+        // Only allow forward movement if the robot is farther than the target
         if (currentDistance < targetDistance.in(Meters)) {
             m_swerve.setControl(m_driveRequest.withVelocityX(velocityOutput).withVelocityY(0).withRotationalRate(0));
         } else {
+            // Stop movement when closer to the target
             m_swerve.setControl(m_driveRequest.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
         }
     }
