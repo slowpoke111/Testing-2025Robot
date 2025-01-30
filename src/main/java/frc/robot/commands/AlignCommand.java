@@ -1,108 +1,79 @@
 package frc.robot.commands;
 
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.VisionSubsystem;
-
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.units.measure.*;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
-import frc.robot.Constants.VisionConstants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.generated.TunerConstants;
+import frc.robot.lib.PIDControllerConfigurable;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LimelightHelpers.RawFiducial;
 
 public class AlignCommand extends Command {
-    private final VisionSubsystem m_Vision;
-    private final SwerveDrivetrain<TalonFX, TalonFX, CANcoder> m_Swerve;
-    private final Distance holdDistance;
-    private final int pipelineID;
-    private final SwerveRequest.FieldCentric m_alignRequest;
+  private final CommandSwerveDrivetrain m_drivetrain;
+  private final VisionSubsystem m_Limelight;
 
-    private final ProfiledPIDController aimController;
-    private final ProfiledPIDController rangeController;
+  private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05, 0, 0, 0.5);
+  private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.3, 0, 0, 0.2);
+  private static final PIDControllerConfigurable yPidController = new PIDControllerConfigurable(0.3, 0, 0, 0.5);
+  private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
-    //From tunerconsts and robtocontainer.java
-    private static final double MAX_AIM_VELOCITY = 1.5*Math.PI; // radd/s
-    private static final double MAX_AIM_ACCELERATION = Math.PI / 2; // rad/s^2
-    private static final double MAX_RANGE_VELOCITY = 1.0; // m/s
-    private static final double MAX_RANGE_ACCELERATION = 0.5; // m/2^s
-  
-    // Todo - Tune later
-    private static final double AIM_P = 0.1; //Proprotinal
-    private static final double AIM_I = 0.01; //Gradual corretction
-    private static final double AIM_D = 0.05; //Smooth oscilattions
-    
-    private static final double RANGE_P = 0.1;
-    private static final double RANGE_I = 0.01;
-    private static final double RANGE_D = 0.05;
+  // private static final SwerveRequest.SwerveDriveBrake brake = new
+  // SwerveRequest.SwerveDriveBrake();
 
-    public AlignCommand(VisionSubsystem vision, SwerveDrivetrain<TalonFX, TalonFX, CANcoder> swerve, Distance holdDistance, int pipelineID) {
-        m_Vision = vision;
-        m_Swerve = swerve;
-        this.holdDistance = holdDistance;
-        this.pipelineID = pipelineID;
+  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
+    this.m_drivetrain = drivetrain;
+    this.m_Limelight = limelight;
+    addRequirements(m_Limelight);
+  }
+
+  @Override
+  public void initialize() {
+  }
+
+  @Override
+  public void execute() {
+    RawFiducial fiducial;
+    try {
+      fiducial = m_Limelight.getFiducialWithId(10);
+
+      final double rotationalRate = rotationalPidController.calculate(fiducial.txnc, 0) * 0.75 * 0.5;
+      final double velocityX = xPidController.calculate(fiducial.distToRobot, 2.25) * -1.0 * 4.73* 0.5;
+      // final double velocityY = yPidController.calculate(fiducial.tync, 0) *
+      // TunerConstants.MaxSpeed * 0.3;
         
-        this.m_alignRequest = new SwerveRequest.FieldCentric().withDeadband(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.1).withRotationalDeadband(0.1);
+      if (rotationalPidController.atSetpoint() && xPidController.atSetpoint() && yPidController.atSetpoint()) {
+        this.end(true);
+      }
 
-        aimController = new ProfiledPIDController(AIM_P, AIM_I, AIM_D, new TrapezoidProfile.Constraints(MAX_AIM_VELOCITY, MAX_AIM_ACCELERATION));
-
-        aimController.enableContinuousInput(-Math.PI, Math.PI); //Wrpa from -pi to ip
-        
-        rangeController = new ProfiledPIDController(RANGE_P, RANGE_I, RANGE_D, new TrapezoidProfile.Constraints(MAX_RANGE_VELOCITY, MAX_RANGE_ACCELERATION));
-
-        addRequirements(m_Vision);
+      SmartDashboard.putNumber("txnc", fiducial.txnc);
+      SmartDashboard.putNumber("distToRobot", fiducial.distToRobot);
+      SmartDashboard.putNumber("rotationalPidController", rotationalRate);
+      SmartDashboard.putNumber("xPidController", velocityX);
+      m_drivetrain.setControl(
+          alignRequest.withRotationalRate(-rotationalRate*1.5).withVelocityX(-velocityX));
+      // .withVelocityY(velocityY));
+      // drivetrain.applyRequest(() -> alignRequest.withRotationalRate(0.5 *
+      // MaxAngularRate)
+      // .withVelocityX(xPidController.calculate(0.2 * MaxSpeed)));
+      // drivetrain.setControl(brake);
+    } catch (VisionSubsystem.NoSuchTargetException nste) {
     }
+  }
 
-    @Override
-    public void initialize() {
-        m_Vision.setPipelineIndex(pipelineID);
-        
-        aimController.reset(0);
-        rangeController.reset(m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT.in(Inches)).in(Inches)); //Init dist
-        
-        aimController.setGoal(0); // tx=0 is centered
-        rangeController.setGoal(holdDistance.in(Meters));
-    }
+  @Override
+  public boolean isFinished() {
+    // return rotationalPidController.atSetpoint() && xPidController.atSetpoint()
+    return false;
+  }
 
-    @Override
-    public void execute() {
-        Angle tx = Angle.ofBaseUnits(m_Vision.getTX(),Degrees);
-        Distance currentDistance = m_Vision.getDistance(this.pipelineID,VisionConstants.REEF_APRILTAG_HEIGHT.in(Inches));
-
-        double rotationOutput = aimController.calculate(tx.in(Radians));
-        double rangeOutput = rangeController.calculate(currentDistance.in(Meters));
-
-        Translation2d translation = new Translation2d(rangeOutput, 0);
-                
-        m_Swerve.setControl(m_alignRequest
-            .withVelocityX(translation.getX())
-            .withVelocityY(translation.getY())
-            .withRotationalRate(rotationOutput));
-    }
-    
-    @Override
-    public void end(boolean interrupted) {
-        m_Swerve.setControl(m_alignRequest
-            .withVelocityX(0)
-            .withVelocityY(0)
-            .withRotationalRate(0));
-    }
-
-    @Override
-    public boolean isFinished() {
-        return aimController.atGoal() && rangeController.atGoal();
-    }
-
-    public AlignCommand withTolerance(Angle aimTolerance, Distance rangeTolerance) {
-        aimController.setTolerance(aimTolerance.in(Radians));
-        rangeController.setTolerance(rangeTolerance.in(Meters));
-        return this;
-    }
+  @Override
+  public void end(boolean interrupted) {
+    m_drivetrain.applyRequest(() -> idleRequest);
+  }
 }

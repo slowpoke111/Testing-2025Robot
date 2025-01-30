@@ -1,82 +1,50 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 
-import java.security.Timestamp;
-import java.text.NumberFormat.Style;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.function.DoubleSupplier;
-
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
-
-import edu.wpi.first.networktables.DoubleEntry;
-import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.DoubleTopic;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.TimestampedDouble;
-import edu.wpi.first.networktables.Topic;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.LimelightHelpers.*;
 
 public class VisionSubsystem extends SubsystemBase {
-    private final DoubleSupplier txSupplier;
-    private final DoubleSupplier tySupplier;
+  private RawFiducial[] fiducials;
 
-    private double TX_value;
-    private double TY_value;
+  public VisionSubsystem() {
+    config();
+  }
 
-    public VisionSubsystem(DoubleSupplier txSupplier, DoubleSupplier tySupplier) {
-        this.txSupplier = txSupplier;
-        this.tySupplier = tySupplier;
+  public static class NoSuchTargetException extends RuntimeException {
+    public NoSuchTargetException(String message) {
+      super(message);
     }
+  }
 
-    public void periodic() {
-        this.TX_value = txSupplier.getAsDouble();
-        this.TY_value = tySupplier.getAsDouble();
-        System.out.println("TX: " + TX_value + ", TY: " + TY_value);
+  public void config() {
+    // LimelightHelpers.setCropWindow("", -0.5, 0.5, -0.5, 0.5);
+    LimelightHelpers.setCameraPose_RobotSpace(
+        "", //LL name
+        Meters.convertFrom(12.75, Inches), //Forward ofset
+        0,
+        0.195,
+        0,
+        0,
+        0);
+    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {1,8,9,10,11,12});
+  }
+
+  @Override
+  public void periodic() {
+    fiducials = LimelightHelpers.getRawFiducials("");
+  }
+
+  public RawFiducial getFiducialWithId(int id) {
+    for (RawFiducial fiducial : fiducials) {
+      if (fiducial.id != id) {
+        continue;
+      }
+
+      return fiducial;
     }
-
-    public Distance getDistance(int pipelineID, double goalHeight) {
-
-       Angle angleToGoal = Angle.ofBaseUnits(getTY(),Degrees).plus(VisionConstants.LIMELIGHT_ANGLE);
-
-       Distance lensHeight = VisionConstants.LIMELIGHT_LENS_HEIGHT;
-
-       double distance = (goalHeight - lensHeight.in(Inches)) / Math.tan(angleToGoal.in(Radians));
-       Distance distanceUnit = Distance.ofBaseUnits(distance, Inches);
-       return distanceUnit;
-    }
-
-
-    public void setPipelineIndex(int i){};
-
-    public double getTX() {
-        return this.TX_value;
-    }
-    
-    public double getTY() {
-        return this.TY_value;
-    }
-
-    public Dimensionless getTA(){
-        return Dimensionless.ofBaseUnits(0.0, Percent);
-    }
-
-    public boolean isTarget(){
-        return false;
-    }
-
-    public String getKeys(){
-        return NetworkTableInstance.getDefault().getTable("limelight").getKeys().toString();
-    }
+    throw new NoSuchTargetException("No target with ID " + id + " is in view!");
+  }
 }
-
-
