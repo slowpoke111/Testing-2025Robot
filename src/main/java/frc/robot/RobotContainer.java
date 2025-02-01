@@ -70,27 +70,12 @@ public class RobotContainer {
    public RobotContainer() {
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
        SmartDashboard.putData("Auto Mode", autoChooser);
+       
+      m_Vision = new VisionSubsystem();
 
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        inst.setServerTeam(5181);
-        inst.startDSClient();
+      autoChooser = AutoBuilder.buildAutoChooser("Tests");
+      SmartDashboard.putData("Auto Mode", autoChooser);
 
-        var limelightNT = inst.getTable("limelight");
-        DoubleTopic txTopic = limelightNT.getDoubleTopic("tx");
-        DoubleTopic tyTopic = limelightNT.getDoubleTopic("ty");
-
-        DoubleSubscriber txSubscriber = txTopic.subscribe(-30.0);
-        DoubleSubscriber tySubscriber = tyTopic.subscribe(-30.0);
-
-        DoubleSupplier txSupplier = txSubscriber::get;
-        DoubleSupplier tySupplier = tySubscriber::get;
-
-
-        m_Vision = new VisionSubsystem();
-
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
-        SmartDashboard.putData("Auto Mode", autoChooser);
- 
        configureBindings();
    }
    public Command getAutonomousCommand() {
@@ -104,8 +89,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );

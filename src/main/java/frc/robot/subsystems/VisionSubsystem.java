@@ -23,11 +23,11 @@ public class VisionSubsystem extends SubsystemBase {
     // LimelightHelpers.setCropWindow("", -0.5, 0.5, -0.5, 0.5);
     LimelightHelpers.setCameraPose_RobotSpace(
         "", //LL name
-        Meters.convertFrom(12.75, Inches), //Forward ofset
+        0.3556, 
+        0.1016,
+        0.3429,
         0,
-        0.195,
-        0,
-        0,
+        -2,
         0);
     LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {1,5,8,9,10,11,12});
   }
