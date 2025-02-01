@@ -19,11 +19,13 @@ public final class Constants {
     public static final int clawMotorID = 30;
     public static final int shooterMotorID = 31;
     public static final int sensorID = 62;
-    public static final double clawSpeed = 0.5;
     public static final double slowShooterSpeed = 0.5;
     public static final double L1ClawPosition = 45;
     public static final double L2ClawPosition = 90;
     public static final double L4ClawPosition = 180;
     public static final double coralDistance = 600;
+    public static final double kP = 0.005;
+    public static final double kD = 0.08;
+    public static final double tolerance = 2;
   }
 }

@@ -11,16 +11,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class ClawToL1Command extends Command {
   private final ClawSubsystem m_claw;
-  private final double speed;
+  private double speed;
+  private double previousPosition;
+  private double currentPosition;
+  private double currentVelocity;
+//  private double velocity = (ClawConstants.kP * (ClawConstants.L1ClawPosition - m_claw.getClawPosition())) - (ClawConstants.kD * );
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ClawToL1Command(ClawSubsystem claw, double speed) {
+  public ClawToL1Command(ClawSubsystem claw) {
     m_claw = claw;
-    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(claw);
   }
@@ -28,13 +31,33 @@ public class ClawToL1Command extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    while(m_claw.getClawPosition() < ClawConstants.L1ClawPosition) {
-      m_claw.runClawMotor(speed);
+    /*if(m_claw.getClawPosition() < ClawConstants.L1ClawPosition){
+      while(m_claw.getClawPosition() < ClawConstants.L1ClawPosition) {
+        m_claw.runClawMotor(speed);
+        System.out.println(m_claw.getClawPosition());
+      }
+    } else {
+      while(m_claw.getClawPosition() > ClawConstants.L1ClawPosition) {
+        m_claw.runClawMotor(-speed);
+        System.out.println(m_claw.getClawPosition());
+      }
+        */
+
+      previousPosition = m_claw.getClawPosition();
+      while(Math.abs(m_claw.getClawPosition() - ClawConstants.L1ClawPosition) > ClawConstants.tolerance) {
+        currentPosition = m_claw.getClawPosition();
+        currentVelocity = currentPosition - previousPosition;
+        speed = ClawConstants.kP * (ClawConstants.L1ClawPosition - m_claw.getClawPosition()) - ClawConstants.kD * currentVelocity;
+        previousPosition = currentPosition;
+        if (speed > 0.1){
+          speed = 0.1;
+        }
+        m_claw.runClawMotor(speed);
+        System.out.println(speed);
+        System.out.println("Difference" + (Math.abs(currentPosition - ClawConstants.L1ClawPosition)));
+      }
+        m_claw.runClawMotor(0);
     }
-    while(m_claw.getClawPosition() > ClawConstants.L1ClawPosition) {
-      m_claw.runClawMotor(-speed);
-    }
-  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

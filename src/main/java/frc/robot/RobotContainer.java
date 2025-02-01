@@ -130,9 +130,9 @@ public class RobotContainer {
     double y = m_driverController.getLeftY();
     m_elevatorSubsystem.changeHeight(y);
 
-    m_driverController.a().onTrue(new ClawToL1Command(m_claw, ClawConstants.clawSpeed));
-    m_driverController.b().onTrue(new ClawToL2Command(m_claw, ClawConstants.clawSpeed));
-    m_driverController.x().onTrue(new ClawToL4Command(m_claw, ClawConstants.clawSpeed));
+    m_driverController.a().onTrue(new ClawToL1Command(m_claw));
+    m_driverController.b().onTrue(new ClawToL2Command(m_claw));
+    m_driverController.x().onTrue(new ClawToL4Command(m_claw));
 
   
   }
