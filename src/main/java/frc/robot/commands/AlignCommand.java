@@ -23,9 +23,6 @@ public class AlignCommand extends Command {
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
-  // private static final SwerveRequest.SwerveDriveBrake brake = new
-  // SwerveRequest.SwerveDriveBrake();
-
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
@@ -42,8 +39,8 @@ public class AlignCommand extends Command {
     try {
       fiducial = m_Limelight.getFiducialWithId(10);
 
-      final double rotationalRate = rotationalPidController.calculate(fiducial.txnc, 0) * 0.75 * 0.5;
-      final double velocityX = xPidController.calculate(fiducial.distToRobot, 2.25) * -1.0 * 4.73* 0.5;
+      final double rotationalRate = rotationalPidController.calculate(fiducial.txnc, 0) * RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.5;
+      final double velocityX = xPidController.calculate(fiducial.distToRobot, 1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.2;
       // final double velocityY = yPidController.calculate(fiducial.tync, 0) *
       // TunerConstants.MaxSpeed * 0.3;
         
@@ -56,12 +53,7 @@ public class AlignCommand extends Command {
       SmartDashboard.putNumber("rotationalPidController", rotationalRate);
       SmartDashboard.putNumber("xPidController", velocityX);
       m_drivetrain.setControl(
-          alignRequest.withRotationalRate(-rotationalRate*1.5).withVelocityX(-velocityX));
-      // .withVelocityY(velocityY));
-      // drivetrain.applyRequest(() -> alignRequest.withRotationalRate(0.5 *
-      // MaxAngularRate)
-      // .withVelocityX(xPidController.calculate(0.2 * MaxSpeed)));
-      // drivetrain.setControl(brake);
+          alignRequest.withRotationalRate(-rotationalRate*1.5).withVelocityX(velocityX));
     } catch (VisionSubsystem.NoSuchTargetException nste) {
     }
   }
