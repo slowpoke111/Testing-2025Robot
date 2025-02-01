@@ -17,37 +17,40 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 
+
 import com.playingwithfusion.*;
-
-
 import com.ctre.phoenix.motorcontrol.can.*;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. TalonFX motor will be final, SparkMax used for testing */
   //private final TalonFX m_elevatorMotor;
-  private final SparkMax m_elevatorMotor;
+  private final SparkMax m_elevatorMotor1;
+  private final SparkMax m_elevatorMotor2;
   public boolean limitSwitch = false;  
   private final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
   private final PIDController m_elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
   public DigitalInput elevatorLimit;
   public ElevatorSubsystem() {
     //m_elevatorMotor = new TalonFX(ElevatorConstants.kMotorID);
-    m_elevatorMotor = new SparkMax(ElevatorConstants.kMotorID, MotorType.kBrushless);
+    m_elevatorMotor1 = new SparkMax(ElevatorConstants.kMotorID, MotorType.kBrushless);
+    m_elevatorMotor2 = new SparkMax(ElevatorConstants.lMotorID, MotorType.kBrushless);
     m_elevatorFeedback.setTolerance(ElevatorConstants.kElevatorToleranceRPS);
+    m_elevatorMotor2.follow(m_elevatorMotor1);
+
 }
  
   public void setElevator(double setpointRotationsPerSecond) {
     run(
       () -> {
-        m_elevatorMotor.set(
+        m_elevatorMotor1.set(
           m_elevatorFeedforward.calculate(setpointRotationsPerSecond)
             + m_elevatorFeedback.calculate(
-              m_elevatorMotor.get(), setpointRotationsPerSecond));
+              m_elevatorMotor1.get(), setpointRotationsPerSecond));
       });
-    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor.set(1));
+    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(1));
     if (limitSwitch == true){
-      m_elevatorMotor.set(0);
+      m_elevatorMotor1.set(0);
     }
     }
   public boolean elevatorPosition(){
