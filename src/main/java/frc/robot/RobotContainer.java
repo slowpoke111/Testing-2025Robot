@@ -7,8 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ClawToL1Command;  
+import frc.robot.commands.ClawToL2Command;
+import frc.robot.commands.ClawToL4Command;
+import frc.robot.commands.RunIndexerCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -23,6 +28,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -45,6 +51,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  private final ClawSubsystem m_claw = new ClawSubsystem();
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -73,6 +80,14 @@ public class RobotContainer {
      // An example command will be run in autonomous
      return autoChooser.getSelected();
    }
+  //find function that loops eternally while roobot is running
+  public void runIndexer() {
+    while(m_claw.coralPresent()) {
+      RunIndexerCommand runIndexerCommand = new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed);
+      runIndexerCommand.initialize();
+    }
+   } 
+
 
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
@@ -114,5 +129,11 @@ public class RobotContainer {
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     double y = m_driverController.getLeftY();
     m_elevatorSubsystem.changeHeight(y);
+
+    m_driverController.a().onTrue(new ClawToL1Command(m_claw, ClawConstants.clawSpeed));
+    m_driverController.b().onTrue(new ClawToL2Command(m_claw, ClawConstants.clawSpeed));
+    m_driverController.x().onTrue(new ClawToL4Command(m_claw, ClawConstants.clawSpeed));
+
+  
   }
 }
