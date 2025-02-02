@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ClawToL1Command;  
-import frc.robot.commands.ClawToL2Command;
-import frc.robot.commands.ClawToL4Command;
+import frc.robot.commands.ClawToPositionCommand;  
 import frc.robot.commands.RunIndexerCommand;
+import frc.robot.commands.RunShooterCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import static edu.wpi.first.units.Units.*;
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -66,10 +66,11 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  Trigger runIndexerTrigger = new Trigger(this::coralPresent);
 
-   private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
-   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
+  private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
    public RobotContainer() {
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
@@ -124,16 +125,19 @@ public class RobotContainer {
     double y = m_driverController.getLeftY();
     m_elevatorSubsystem.changeHeight(y);
 
-    m_driverController.a().onTrue(new ClawToL1Command(m_claw));
-    m_driverController.b().onTrue(new ClawToL2Command(m_claw));
-    m_driverController.x().onTrue(new ClawToL4Command(m_claw));
+    m_driverController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
+    m_driverController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition));
+    m_driverController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
 
-    Trigger runIndexerTrigger = new Trigger(this::coralPresent);
-    runIndexerTrigger.whileTrue(new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed));
-  
+    m_driverController.rightTrigger().whileTrue(new RunShooterCommand(m_claw));
+
+    runIndexerTrigger.whileTrue(new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed)); 
   }
 
   public boolean coralPresent() {
-    return m_rangeSensor.getRange() < ClawConstants.coralDistance;
+    BooleanSupplier coralPresent = () -> (m_rangeSensor.getRange() > 1) && (m_rangeSensor.getRange() < 400);
+    boolean isPresent = coralPresent.getAsBoolean();
+    System.out.println(m_rangeSensor.getRange());
+    return isPresent;
   }
 }

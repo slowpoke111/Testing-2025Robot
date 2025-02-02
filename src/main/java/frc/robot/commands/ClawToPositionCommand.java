@@ -9,12 +9,13 @@ import frc.robot.Constants.ClawConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ClawToL1Command extends Command {
+public class ClawToPositionCommand extends Command {
   private final ClawSubsystem m_claw;
   private double speed;
   private double previousPosition;
   private double currentPosition;
   private double currentVelocity;
+  private double desiredPosition;
 //  private double velocity = (ClawConstants.kP * (ClawConstants.L1ClawPosition - m_claw.getClawPosition())) - (ClawConstants.kD * );
 
   /**
@@ -22,8 +23,9 @@ public class ClawToL1Command extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ClawToL1Command(ClawSubsystem claw) {
+  public ClawToPositionCommand(ClawSubsystem claw, double desiredPosition) {
     m_claw = claw;
+    this.desiredPosition = desiredPosition;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(claw);
   }
@@ -42,19 +44,19 @@ public class ClawToL1Command extends Command {
         System.out.println(m_claw.getClawPosition());
       }
         */
-
+    
       previousPosition = m_claw.getClawPosition();
-      while(Math.abs(m_claw.getClawPosition() - ClawConstants.L1ClawPosition) > ClawConstants.tolerance) {
+      while(Math.abs(m_claw.getClawPosition() - desiredPosition) > ClawConstants.tolerance) {
         currentPosition = m_claw.getClawPosition();
         currentVelocity = currentPosition - previousPosition;
-        speed = ClawConstants.kP * (ClawConstants.L1ClawPosition - m_claw.getClawPosition()) - ClawConstants.kD * currentVelocity;
+        speed = ClawConstants.kP * (desiredPosition - m_claw.getClawPosition()) - ClawConstants.kD * currentVelocity;
         previousPosition = currentPosition;
         if (speed > 0.1){
           speed = 0.1;
         }
         m_claw.runClawMotor(speed);
         System.out.println(speed);
-        System.out.println("Difference" + (Math.abs(currentPosition - ClawConstants.L1ClawPosition)));
+        System.out.println("Difference" + (Math.abs(currentPosition - desiredPosition)));
       }
         m_claw.runClawMotor(0);
     }
@@ -72,6 +74,6 @@ public class ClawToL1Command extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_claw.getClawPosition() == ClawConstants.L1ClawPosition;
+    return m_claw.getClawPosition() == desiredPosition;
   }
 }
