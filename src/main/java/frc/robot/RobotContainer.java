@@ -14,7 +14,6 @@ import frc.robot.commands.ClawToL1Command;
 import frc.robot.commands.ClawToL2Command;
 import frc.robot.commands.ClawToL4Command;
 import frc.robot.commands.RunIndexerCommand;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import static edu.wpi.first.units.Units.*;
@@ -24,14 +23,14 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -70,7 +69,10 @@ public class RobotContainer {
 
    private final SendableChooser<Command> autoChooser;
 
+   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
+
    public RobotContainer() {
+       m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
        SmartDashboard.putData("Auto Mode", autoChooser);
  
@@ -80,14 +82,6 @@ public class RobotContainer {
      // An example command will be run in autonomous
      return autoChooser.getSelected();
    }
-  //find function that loops eternally while roobot is running
-  public void runIndexer() {
-    while(m_claw.coralPresent()) {
-      RunIndexerCommand runIndexerCommand = new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed);
-      runIndexerCommand.initialize();
-    }
-   } 
-
 
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
@@ -134,6 +128,12 @@ public class RobotContainer {
     m_driverController.b().onTrue(new ClawToL2Command(m_claw));
     m_driverController.x().onTrue(new ClawToL4Command(m_claw));
 
+    Trigger runIndexerTrigger = new Trigger(this::coralPresent);
+    runIndexerTrigger.whileTrue(new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed));
   
+  }
+
+  public boolean coralPresent() {
+    return m_rangeSensor.getRange() < ClawConstants.coralDistance;
   }
 }
