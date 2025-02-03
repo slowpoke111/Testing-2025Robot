@@ -21,7 +21,7 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-    public static final String LIMELIGHT_NAME = "limelight-a";
+    public static final String LIMELIGHT_NAME = "";
     public static final Distance LIMELIGHT_LENS_HEIGHT = Distance.ofBaseUnits(8, Inches);
     public static final Angle LIMELIGHT_ANGLE = Angle.ofBaseUnits(0, Degrees);
 

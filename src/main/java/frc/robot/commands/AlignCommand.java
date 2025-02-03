@@ -8,14 +8,24 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
-import frc.robot.lib.PIDControllerConfigurable;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LimelightHelpers.RawFiducial;
-
+import edu.wpi.first.math.controller.PIDController;
+class PIDControllerConfigurable extends PIDController {
+  public PIDControllerConfigurable(double kP, double kI, double kD) {
+      super(kP, kI, kD);
+  }
+  
+  public PIDControllerConfigurable(double kP, double kI, double kD, double tolerance) {
+      super(kP, kI, kD);
+      this.setTolerance(tolerance);
+  }
+}
 public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_Limelight;
+  private final int tagID;
 
   private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.075, 0, 0, 0.01);
   private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.3, 0.01, 0.01, 0.01);
@@ -26,12 +36,20 @@ public class AlignCommand extends Command {
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
+
+    this.tagID=m_Limelight.getClosestFiducial().id;
+    addRequirements(m_Limelight);
+  }
+
+  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int tagID) {
+    this.m_drivetrain = drivetrain;
+    this.m_Limelight = limelight;
+    this.tagID = tagID;
     addRequirements(m_Limelight);
   }
 
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {
@@ -39,7 +57,7 @@ public class AlignCommand extends Command {
     RawFiducial fiducial;
 
     try {
-      fiducial = m_Limelight.getFiducialWithId(10);
+      fiducial = m_Limelight.getFiducialWithId(this.tagID);
       System.out.println(fiducial.distToRobot);
 
       final double rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;

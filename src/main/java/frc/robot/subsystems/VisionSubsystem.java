@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.LimelightHelpers.*;
 
 public class VisionSubsystem extends SubsystemBase {
@@ -28,16 +26,32 @@ public class VisionSubsystem extends SubsystemBase {
         0,
         -2,
         0);
-    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {1,5,8,9,10,11,12});
+    LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LIMELIGHT_NAME, new int[] {1,5,8,9,10,11,12});
   }
 
   @Override
   public void periodic() {
-    fiducials = LimelightHelpers.getRawFiducials("");
+    fiducials = LimelightHelpers.getRawFiducials(VisionConstants.LIMELIGHT_NAME);
+  }
+  public RawFiducial getClosestFiducial() {
+    if (fiducials == null || fiducials.length == 0) {
+        throw new NoSuchTargetException("No fiducials found.");
+    }
+
+    RawFiducial closest = fiducials[0];
+    double minDistance = closest.ta;
+
+    for (RawFiducial fiducial : fiducials) {
+        if (fiducial.ta > minDistance) {
+            closest = fiducial;
+            minDistance = fiducial.ta;
+        }
+    }
+
+    return closest;
   }
 
   public RawFiducial getFiducialWithId(int id) {
-    StringBuilder availableIds = new StringBuilder();
   
     for (RawFiducial fiducial : fiducials) {
         if (fiducial.id == id) {
@@ -61,5 +75,18 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
       }
   }
   throw new NoSuchTargetException("Cannot find: " + id + ". IN view:: " + availableIds.toString());
+  }
+
+  public double getTX(){
+    return LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME);
+  }
+  public double getTY(){
+    return LimelightHelpers.getTY(VisionConstants.LIMELIGHT_NAME);
+  }
+  public double getTA(){
+    return LimelightHelpers.getTA(VisionConstants.LIMELIGHT_NAME);
+  }
+  public boolean getTV(){
+    return LimelightHelpers.getTV(VisionConstants.LIMELIGHT_NAME);
   }
 }
