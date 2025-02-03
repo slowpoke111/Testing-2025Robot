@@ -89,4 +89,14 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   public boolean getTV(){
     return LimelightHelpers.getTV(VisionConstants.LIMELIGHT_NAME);
   }
+
+  public double getClosestTX(){
+    return getClosestFiducial().txnc;
+  }
+  public double getClosestTY(){
+    return getClosestFiducial().tync;
+  }
+  public double getClosestTA(){
+    return getClosestFiducial().ta;
+  }
 }
