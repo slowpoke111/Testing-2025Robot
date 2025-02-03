@@ -20,9 +20,8 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public void config() {
-    // LimelightHelpers.setCropWindow("", -0.5, 0.5, -0.5, 0.5);
     LimelightHelpers.setCameraPose_RobotSpace(
-        "", //LL name
+        "",
         0.3556, 
         0.1016,
         0.3429,
@@ -38,13 +37,29 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public RawFiducial getFiducialWithId(int id) {
+    StringBuilder availableIds = new StringBuilder();
+  
     for (RawFiducial fiducial : fiducials) {
-      if (fiducial.id != id) {
-        continue;
-      }
-
-      return fiducial;
+        if (fiducial.id == id) {
+            return fiducial;
+        }
     }
-    throw new NoSuchTargetException("No target with ID " + id + " is in view!");
+    throw new NoSuchTargetException("Can't find ID: " + id);
+  }
+
+public RawFiducial getFiducialWithId(int id, boolean verbose) {
+  StringBuilder availableIds = new StringBuilder();
+
+  for (RawFiducial fiducial : fiducials) {
+      if (availableIds.length() > 0) {
+          availableIds.append(", ");
+      } //Error reporting
+      availableIds.append(fiducial.id);
+      
+      if (fiducial.id == id) {
+          return fiducial;
+      }
+  }
+  throw new NoSuchTargetException("Cannot find: " + id + ". IN view:: " + availableIds.toString());
   }
 }

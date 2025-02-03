@@ -23,9 +23,6 @@ public class AlignCommand extends Command {
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
-  // private static final SwerveRequest.SwerveDriveBrake brake = new
-  // SwerveRequest.SwerveDriveBrake();
-
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
@@ -48,8 +45,6 @@ public class AlignCommand extends Command {
       final double rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
       
       final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * 4.73 * 0.7;
-      //final double velocityY = yPidController.calculate(fiducial.tync, 0);
-      // TunerConstants.MaxSpeed * 0.3;
         
       if (rotationalPidController.atSetpoint() && xPidController.atSetpoint() && yPidController.atSetpoint()) {
         this.end(true);
@@ -60,11 +55,8 @@ public class AlignCommand extends Command {
       SmartDashboard.putNumber("rotationalPidController", rotationalRate);
       SmartDashboard.putNumber("xPidController", velocityX);
       m_drivetrain.setControl(
-          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX));//.withVelocityY(velocityY));
-      // drivetrain.applyRequest(() -> alignRequest.withRotationalRate(0.5 *
-      // MaxAngularRate)
-      // .withVelocityX(xPidController.calculate(0.2 * MaxSpeed)));
-      // drivetrain.setControl(brake);
+          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX));
+ 
     } catch (VisionSubsystem.NoSuchTargetException nste) {
     }
   }
