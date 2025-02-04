@@ -54,7 +54,7 @@ public class AlignCommand extends Command {
 
       final double rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
       
-      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * 4.73 * 0.7;
+      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7;
         
       if (rotationalPidController.atSetpoint() && xPidController.atSetpoint() && yPidController.atSetpoint()) {
         this.end(true);
