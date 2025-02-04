@@ -33,20 +33,13 @@ public class AlignCommand extends Command {
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
-  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
+  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int TAGID) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
-
-    this.tagID=m_Limelight.getClosestFiducial().id;
+    this.tagID = TAGID;
     addRequirements(m_Limelight);
   }
 
-  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int tagID) {
-    this.m_drivetrain = drivetrain;
-    this.m_Limelight = limelight;
-    this.tagID = tagID;
-    addRequirements(m_Limelight);
-  }
 
   @Override
   public void initialize() {}
@@ -58,7 +51,6 @@ public class AlignCommand extends Command {
 
     try {
       fiducial = m_Limelight.getFiducialWithId(this.tagID);
-      System.out.println(fiducial.distToRobot);
 
       final double rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
       
@@ -76,6 +68,7 @@ public class AlignCommand extends Command {
           alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX));
  
     } catch (VisionSubsystem.NoSuchTargetException nste) {
+      System.out.println("Tag not found");
     }
   }
 

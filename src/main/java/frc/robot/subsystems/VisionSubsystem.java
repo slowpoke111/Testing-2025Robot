@@ -26,12 +26,13 @@ public class VisionSubsystem extends SubsystemBase {
         0,
         -2,
         0);
-    LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LIMELIGHT_NAME, new int[] {1,5,8,9,10,11,12});
+    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {0,1,5,8,9,10,11,12});
   }
 
   @Override
   public void periodic() {
-    fiducials = LimelightHelpers.getRawFiducials(VisionConstants.LIMELIGHT_NAME);
+    fiducials = LimelightHelpers.getRawFiducials("");
+
   }
   public RawFiducial getClosestFiducial() {
     if (fiducials == null || fiducials.length == 0) {
