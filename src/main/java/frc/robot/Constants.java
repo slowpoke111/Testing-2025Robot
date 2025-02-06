@@ -20,6 +20,7 @@ public final class Constants {
     public static final int shooterMotorID = 31;
     public static final int sensorID = 62;
     public static final double slowShooterSpeed = 0.3;
+    public static final double fastShooterSpeed = 0.6;
     public static final double L1ClawPosition = 45;
     public static final double L2ClawPosition = 90;
     public static final double L4ClawPosition = 180;
