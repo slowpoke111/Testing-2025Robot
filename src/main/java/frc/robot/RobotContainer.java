@@ -7,25 +7,30 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ClawToPositionCommand;
+import frc.robot.commands.RunIndexerCommand;
+import frc.robot.commands.RunShooterCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import static edu.wpi.first.units.Units.*;
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -45,6 +50,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  private final ClawSubsystem m_claw = new ClawSubsystem();
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -60,10 +66,16 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+  Trigger runIndexerTrigger = new Trigger(this::coralPresent);
 
-   private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
+
+  private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
    public RobotContainer() {
+       m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
        SmartDashboard.putData("Auto Mode", autoChooser);
  
@@ -112,7 +124,26 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    double y = m_driverController.getLeftY();
-    m_elevatorSubsystem.changeHeight(y);
+    double yDriver = m_driverController.getLeftY();
+    double yOperator = m_operatorController.getLeftY();
+    m_elevatorSubsystem.changeHeight(yDriver);
+
+    m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
+    m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition));
+    m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
+
+    // failsafe for manual control
+    m_claw.runClawMotor(yOperator * 0.2);
+
+    m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.fastShooterSpeed));
+
+    runIndexerTrigger.whileTrue(new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed)); 
+  }
+
+  public boolean coralPresent() {
+    BooleanSupplier coralPresent = () -> (m_rangeSensor.getRange() > 1) && (m_rangeSensor.getRange() < 400);
+    boolean isPresent = coralPresent.getAsBoolean();
+    System.out.println(m_rangeSensor.getRange());
+    return isPresent;
   }
 }
