@@ -6,6 +6,7 @@ public final class Constants {
   }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
   }
   public static class ElevatorConstants {
     public static final int kMotorID = 0;
@@ -19,6 +20,7 @@ public final class Constants {
     public static final int clawMotorID = 30;
     public static final int shooterMotorID = 31;
     public static final int sensorID = 62;
+    public static final double manualClawSpeed = 0.1;
     public static final double slowShooterSpeed = 0.3;
     public static final double fastShooterSpeed = 0.6;
     public static final double L1ClawPosition = 45;

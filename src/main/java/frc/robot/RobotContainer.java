@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ClawToPositionCommand;  
+import frc.robot.commands.ClawToPositionCommand;
 import frc.robot.commands.RunIndexerCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -66,6 +66,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
 
   private final SendableChooser<Command> autoChooser;
@@ -122,14 +124,18 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    double y = m_driverController.getLeftY();
-    m_elevatorSubsystem.changeHeight(y);
+    double yDriver = m_driverController.getLeftY();
+    double yOperator = m_operatorController.getLeftY();
+    m_elevatorSubsystem.changeHeight(yDriver);
 
-    m_driverController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
-    m_driverController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition));
-    m_driverController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
+    m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
+    m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition));
+    m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
 
-    m_driverController.rightTrigger().whileTrue(new RunShooterCommand(m_claw));
+    // failsafe for manual control
+    m_claw.runClawMotor(yOperator * 0.2);
+
+    m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.fastShooterSpeed));
 
     runIndexerTrigger.whileTrue(new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed)); 
   }
