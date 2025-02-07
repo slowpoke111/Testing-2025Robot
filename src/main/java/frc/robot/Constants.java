@@ -31,6 +31,7 @@ public final class Constants {
     public static final double colorBlue = 0.87;
     public static final double colorGold = 0.67;
     public static final double twinklesColorOneAndTwo = 0.51;
+  }
 
   public static class ClawConstants {
     public static final int clawMotorID = 30;
@@ -46,5 +47,4 @@ public final class Constants {
     public static final double kD = 0.08;
     public static final double tolerance = 2;
   }
-}
 }
