@@ -5,14 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ClawToPositionCommand;
-import frc.robot.commands.RunIndexerCommand;
-import frc.robot.commands.RunShooterCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import static edu.wpi.first.units.Units.*;
@@ -135,9 +134,9 @@ public class RobotContainer {
     // failsafe for manual control
     m_claw.runClawMotor(yOperator * 0.2);
 
-    m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.fastShooterSpeed));
+    m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
 
-    runIndexerTrigger.whileTrue(new RunIndexerCommand(m_claw, ClawConstants.slowShooterSpeed)); 
+    runIndexerTrigger.whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed)));
   }
 
   public boolean coralPresent() {
