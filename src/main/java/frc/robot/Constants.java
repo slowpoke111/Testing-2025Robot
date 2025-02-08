@@ -32,8 +32,8 @@ public final class Constants {
     public static final double kV = 1.5;
     public static final double kA = 0.0;
     public static final double kElevatorToleranceRPS = 0;
-    public static final int kMotorID = 32;
-    public static final int lMotorID = 33;
+    public static final int kMotorID = 19;
+    public static final int lMotorID = 20;
     public static final double setpointRotationsPerSecond = 1;
   } 
 }

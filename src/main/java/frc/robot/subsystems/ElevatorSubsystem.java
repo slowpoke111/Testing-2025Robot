@@ -15,9 +15,12 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
-
-
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.playingwithfusion.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 
@@ -35,31 +38,31 @@ public class ElevatorSubsystem extends SubsystemBase {
     //m_elevatorMotor = new TalonFX(ElevatorConstants.kMotorID);
     m_elevatorMotor1 = new SparkMax(ElevatorConstants.kMotorID, MotorType.kBrushless);
     m_elevatorMotor2 = new SparkMax(ElevatorConstants.lMotorID, MotorType.kBrushless);
+    SparkMaxConfig config = new SparkMaxConfig();
+    config.follow(m_elevatorMotor1);
+    m_elevatorMotor2.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_elevatorFeedback.setTolerance(ElevatorConstants.kElevatorToleranceRPS);
-    m_elevatorMotor2.follow(m_elevatorMotor1);
 
 }
  
-  public void setElevator(double setpointRotationsPerSecond) {
+  public void setElevator(double setpointLocation) {
+    m_elevatorFeedback.setSetpoint(setpointLocation);
     run(
       () -> {
         m_elevatorMotor1.set(
-          m_elevatorFeedforward.calculate(setpointRotationsPerSecond)
+          m_elevatorFeedforward.calculate(setpointLocation)
             + m_elevatorFeedback.calculate(
-              m_elevatorMotor1.get(), setpointRotationsPerSecond));
+              m_elevatorMotor1.get(), setpointLocation));
       });
-    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(1));
-    if (limitSwitch == true){
+    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(0));
+    /*if (limitSwitch == true){
       m_elevatorMotor1.set(0);
     }
+    */
     }
-  public boolean elevatorPosition(){
-    if (elevatorLimit.get()){
-      return true;
-    }
-    else{
-      return false;
-    }
+
+  public boolean elevatorLimitCheck(){
+    return elevatorLimit.get();
   }
  
 
