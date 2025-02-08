@@ -53,6 +53,7 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+  
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -67,9 +68,13 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+  double yOperator = m_operatorController.getLeftY();
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
+  Trigger manualClawTrigger = new Trigger(() -> yOperator != 0);
 
   private final SendableChooser<Command> autoChooser;
+
+  
 
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
@@ -124,7 +129,6 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     double yDriver = m_driverController.getLeftY();
-    double yOperator = m_operatorController.getLeftY();
     m_elevatorSubsystem.changeHeight(yDriver);
 
     m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
@@ -136,10 +140,10 @@ public class RobotContainer {
     m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
     // failsafe for manual claw control
-    m_claw.runClawMotor(yOperator * 0.2);
+    manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(yOperator * ClawConstants.manualClawSpeed)));
 
     m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
-
+    m_operatorController.leftTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed)));
     runIndexerTrigger.whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed)));
   }
 

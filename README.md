@@ -1,6 +1,6 @@
 # La Salle's 2025 Robot
 
-### Controls:
+## Controls:
 
 ### Driver Controller:
 
