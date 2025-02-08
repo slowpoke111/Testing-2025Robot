@@ -10,14 +10,24 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
-import frc.robot.lib.PIDControllerConfigurable;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LimelightHelpers.RawFiducial;
-
+import edu.wpi.first.math.controller.PIDController;
+class PIDControllerConfigurable extends PIDController {
+  public PIDControllerConfigurable(double kP, double kI, double kD) {
+      super(kP, kI, kD);
+  }
+  
+  public PIDControllerConfigurable(double kP, double kI, double kD, double tolerance) {
+      super(kP, kI, kD);
+      this.setTolerance(tolerance);
+  }
+}
 public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_Limelight;
+  private final int tagID;
 
   private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.01);
   private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.01);
@@ -33,8 +43,10 @@ public class AlignCommand extends Command {
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
+    this.tagID = TAGID;
     addRequirements(m_Limelight);
   }
+
 
   @Override
   public void initialize() {
@@ -49,14 +61,11 @@ public class AlignCommand extends Command {
     
 
     try {
-      fiducial = m_Limelight.getFiducialWithId(10);
-      System.out.println(fiducial.distToRobot);
+      fiducial = m_Limelight.getFiducialWithId(this.tagID);
 
       rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
       
-      velocityX = xPidController.calculate(fiducial.distToRobot, 0.5) * 4.73 * 0.7;
-      //final double velocityY = yPidController.calculate(fiducial.tync, 0);
-      // TunerConstants.MaxSpeed * 0.3;
+      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7;
         
       if (rotationalPidController.atSetpoint() && xPidController.atSetpoint()) {
         this.end(true);
