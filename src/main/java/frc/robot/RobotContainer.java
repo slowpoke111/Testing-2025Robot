@@ -132,7 +132,7 @@ public class RobotContainer {
     m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
     m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
 
-    // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT
+    // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
     m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
     // failsafe for manual claw control
