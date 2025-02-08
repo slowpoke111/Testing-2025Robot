@@ -34,13 +34,14 @@ public final class Constants {
     public static final double kElevatorToleranceRPS = 0;
     public static final int kMotorID = 19;
     public static final int lMotorID = 20;
-    public static final double setpointLocation = 1;
-    public static final double maxElevatorHeight = 3000;
+    public static final double setpointLocation = 50000;
+    public static final double maxElevatorHeight = 50000;
     public static final double level4HeightRatio = 0.9;
     public static final double algaePickupHighRatio = 0.53;
     public static final double level3HeightRatio = 0.5;
     public static final double algaePickupLowRatio = 0.23;
     public static final double level2HeightRatio = 0.2;
     public static final double coralPickupRatio = 0;
+    public static final double targetSpeed = 1;
   } 
 }

@@ -47,14 +47,18 @@ public class ElevatorSubsystem extends SubsystemBase {
  
   public void setElevator(double setpointLocation) {
     m_elevatorFeedback.setSetpoint(setpointLocation);
-    run(
+    m_elevatorMotor1.set(
+      m_elevatorFeedforward.calculate(ElevatorConstants.targetSpeed) //check
+        + m_elevatorFeedback.calculate(
+          m_elevatorMotor1.get(), setpointLocation));
+    /*run(
       () -> {
         m_elevatorMotor1.set(
-          m_elevatorFeedforward.calculate(setpointLocation) //check
+          m_elevatorFeedforward.calculate(ElevatorConstants.targetSpeed) //check
             + m_elevatorFeedback.calculate(
               m_elevatorMotor1.get(), setpointLocation));
       });
-    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(0));
+    /*waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(0));
     /*if (limitSwitch == true){
       m_elevatorMotor1.set(0);
     }
@@ -70,7 +74,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     public void periodic() {
       // This method will be called once per scheduler run
-      
+      /*System.out.println(m_elevatorFeedforward.calculate(ElevatorConstants.targetSpeed) //check
+      + m_elevatorFeedback.calculate(
+        m_elevatorMotor1.get(), 50000));
+      */
     }
   }
 
