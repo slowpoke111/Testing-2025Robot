@@ -31,8 +31,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax m_elevatorMotor1;
   private final SparkMax m_elevatorMotor2;
   public boolean limitSwitch = false;  
-  private final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
-  private final PIDController m_elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+  public final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
+  public final PIDController m_elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
   public DigitalInput elevatorLimit;
   public ElevatorSubsystem() {
     //m_elevatorMotor = new TalonFX(ElevatorConstants.kMotorID);
@@ -50,7 +50,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     run(
       () -> {
         m_elevatorMotor1.set(
-          m_elevatorFeedforward.calculate(setpointLocation)
+          m_elevatorFeedforward.calculate(setpointLocation) //check
             + m_elevatorFeedback.calculate(
               m_elevatorMotor1.get(), setpointLocation));
       });
