@@ -27,7 +27,6 @@ class PIDControllerConfigurable extends PIDController {
 public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_Limelight;
-  private final int tagID;
 
   private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.01);
   private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.01);
@@ -43,7 +42,6 @@ public class AlignCommand extends Command {
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
-    this.tagID = TAGID;
     addRequirements(m_Limelight);
   }
 
