@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.w3c.dom.views.DocumentView;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
@@ -17,12 +19,14 @@ public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_Limelight;
 
-  private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.075, 0, 0, 0.01);
-  private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.3, 0.01, 0.01, 0.01);
+  private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.01);
+  private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.01);
   private static final PIDControllerConfigurable yPidController = new PIDControllerConfigurable(0.3, 0, 0, 0.3);
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
-
+  
+  public double rotationalRate = 0;
+  public double velocityX = 0;
   // private static final SwerveRequest.SwerveDriveBrake brake = new
   // SwerveRequest.SwerveDriveBrake();
 
@@ -34,24 +38,27 @@ public class AlignCommand extends Command {
 
   @Override
   public void initialize() {
+    
   }
 
   @Override
   public void execute() {
     
-    RawFiducial fiducial;
+    RawFiducial fiducial; 
+
+    
 
     try {
       fiducial = m_Limelight.getFiducialWithId(10);
       System.out.println(fiducial.distToRobot);
 
-      final double rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
+      rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
       
-      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * 4.73 * 0.7;
+      velocityX = xPidController.calculate(fiducial.distToRobot, 0.5) * 4.73 * 0.7;
       //final double velocityY = yPidController.calculate(fiducial.tync, 0);
       // TunerConstants.MaxSpeed * 0.3;
         
-      if (rotationalPidController.atSetpoint() && xPidController.atSetpoint() && yPidController.atSetpoint()) {
+      if (rotationalPidController.atSetpoint() && xPidController.atSetpoint()) {
         this.end(true);
       }
 
@@ -65,9 +72,16 @@ public class AlignCommand extends Command {
       // MaxAngularRate)
       // .withVelocityX(xPidController.calculate(0.2 * MaxSpeed)));
       // drivetrain.setControl(brake);
-    } catch (VisionSubsystem.NoSuchTargetException nste) {
+    } catch (VisionSubsystem.NoSuchTargetException nste) { 
+      System.out.println("No apriltag found");
+      if ((rotationalRate != 0) && (velocityX != 0)){
+        m_drivetrain.setControl(
+          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX));//.withVelocityY(velocityY));
+        }
+      }
+      
     }
-  }
+  
 
   @Override
   public boolean isFinished() {

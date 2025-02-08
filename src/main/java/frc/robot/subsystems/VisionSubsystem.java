@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LimelightHelpers.*;
 
@@ -20,6 +21,14 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public void config() {
+
+    SmartDashboard.putNumber("Rotational P", 0.3);
+    SmartDashboard.putNumber("Move P", 0.3);
+    SmartDashboard.putNumber("Rotational I", 0.3);
+    SmartDashboard.putNumber("Move I", 0.3);
+    SmartDashboard.putNumber("Rotational D", 0.3);
+    SmartDashboard.putNumber("Move D", 0.3);
+
     // LimelightHelpers.setCropWindow("", -0.5, 0.5, -0.5, 0.5);
     LimelightHelpers.setCameraPose_RobotSpace(
         "", //LL name
