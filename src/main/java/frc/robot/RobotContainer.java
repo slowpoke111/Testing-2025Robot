@@ -128,10 +128,14 @@ public class RobotContainer {
     m_elevatorSubsystem.changeHeight(yDriver);
 
     m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
-    m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition));
+    m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition));
     m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
+    m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
 
-    // failsafe for manual control
+    // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT
+    m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
+
+    // failsafe for manual claw control
     m_claw.runClawMotor(yOperator * 0.2);
 
     m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));

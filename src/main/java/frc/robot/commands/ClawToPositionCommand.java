@@ -16,8 +16,7 @@ public class ClawToPositionCommand extends Command {
   private double currentPosition;
   private double currentVelocity;
   private double desiredPosition;
-//  private double velocity = (ClawConstants.kP * (ClawConstants.L1ClawPosition - m_claw.getClawPosition())) - (ClawConstants.kD * );
-
+  
   /**
    * Creates a new ExampleCommand.
    *
@@ -33,18 +32,6 @@ public class ClawToPositionCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    /*if(m_claw.getClawPosition() < ClawConstants.L1ClawPosition){
-      while(m_claw.getClawPosition() < ClawConstants.L1ClawPosition) {
-        m_claw.runClawMotor(speed);
-        System.out.println(m_claw.getClawPosition());
-      }
-    } else {
-      while(m_claw.getClawPosition() > ClawConstants.L1ClawPosition) {
-        m_claw.runClawMotor(-speed);
-        System.out.println(m_claw.getClawPosition());
-      }
-        */
-    
       previousPosition = m_claw.getClawPosition();
       while(Math.abs(m_claw.getClawPosition() - desiredPosition) > ClawConstants.tolerance) {
         currentPosition = m_claw.getClawPosition();
