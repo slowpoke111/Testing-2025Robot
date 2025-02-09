@@ -4,13 +4,35 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
+import java.util.function.DoubleSupplier;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlignCommand;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 import frc.robot.commands.ClawToPositionCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -38,6 +60,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Telemetry;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,6 +86,7 @@ public class RobotContainer {
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -73,12 +97,18 @@ public class RobotContainer {
   Trigger manualClawTrigger = new Trigger(() -> yOperator != 0);
 
   private final SendableChooser<Command> autoChooser;
+  
+  private final VisionSubsystem m_Vision = new VisionSubsystem();
 
   
 
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
    public RobotContainer() {
+      for (int port = 5800; port <= 5809; port++) {
+          PortForwarder.add(port, "limelight.local", port);
+      }
+      
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
        SmartDashboard.putData("Auto Mode", autoChooser);
@@ -107,6 +137,9 @@ public class RobotContainer {
         m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
         ));
+    
+        m_driverController.x().whileTrue(new AlignCommand(drivetrain, m_Vision));
+
 
         m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
             forwardStraight.withVelocityX(0.5).withVelocityY(0))
@@ -153,4 +186,6 @@ public class RobotContainer {
     System.out.println(m_rangeSensor.getRange());
     return isPresent;
   }
+
+
 }
