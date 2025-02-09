@@ -33,7 +33,7 @@ public class AlignCommand extends Command {
   private static final PIDControllerConfigurable yPidController = new PIDControllerConfigurable(0.3, 0, 0, 0.3);
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
-  private static final int tagID = 10;
+  private static final int tagID = 3;
   
   public double rotationalRate = 0;
   public double velocityX = 0;
@@ -60,7 +60,7 @@ public class AlignCommand extends Command {
     
 
     try {
-      fiducial = m_Limelight.getFiducialWithId(tagID);
+      fiducial = m_Limelight.getFiducialWithId(m_Limelight.getClosestFiducial().id);
 
       rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
       

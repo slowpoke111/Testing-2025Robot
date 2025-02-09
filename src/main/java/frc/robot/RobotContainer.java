@@ -26,6 +26,7 @@ import frc.robot.subsystems.VisionSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
@@ -108,6 +109,8 @@ public class RobotContainer {
       for (int port = 5800; port <= 5809; port++) {
           PortForwarder.add(port, "limelight.local", port);
       }
+
+      NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision).withTimeout(2));
       
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -183,7 +186,6 @@ public class RobotContainer {
   public boolean coralPresent() {
     BooleanSupplier coralPresent = () -> (m_rangeSensor.getRange() > 1) && (m_rangeSensor.getRange() < 400);
     boolean isPresent = coralPresent.getAsBoolean();
-    System.out.println(m_rangeSensor.getRange());
     return isPresent;
   }
 
