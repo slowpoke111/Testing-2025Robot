@@ -138,7 +138,7 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
         ));
     
-        m_driverController.x().whileTrue(new AlignCommand(drivetrain, m_Vision));
+        m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
 
 
         m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
