@@ -87,6 +87,7 @@ public class TunerConstants {
     private static final boolean kInvertLeftSide = true;
     private static final boolean kInvertRightSide = false;
 
+
     private static final int kPigeonId = 1;
 
     // These are only used for simulation
@@ -126,6 +127,7 @@ public class TunerConstants {
 
 
     // Front Left
+
     private static final int kFrontLeftDriveMotorId = 6;
     private static final int kFrontLeftSteerMotorId = 7;
     private static final int kFrontLeftEncoderId = 12;
@@ -168,6 +170,7 @@ public class TunerConstants {
 
     private static final Distance kBackRightXPos = Inches.of(-14);
     private static final Distance kBackRightYPos = Inches.of(-14);
+
 
 
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontLeft =
@@ -283,4 +286,5 @@ public class TunerConstants {
             );
         }
     }
+
 }
