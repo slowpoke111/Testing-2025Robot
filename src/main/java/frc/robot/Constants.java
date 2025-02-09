@@ -1,4 +1,6 @@
 package frc.robot;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Angle;
 
 public class Constants {
   public static class UniversalConstants {
@@ -47,5 +49,10 @@ public class Constants {
     public static final double kP = 0.003;
     public static final double kD = 0.08;
     public static final double tolerance = 2;
+  }
+
+  public static class VisionConstants {
+    public static final String LIMELIGHT_NAME = "";
+
   }
 }
