@@ -62,7 +62,7 @@ public class AlignCommand extends Command {
     try {
       fiducial = m_Limelight.getFiducialWithId(m_Limelight.getClosestFiducial().id);
 
-      rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
+      rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.9;
       
       final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7;
         
