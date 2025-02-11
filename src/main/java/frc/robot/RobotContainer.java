@@ -11,18 +11,16 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ClawConstants;
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.*;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -35,8 +33,6 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.commands.ClawToPositionCommand;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import static edu.wpi.first.units.Units.*;
 import java.util.function.BooleanSupplier;
 
@@ -45,9 +41,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ClawSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -100,9 +93,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   
   private final VisionSubsystem m_Vision = new VisionSubsystem();
-
-  
-
+  private final LEDSubsystem m_leds = new LEDSubsystem();
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
    public RobotContainer() {
@@ -110,7 +101,7 @@ public class RobotContainer {
           PortForwarder.add(port, "limelight.local", port);
       }
 
-      NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision).withTimeout(2));
+      NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision, m_leds).withTimeout(2));
       
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -141,7 +132,7 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
         ));
     
-        m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
+        m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision, m_leds));
 
 
         m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
@@ -180,7 +171,10 @@ public class RobotContainer {
 
     m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
     m_operatorController.leftTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed)));
-    runIndexerTrigger.whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed)));
+    runIndexerTrigger.whileTrue(Commands.startEnd(
+        () -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed),
+        () -> m_leds.LEDColor(LEDConstants.colorWhite),
+        m_claw, m_leds));
   }
 
   public boolean coralPresent() {
