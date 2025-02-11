@@ -11,16 +11,17 @@ public class VisionSubsystem extends SubsystemBase {
     config();
   }
 
-  public static class NoSuchTargetException extends RuntimeException {
+  public static class NoSuchTargetException extends RuntimeException { //No fiducial fonund
     public NoSuchTargetException(String message) {
       super(message);
     }
   }
 
   public void config() {
-
+    //Enable if fps is an issue
     // LimelightHelpers.setCropWindow("", -0.5, 0.5, -0.5, 0.5);
-    LimelightHelpers.setCameraPose_RobotSpace(
+
+    LimelightHelpers.setCameraPose_RobotSpace( // maybe put in consts.java
         "",
         0.3556, 
         0.1016,
@@ -43,17 +44,17 @@ public class VisionSubsystem extends SubsystemBase {
 
     RawFiducial closest = fiducials[0];
     double minDistance = closest.ta;
-
+    //Linear search for close
     for (RawFiducial fiducial : fiducials) {
         if (fiducial.ta > minDistance) {
             closest = fiducial;
             minDistance = fiducial.ta;
         }
     }
-
     return closest;
   }
 
+  //Linear searcgh by id
   public RawFiducial getFiducialWithId(int id) {
   
     for (RawFiducial fiducial : fiducials) {
@@ -64,7 +65,7 @@ public class VisionSubsystem extends SubsystemBase {
     throw new NoSuchTargetException("Can't find ID: " + id);
   }
 
-public RawFiducial getFiducialWithId(int id, boolean verbose) {
+public RawFiducial getFiducialWithId(int id, boolean verbose) {//Debug
   StringBuilder availableIds = new StringBuilder();
 
   for (RawFiducial fiducial : fiducials) {
@@ -80,6 +81,7 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   throw new NoSuchTargetException("Cannot find: " + id + ". IN view:: " + availableIds.toString());
   }
 
+  //Get values
   public double getTX(){
     return LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME);
   }
@@ -101,5 +103,12 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   }
   public double getClosestTA(){
     return getClosestFiducial().ta;
+  }
+
+  public double getID_TX(int ID){
+    return getFiducialWithId(ID).txnc;
+  }
+  public double getID_TY(int ID){
+    return getFiducialWithId(ID).tync;
   }
 }

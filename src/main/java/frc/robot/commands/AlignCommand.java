@@ -9,6 +9,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
@@ -28,45 +29,59 @@ public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_Limelight;
 
-  private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.01);
-  private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.01);
-  private static final PIDControllerConfigurable yPidController = new PIDControllerConfigurable(0.3, 0, 0, 0.3);
+  //private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.01);
+  private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(VisionConstants.ROTATE_P, VisionConstants.ROTATE_I, VisionConstants.ROTATE_D, VisionConstants.TOLERANCE);
+  //private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.01);
+  private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(VisionConstants.MOVE_P, VisionConstants.MOVE_I, VisionConstants.MOVE_D, VisionConstants.TOLERANCE);
+
+  
+
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
-  private static final int tagID = 3;
+  private static int tagID = -1;
   
   public double rotationalRate = 0;
   public double velocityX = 0;
-  // private static final SwerveRequest.SwerveDriveBrake brake = new
-  // SwerveRequest.SwerveDriveBrake();
 
+  //use whatever fiducial is closest
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
     addRequirements(m_Limelight);
   }
 
+  //Overload for specific april tag
+  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int ID) throws IllegalArgumentException{
+    this.m_drivetrain = drivetrain;
+    this.m_Limelight = limelight;
+    if (ID<0){throw new IllegalArgumentException("april tag id cannot be negative");}
+    tagID = ID;
+    addRequirements(m_Limelight);
+  }
+
 
   @Override
-  public void initialize() {
-    
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {
     
-    RawFiducial fiducial; 
-
-    
+    RawFiducial fiducial; //Tracked fiducual 
 
     try {
-      fiducial = m_Limelight.getFiducialWithId(m_Limelight.getClosestFiducial().id);
+      if (tagID==-1){
+        fiducial = m_Limelight.getFiducialWithId(m_Limelight.getClosestFiducial().id);
+      }
+      else{
+        fiducial = m_Limelight.getFiducialWithId(tagID);
+      }
+       
 
-      rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * 0.75* 0.9;
+      rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.9; // Max speed is 90 percnet of max rotate
       
-      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7;
+      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7; //Max speed is 70 percnet of max drive
         
-      if (rotationalPidController.atSetpoint() && xPidController.atSetpoint()) {
+      if (rotationalPidController.atSetpoint() && xPidController.atSetpoint()) { //At target dist
         this.end(true);
       }
 
@@ -74,17 +89,15 @@ public class AlignCommand extends Command {
       SmartDashboard.putNumber("distToRobot", fiducial.distToRobot);
       SmartDashboard.putNumber("rotationalPidController", rotationalRate);
       SmartDashboard.putNumber("xPidController", velocityX);
+
       m_drivetrain.setControl(
-          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX));//.withVelocityY(velocityY));
-      // drivetrain.applyRequest(() -> alignRequest.withRotationalRate(0.5 *
-      // MaxAngularRate)
-      // .withVelocityX(xPidController.calculate(0.2 * MaxSpeed)));
-      // drivetrain.setControl(brake);
+          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX));
+
     } catch (VisionSubsystem.NoSuchTargetException nste) { 
       System.out.println("No apriltag found");
-      if ((rotationalRate != 0) && (velocityX != 0)){
+      if ((rotationalRate != 0) && (velocityX != 0)){ //Todo - don't move after x seconds without seeing fiducial
         m_drivetrain.setControl(
-          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX));//.withVelocityY(velocityY));
+          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX)); //Continue moving after losing sight temporarily 
         }
       }
       
