@@ -39,6 +39,7 @@ public class Constants {
     public static final int clawMotorID = 30;
     public static final int shooterMotorID = 31;
     public static final int sensorID = 62;
+    public static final double clawSpeedLimit = 0.1;
     public static final double manualClawSpeed = 0.2;
     public static final double slowShooterSpeed = 0.1;
     public static final double fastShooterSpeed = 0.6;
@@ -53,6 +54,5 @@ public class Constants {
 
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
-
   }
 }
