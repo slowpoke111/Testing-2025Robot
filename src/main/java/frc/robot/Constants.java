@@ -11,7 +11,7 @@ public class Constants {
     public static final int kOperatorControllerPort = 1;
   }
   public static class ElevatorConstants {
-    public static final int kMotorID = 0;
+    public static final int kMotorID = 19;
     public static final double kMotorCircumference = 0;
     public static final double kP = 0.5;   // Strong correction
     public static final double kI = 0.01;  // Slight accumulation
@@ -36,8 +36,8 @@ public class Constants {
   }
 
   public static class ClawConstants {
-    public static final int clawMotorID = 30;
-    public static final int shooterMotorID = 31;
+    public static final int clawMotorID = 31;
+    public static final int shooterMotorID = 30;
     public static final int sensorID = 62;
     public static final double clawSpeedLimit = 0.1;
     public static final double manualClawSpeed = 0.2;
