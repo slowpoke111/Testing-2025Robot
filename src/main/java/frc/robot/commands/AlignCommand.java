@@ -1,9 +1,6 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
-
-import org.w3c.dom.views.DocumentView;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
