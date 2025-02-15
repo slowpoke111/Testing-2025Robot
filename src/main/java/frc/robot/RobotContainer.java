@@ -35,7 +35,6 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.commands.ClawToPositionCommand;
-import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import static edu.wpi.first.units.Units.*;
 import java.util.function.BooleanSupplier;
