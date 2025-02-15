@@ -93,9 +93,9 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-  double yOperator = m_operatorController.getLeftY();
+  DoubleSupplier yOperator = () -> m_operatorController.getLeftY();
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
-  Trigger manualClawTrigger = new Trigger(() -> yOperator != 0);
+  Trigger manualClawTrigger = new Trigger(() -> yOperator.getAsDouble() != 0);
 
   private final SendableChooser<Command> autoChooser;
   
@@ -126,40 +126,40 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new Trigger(m_exampleSubsystem::exampleCondition)
-        //.onTrue(new ExampleCommand(m_exampleSubsystem));
-        m_drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            m_drivetrain.applyRequest(() ->
-                drive.withVelocityX(m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
+    //.onTrue(new ExampleCommand(m_exampleSubsystem));
+    m_drivetrain.setDefaultCommand(
+        // Drivetrain will execute this command periodically
+        m_drivetrain.applyRequest(() ->
+            drive.withVelocityX(m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                .withVelocityY(m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        )
+    );
 
-        m_driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
-        m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
-        ));
-    
-        m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
+    m_driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
+    m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
+        point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
+    ));
+
+    m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
 
 
-        m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(0.5).withVelocityY(0))
-        );
-        m_driverController.pov(180).whileTrue(m_drivetrain.applyRequest(() ->
-            forwardStraight.withVelocityX(-0.5).withVelocityY(0))
-        );
+    m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
+        forwardStraight.withVelocityX(0.5).withVelocityY(0))
+    );
+    m_driverController.pov(180).whileTrue(m_drivetrain.applyRequest(() ->
+        forwardStraight.withVelocityX(-0.5).withVelocityY(0))
+    );
 
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        m_driverController.back().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
-        m_driverController.back().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
-        m_driverController.start().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
-        m_driverController.start().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
+    // Run SysId routines when holding back/start and X/Y.
+    // Note that each routine should be run exactly once in a single log.
+    m_driverController.back().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
+    m_driverController.back().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
+    m_driverController.start().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
+    m_driverController.start().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // reset the field-centric heading on left bumper press
-        m_driverController.leftBumper().onTrue(m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric()));
+    // reset the field-centric heading on left bumper press
+    m_driverController.leftBumper().onTrue(m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric()));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -174,7 +174,7 @@ public class RobotContainer {
     m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
     // failsafe for manual claw control
-    manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(yOperator * ClawConstants.manualClawSpeed)));
+    manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(yOperator.getAsDouble() * ClawConstants.manualClawSpeed)));
 
     //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
     m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));
