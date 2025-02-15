@@ -43,6 +43,7 @@ public class Constants {
     public static final double manualClawSpeed = 0.2;
     public static final double slowShooterSpeed = -0.3;
     public static final double fastShooterSpeed = -0.6;
+    public static final double intakeSpeed = -0.2;
     public static final double L1ClawPosition = 15;
     public static final double L2L3ClawPosition = 45;
     public static final double L4ClawPosition = 90;

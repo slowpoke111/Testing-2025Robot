@@ -164,7 +164,6 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    double yDriver = m_driverController.getLeftY();
 
     m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
     m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition));
@@ -179,11 +178,12 @@ public class RobotContainer {
 
     //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
     m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));
-    runIndexerTrigger.whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));
+    runIndexerTrigger.whileTrue(new RunShooterCommand(m_claw, -0.2));
   }
 
   public boolean coralPresent() {
-    BooleanSupplier coralPresent = () -> (m_rangeSensor.getRange() > 1) && (m_rangeSensor.getRange() < 400);
+    BooleanSupplier coralPresent = () -> (m_rangeSensor.getRange() > 1) && (m_rangeSensor.getRange() < 170);
+    SmartDashboard.putNumber("Dist", m_rangeSensor.getRange());
     boolean isPresent = coralPresent.getAsBoolean();
     return isPresent;
   }
