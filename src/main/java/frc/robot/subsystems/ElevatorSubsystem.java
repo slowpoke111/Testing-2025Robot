@@ -31,8 +31,8 @@ import com.revrobotics.spark.*;
 public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. TalonFX motor will be final, SparkMax used for testing */
   //private final TalonFX m_elevatorMotor;
-  private final SparkMax m_elevatorMotor1;
-  private final SparkMax m_elevatorMotor2;
+  public final SparkMax m_elevatorMotor1;
+  public final SparkMax m_elevatorMotor2;
   public boolean limitSwitch = false;
   public double x = 0;
   public final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
