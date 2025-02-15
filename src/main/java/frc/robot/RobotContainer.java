@@ -4,8 +4,8 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,7 +27,9 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+      new CommandXboxController(0);
+  private final CommandXboxController m_operatorController = 
+      new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,12 +50,20 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+    
+    DoubleSupplier leftY = () -> m_operatorController.getLeftY();
+    Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() > 0.0);
+    Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() < 0.0);
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   
     m_driverController.a().whileTrue(new InstantCommand(() -> m_elevator.setElevator(ElevatorConstants.setpointLocation), m_elevator));
+    
+    MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.05));
+    MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.05));
 
   }
 

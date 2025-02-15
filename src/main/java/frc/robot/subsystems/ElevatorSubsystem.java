@@ -34,61 +34,54 @@ public class ElevatorSubsystem extends SubsystemBase {
   public final SparkMax m_elevatorMotor1;
   public final SparkMax m_elevatorMotor2;
   public boolean limitSwitch = false;
-  public double x = 0;
-  public final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
-  public final PIDController m_elevatorFeedback = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+
+  public final ElevatorFeedforward m_elevatorFeedforward = new ElevatorFeedforward(
+    ElevatorConstants.kS, 
+    ElevatorConstants.kG, 
+    ElevatorConstants.kV, 
+    ElevatorConstants.kA);
+  public final PIDController m_elevatorFeedback = new PIDController(
+    ElevatorConstants.kP, 
+    ElevatorConstants.kI, 
+    ElevatorConstants.kD);
   public DigitalInput elevatorLimit;
+
   public ElevatorSubsystem() {
-    //m_elevatorMotor = new TalonFX(ElevatorConstants.kMotorID);
     m_elevatorMotor1 = new SparkMax(ElevatorConstants.kMotorID, MotorType.kBrushless);
     m_elevatorMotor2 = new SparkMax(ElevatorConstants.lMotorID, MotorType.kBrushless);
     SparkMaxConfig config = new SparkMaxConfig();
     config.follow(m_elevatorMotor1);
     m_elevatorMotor2.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_elevatorFeedback.setTolerance(ElevatorConstants.kElevatorToleranceRPS);
-    setDefaultCommand(
-      runOnce(
-              () -> {
-                m_elevatorMotor1.disable();
-              })
-          .andThen(run(() -> {}))
-          .withName("Idle"));
   }
  
   public void setElevator(double setpointLocation) {
-    m_elevatorFeedback.setSetpoint(setpointLocation);
-    x= 
-    m_elevatorFeedforward.calculate(ElevatorConstants.targetSpeed) //check
-      + m_elevatorFeedback.calculate(
-        m_elevatorMotor1.getEncoder().getPosition(), setpointLocation);
-    m_elevatorMotor1.set(x);
-    
-    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(0));
-    /*run(
-      () -> {
-        m_elevatorMotor1.set(
-          m_elevatorFeedforward.calculate(ElevatorConstants.targetSpeed) //check
-            + m_elevatorFeedback.calculate(
-              m_elevatorMotor1.getEncoder().getPosition(), setpointLocation));
-      });
-    waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(0));
-    /*if (limitSwitch == true){
+    if(!elevatorLimit.get()){
+      m_elevatorFeedback.setSetpoint(setpointLocation);
+      m_elevatorMotor1.set(
+        (m_elevatorFeedforward.calculate(ElevatorConstants.targetSpeed)) +
+        (m_elevatorFeedback.calculate(m_elevatorMotor1.getEncoder().getPosition(), setpointLocation)));
+      waitUntil(m_elevatorFeedback::atSetpoint).andThen(() -> m_elevatorMotor1.set(0));
+    }
+    else{
       m_elevatorMotor1.set(0);
     }
-    */
-    }
-    
-  public boolean elevatorLimitCheck(){
+  }
+
+  public void runElevatorMotorManual(double speed){
+    m_elevatorMotor1.set(speed);
+  }
+
+  public boolean getLimit(){
     return elevatorLimit.get();
   }
- 
+    
 
     @Override
     
     public void periodic() {
-      // This method will be called once per scheduler run
-      System.out.println("Test " + x);
       System.out.println(m_elevatorMotor1.getEncoder().getPosition());
     }
   }
+
 
