@@ -6,18 +6,16 @@ public class Constants {
   public static class UniversalConstants {
     public static final String bestProgrammer = "Gabriel Kuzowsky"; 
   }
+
+  public static class MultiversalConstants {
+    public static final String bestProgrammer = "Ben Bell";
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
-  public static class ElevatorConstants {
-    public static final int kMotorID = 19;
-    public static final double kMotorCircumference = 0;
-    public static final double kP = 0.5;   // Strong correction
-    public static final double kI = 0.01;  // Slight accumulation
-    public static final double kD = 0.1;  // Moderate dampening
-    public static final double kTolerance = 0.05;
-  }
+
+
   public static class LEDConstants{
     public static final int LEDDriverOneID = 3;
     public static final double colorRed = 0.61;
