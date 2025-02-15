@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
@@ -19,6 +20,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.RunShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -175,9 +177,9 @@ public class RobotContainer {
     // failsafe for manual claw control
     manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(yOperator * ClawConstants.manualClawSpeed)));
 
-    m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
-    m_operatorController.leftTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed)));
-    runIndexerTrigger.whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.slowShooterSpeed)));
+    //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
+    m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));
+    runIndexerTrigger.whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));
   }
 
   public boolean coralPresent() {

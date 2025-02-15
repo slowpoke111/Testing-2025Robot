@@ -47,6 +47,7 @@ public class Constants {
     public static final double L2L3ClawPosition = 45;
     public static final double L4ClawPosition = 90;
     public static final double algaeClawPosition = 270;
+    public static final double limitClawPosition = 0;
     public static final double kP = 0.003;
     public static final double kD = 0.08;
     public static final double tolerance = 2;
