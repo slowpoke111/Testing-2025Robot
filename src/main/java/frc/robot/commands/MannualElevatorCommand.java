@@ -14,9 +14,7 @@ public class MannualElevatorCommand extends Command{
 
     @Override
     public void initialize(){
-        if(!elevator.getLimit()){
-            elevator.runElevatorMotorManual(speed);
-        }
+        elevator.runElevatorMotorManual(speed);
     }
 
     @Override
@@ -26,6 +24,6 @@ public class MannualElevatorCommand extends Command{
 
     @Override
     public boolean isFinished(){
-        return true;
+        return false;
     }
 }

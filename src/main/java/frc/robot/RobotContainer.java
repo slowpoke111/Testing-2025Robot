@@ -52,18 +52,24 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
     
     DoubleSupplier leftY = () -> m_operatorController.getLeftY();
-    Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() > 0.0);
-    Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() < 0.0);
+    Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
+    Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   
-    m_driverController.a().whileTrue(new InstantCommand(() -> m_elevator.setElevator(ElevatorConstants.setpointLocation), m_elevator));
-    
-    MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.05));
-    MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.05));
+    m_operatorController.b().whileTrue(new SetElevator(m_elevator, 12.0));
+    m_operatorController.a().onTrue(new InstantCommand(() -> m_elevator.setPosition(0.143)));
+    m_operatorController.y().onTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
+    m_operatorController.x().onTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
+
+    m_operatorController.b().onTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
+    m_operatorController.b().onTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
+
+    MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.15));
+    MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.03));
 
   }
 
