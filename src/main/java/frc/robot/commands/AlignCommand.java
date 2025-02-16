@@ -46,7 +46,8 @@ public class AlignCommand extends Command {
     addRequirements(m_Limelight);
   }
 
-  //Overload for specific april tag
+  //Overload for specific april tag by id
+
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int ID) throws IllegalArgumentException{
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
@@ -55,7 +56,7 @@ public class AlignCommand extends Command {
     addRequirements(m_Limelight);
   }
 
-
+  //maybe set tagid by closest here instead of each execution to keep same tag
   @Override
   public void initialize() {}
 

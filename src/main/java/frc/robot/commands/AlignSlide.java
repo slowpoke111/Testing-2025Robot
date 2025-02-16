@@ -14,7 +14,6 @@ public class AlignSlide extends Command {
     private final Timer timer = new Timer();
     private boolean movingForward = true;
 
-    // Single SwerveRequest instance
     private final SwerveRequest.RobotCentric swerveRequest = new SwerveRequest.RobotCentric();
 
     public AlignSlide(CommandSwerveDrivetrain swerve, double timeForward, double timeRight, double speed) {
