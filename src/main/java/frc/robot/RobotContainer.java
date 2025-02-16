@@ -93,7 +93,7 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-  DoubleSupplier yOperator = () -> m_operatorController.getLeftY();
+  DoubleSupplier yOperator = () -> m_operatorController.getRightY();
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
   Trigger manualClawTrigger = new Trigger(() -> yOperator.getAsDouble() != 0);
 
@@ -168,10 +168,10 @@ public class RobotContainer {
     m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
     m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition));
     m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
-    m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
+    // m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
 
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
-    m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
+    // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
     // failsafe for manual claw control
     manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(yOperator.getAsDouble() * ClawConstants.manualClawSpeed)));

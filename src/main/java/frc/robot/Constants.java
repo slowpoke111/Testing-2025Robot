@@ -1,6 +1,7 @@
 package frc.robot;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Angle;
+import static edu.wpi.first.units.Units.Radian;
 
 public class Constants {
   public static class UniversalConstants {
@@ -37,19 +38,21 @@ public class Constants {
     public static final int clawMotorID = 31;
     public static final int shooterMotorID = 30;
     public static final int sensorID = 62;
+    public static final int gearRatio = 46;
+    public static final int encoderTicksWithRatio = 2048 * gearRatio;
     public static final double clawSpeedLimit = 0.1;
     public static final double manualClawSpeed = 0.2;
     public static final double slowShooterSpeed = -0.3;
     public static final double fastShooterSpeed = -0.6;
     public static final double intakeSpeed = -0.2;
-    public static final double L1ClawPosition = 15;
-    public static final double L2L3ClawPosition = 45;
-    public static final double L4ClawPosition = 90;
-    public static final double algaeClawPosition = 270;
+    public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
+    public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(1, Radian); 
+    public static final Angle L4ClawPosition = Angle.ofBaseUnits(56, Radian);
+    public static final double algaeClawPosition = 100; // 270 degrees out of 2048 encoder ticks
     public static final double limitClawPosition = 0;
     public static final double kP = 0.003;
     public static final double kD = 0.08;
-    public static final double tolerance = 2;
+    public static final double tolerance = 0.1;
   }
 
   public static class VisionConstants {
