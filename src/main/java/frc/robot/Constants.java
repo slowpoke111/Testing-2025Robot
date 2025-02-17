@@ -12,7 +12,7 @@ public class Constants {
     public static final String bestProgrammer = "Ben Bell";
   }
 
-  public static class OperatorConstants {
+    public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
@@ -52,14 +52,12 @@ public class Constants {
     public static final double tolerance = 0.05;
     public static final double GEAR_RATIO = 46;
   }
-
   public static class ShooterConstants {
     public static final int shooterMotorID = 30;
     public static final double slowShooterSpeed = -0.3;
     public static final double fastShooterSpeed = -0.6;
   
   }
-
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
 
@@ -73,7 +71,6 @@ public class Constants {
 
     public static final double TOLERANCE = 0.01;
   }
-
   public static class ElevatorConstants {
     /** All values are placeholders for now*/
     public static final double kP = 0.25;
@@ -101,5 +98,5 @@ public class Constants {
     public static final double level2HeightRatio = 0.2;
     public static final double coralPickupRatio = 0;
     public static final double targetSpeed = 0.0025;
-  } 
+  }
 }

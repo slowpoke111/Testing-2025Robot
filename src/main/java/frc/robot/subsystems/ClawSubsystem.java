@@ -23,8 +23,8 @@ public class ClawSubsystem extends SubsystemBase {
     TalonFXConfigurator config = clawMotor.getConfigurator();
     CurrentLimitsConfigs limitConfig = new CurrentLimitsConfigs();
 
-    limitConfig.StatorCurrentLimit = 50;
-    limitConfig.StatorCurrentLimitEnable = true;
+   // limitConfig.StatorCurrentLimit = 100;
+  //  limitConfig.StatorCurrentLimitEnable = true;
     config.apply(limitConfig);
 
     clawMotor.setNeutralMode(NeutralModeValue.Brake);
