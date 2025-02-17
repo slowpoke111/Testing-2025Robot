@@ -74,7 +74,12 @@ public class ClawToPositionCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_claw.runClawMotor(0);
+    if (clawPID.atSetpoint()) {
+      m_claw.runClawMotor(0);
+    }
+    else {
+      m_claw.runClawMotor(MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5));
+    }
   }
 
   // Returns true when the command should end.
