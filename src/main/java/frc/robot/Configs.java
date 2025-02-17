@@ -11,10 +11,12 @@ public class Configs {
         static {
             elevatorConfig.idleMode(IdleMode.kBrake);
 
+            
             elevatorConfig
                 .closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .p(0.1)
+                .p(0.00625)
+                .d(0)
                 .outputRange(-0.10, 0.15)
                 .maxMotion
                 .maxVelocity(2000)

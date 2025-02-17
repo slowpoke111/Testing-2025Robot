@@ -58,15 +58,15 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  
-    m_operatorController.b().whileTrue(new SetElevator(m_elevator, 12.0));
-    m_operatorController.a().onTrue(new InstantCommand(() -> m_elevator.setPosition(0.143)));
-    m_operatorController.y().onTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
-    m_operatorController.x().onTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
+    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    m_operatorController.b().onTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
-    m_operatorController.b().onTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
+    m_operatorController.b().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
+    m_operatorController.a().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0.143)));
+    m_operatorController.y().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
+    m_operatorController.x().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
+
+    m_operatorController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
+    m_operatorController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
 
     MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.15));
     MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.03));
