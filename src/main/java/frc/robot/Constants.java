@@ -36,13 +36,10 @@ public class Constants {
 
   public static class ClawConstants {
     public static final int clawMotorID = 31;
-    public static final int shooterMotorID = 30;
     public static final int sensorID = 62;
     public static final int gearRatio = 46;
     public static final int encoderTicksWithRatio = 2048 * gearRatio;
     public static final double manualClawSpeed = 0.1;
-    public static final double slowShooterSpeed = -0.3;
-    public static final double fastShooterSpeed = -0.6;
     public static final double intakeSpeed = -0.2;
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
     public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(1, Radian); 
@@ -54,7 +51,12 @@ public class Constants {
     public static final double tolerance = 0.05;
     public static final double GEAR_RATIO = 46;
   }
-
+  public static class ShooterConstants {
+    public static final int shooterMotorID = 30;
+    public static final double slowShooterSpeed = -0.3;
+    public static final double fastShooterSpeed = -0.6;
+  
+  }
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
 

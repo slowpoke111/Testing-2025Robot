@@ -26,6 +26,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.Constants.ShooterConstants;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -75,6 +77,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ClawSubsystem m_claw = new ClawSubsystem();
+  private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -180,8 +183,8 @@ public class RobotContainer {
     manualClawTriggerDown.whileTrue(new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed));
 
     //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
-    m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));
-    runIndexerTrigger.whileTrue(new RunShooterCommand(m_claw, -0.2));
+    m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
+    runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, -0.2));
   }
 
   public boolean coralPresent() {
