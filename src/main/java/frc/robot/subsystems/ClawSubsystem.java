@@ -43,5 +43,4 @@ public class ClawSubsystem extends SubsystemBase {
   public void periodic() {
     System.out.println(getClawPosition().in(Radian));
   }
-
-  }
+}
