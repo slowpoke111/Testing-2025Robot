@@ -50,9 +50,10 @@ public class Constants {
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(56, Radian);
     public static final double algaeClawPosition = 100; // 270 degrees out of 2048 encoder ticks
     public static final double limitClawPosition = 0;
-    public static final double kP = 0.003;
-    public static final double kD = 0.08;
+    public static final double kP = 0.1;
+    public static final double kD = 0.15;
     public static final double tolerance = 0.1;
+    public static final double GEAR_RATIO = 46;
   }
 
   public static class VisionConstants {

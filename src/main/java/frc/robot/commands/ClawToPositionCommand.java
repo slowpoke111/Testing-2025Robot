@@ -36,16 +36,12 @@ public class ClawToPositionCommand extends Command {
   public void initialize() {
       clawPID.setTolerance(ClawConstants.tolerance);
       clawPID.setSetpoint(desiredPosition.in(Radian));
-      m_claw.runClawMotor(clawPID.calculate(m_claw.getClawPosition(), desiredPosition.in(Radian)));
     }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Velocity", clawPID.calculate(m_claw.getClawPosition(), desiredPosition.in(Radian)));
-    SmartDashboard.putNumber("P", ClawConstants.kP);
-    SmartDashboard.putNumber("D", ClawConstants.kD);
-    clawPID = new PIDController(ClawConstants.kP, 0, ClawConstants.kD);
+    m_claw.runClawMotor(-0.5*clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)));
   }
 
   // Called once the command ends or is interrupted.

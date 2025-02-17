@@ -174,7 +174,7 @@ public class RobotContainer {
     // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
     // failsafe for manual claw control
-    manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(yOperator.getAsDouble() * ClawConstants.manualClawSpeed)));
+    manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(Math.signum(yOperator.getAsDouble()) * ClawConstants.manualClawSpeed)));
 
     //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
     m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));

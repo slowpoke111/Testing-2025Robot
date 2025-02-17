@@ -8,7 +8,10 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static edu.wpi.first.units.Units.Radian;
+import static edu.wpi.first.units.Units.Radians;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -18,13 +21,21 @@ public class ClawSubsystem extends SubsystemBase {
   private static final double expectedZero = 0;
 
   public ClawSubsystem() {
+
+    TalonFXConfigurator config = clawMotor.getConfigurator();
+    CurrentLimitsConfigs limitConfig = new CurrentLimitsConfigs();
+
+    limitConfig.StatorCurrentLimit = 50;
+    limitConfig.StatorCurrentLimitEnable = true;
+    config.apply(limitConfig);
+
     shooterMotor.setNeutralMode(NeutralModeValue.Brake);
     clawMotor.setNeutralMode(NeutralModeValue.Brake);
     clawMotor.setPosition(Angle.ofBaseUnits(expectedZero, Radian));
   }
 
-  public double getClawPosition() {
-    return clawMotor.getPosition().getValue().in(Radian);
+  public Angle getClawPosition() {
+    return Angle.ofBaseUnits(clawMotor.getPosition().getValue().in(Radian)%(2*Math.PI*ClawConstants.GEAR_RATIO), Radians);
   }
     
   public void runClawMotor(double speed) {
@@ -33,8 +44,7 @@ public class ClawSubsystem extends SubsystemBase {
   
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Angle", getClawPosition());
-    System.out.println(getClawPosition());
+    System.out.println(getClawPosition().in(Radian));
   }
 
   public void runShooterMotor(double speed) {
