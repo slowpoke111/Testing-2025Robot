@@ -20,10 +20,12 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -74,10 +76,12 @@ import frc.robot.Telemetry;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  //The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ClawSubsystem m_claw = new ClawSubsystem();
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
+  private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -185,6 +189,24 @@ public class RobotContainer {
     //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
     m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
     runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, -0.2));
+
+    DoubleSupplier leftY = () -> m_operatorController.getLeftY();
+    Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
+    Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
+
+    /* ELEVATOR CONTROLS
+    m_operatorController.b().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
+    m_operatorController.a().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0.143)));
+    m_operatorController.y().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
+    m_operatorController.x().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
+
+    m_operatorController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
+    m_operatorController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
+    */
+
+    MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.15));
+    MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.03));
+      
   }
 
   public boolean coralPresent() {
