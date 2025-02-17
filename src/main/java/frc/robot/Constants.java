@@ -70,4 +70,32 @@ public class Constants {
 
     public static final double TOLERANCE = 0.01;
   }
+  public static final class ElevatorConstants {
+    /** All values are placeholders for now*/
+    public static final double kP = 0.25;
+    public static final double kI = 0.0;
+    public static final double kD = 0.05;
+    public static final double elevatorPosTolerance = 1;
+    public static final double elevatorVelTolerance = 1;
+    public static final double kElevatorMotorPort = 0;
+    public static final int[] kEncoderPorts = {0, 1};
+    public static final boolean kEncoderReversed = false;
+    public static final double kEncoderDistancePerPulse = 1;
+    public static final double kS = 0.0;
+    public static final double kG = 0.0;
+    public static final double kV = 0.1;
+    public static final double kA = 0.0;
+    public static final double kElevatorToleranceRPS = 100;
+    public static final int kMotorID = 19;
+    public static final int lMotorID = 20;
+    public static final double setpointLocation = 0.5;
+    public static final double maxElevatorHeight = 1;
+    public static final double level4HeightRatio = 0.9;
+    public static final double algaePickupHighRatio = 0.53;
+    public static final double level3HeightRatio = 0.5;
+    public static final double algaePickupLowRatio = 0.23;
+    public static final double level2HeightRatio = 0.2;
+    public static final double coralPickupRatio = 0;
+    public static final double targetSpeed = 0.0025;
+  } 
 }
