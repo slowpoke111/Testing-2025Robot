@@ -37,6 +37,7 @@ public class ClawToPositionCommand extends Command {
   public void initialize() {
       clawPID.setTolerance(ClawConstants.tolerance);
       clawPID.setSetpoint(desiredPosition.in(Radian));
+      clawPID.enableContinuousInput(0, Math.PI * ClawConstants.GEAR_RATIO);
     }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,7 +45,7 @@ public class ClawToPositionCommand extends Command {
   public void execute() {
     double speed = MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5);
 
-    if (speed < 0 && desiredPosition.in(Radian) < m_claw.getClawPosition().in(Radian)) {
+   /* if (speed < 0 && desiredPosition.in(Radian) < m_claw.getClawPosition().in(Radian)) {
       m_claw.runClawMotor(0.5 * speed);
     }
     else if (speed > 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
@@ -55,7 +56,17 @@ public class ClawToPositionCommand extends Command {
     }
     else if (speed > 0 && desiredPosition.in(Radian) < m_claw.getClawPosition().in(Radian)) {
       m_claw.runClawMotor(0.5 * speed);
+    } */
+
+    m_claw.runClawMotor(0.5 * speed);
+
+    if (clawPID.atSetpoint()) {
+      m_claw.runClawMotor(0);
     }
+    else {
+      m_claw.runClawMotor(MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5));
+    }
+
     SmartDashboard.putNumber("Angle", m_claw.getClawPosition().in(Radian));
     SmartDashboard.putNumber("PID Speed", speed);
   }
