@@ -194,15 +194,15 @@ public class RobotContainer {
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
-    /* ELEVATOR CONTROLS
-    m_operatorController.b().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
-    m_operatorController.a().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0.143)));
-    m_operatorController.y().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
-    m_operatorController.x().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
+    //ELEVATOR CONTROLS
+    m_driverController.povLeft().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
+    m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0.143)));
+    m_driverController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
+    m_driverController.povRight().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
 
-    m_operatorController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
-    m_operatorController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
-    */
+    //m_operatorController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
+    //m_operatorController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
+    
 
     MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.15));
     MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.03));
