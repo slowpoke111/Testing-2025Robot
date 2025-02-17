@@ -4,23 +4,23 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RunShooterCommand extends Command {
-  private final ClawSubsystem m_claw;
+  private final ShooterSubsystem m_shooter;
   private final double speed;
   
  
-  public RunShooterCommand(ClawSubsystem claw, double speed) {
-    m_claw = claw;
+  public RunShooterCommand(ShooterSubsystem shooter, double speed) {
+    m_shooter = shooter;
     this.speed = speed;
-    addRequirements(claw);
+    addRequirements(shooter);
   }
 
   @Override
   public void initialize() {
-      m_claw.runShooterMotor(speed);
+      m_shooter.runShooterMotor(speed);
     }
 
   @Override
@@ -28,7 +28,7 @@ public class RunShooterCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    m_claw.runShooterMotor(0);
+    m_shooter.runShooterMotor(0);
   }
 
   @Override
