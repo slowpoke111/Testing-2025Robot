@@ -20,6 +20,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ManualClawCommand;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -95,7 +96,8 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   DoubleSupplier yOperator = () -> m_operatorController.getRightY();
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
-  Trigger manualClawTrigger = new Trigger(() -> yOperator.getAsDouble() != 0);
+  Trigger manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
+  Trigger manualClawTriggerDown = new Trigger(() -> yOperator.getAsDouble() < 0);
 
   private final SendableChooser<Command> autoChooser;
   
@@ -174,7 +176,8 @@ public class RobotContainer {
     // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
     // failsafe for manual claw control
-    manualClawTrigger.whileTrue(new InstantCommand(() -> m_claw.runClawMotor(Math.signum(yOperator.getAsDouble()) * ClawConstants.manualClawSpeed)));
+    manualClawTriggerUp.whileTrue(new ManualClawCommand(m_claw, ClawConstants.manualClawSpeed));
+    manualClawTriggerDown.whileTrue(new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed));
 
     //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
     m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_claw, ClawConstants.slowShooterSpeed));

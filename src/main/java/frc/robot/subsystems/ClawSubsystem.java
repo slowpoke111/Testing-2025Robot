@@ -18,7 +18,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class ClawSubsystem extends SubsystemBase {
   private final TalonFX clawMotor = new TalonFX(ClawConstants.clawMotorID);
   private final TalonFX shooterMotor = new TalonFX(ClawConstants.shooterMotorID);
-  private static final double expectedZero = 0;
 
   public ClawSubsystem() {
 
@@ -31,7 +30,7 @@ public class ClawSubsystem extends SubsystemBase {
 
     shooterMotor.setNeutralMode(NeutralModeValue.Brake);
     clawMotor.setNeutralMode(NeutralModeValue.Brake);
-    clawMotor.setPosition(Angle.ofBaseUnits(expectedZero, Radian));
+    clawMotor.setPosition(Angle.ofBaseUnits(0, Radian));
   }
 
   public Angle getClawPosition() {
