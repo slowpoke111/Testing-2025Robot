@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.Constants.ClawConstants;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,7 +42,18 @@ public class ClawToPositionCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_claw.runClawMotor(-0.5*clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)));
+    double speed = MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5);
+    if(speed > 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
+      m_claw.runClawMotor(0.5 * speed);
+    }
+    else if (speed < 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
+      m_claw.runClawMotor(-0.5 * speed);
+    }
+    else {
+      m_claw.runClawMotor(0);
+    }
+    SmartDashboard.putNumber("Angle", m_claw.getClawPosition().in(Radian));
+    SmartDashboard.putNumber("PID Speed", speed);
   }
 
   // Called once the command ends or is interrupted.
