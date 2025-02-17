@@ -152,13 +152,14 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
 
-
+    /* 
     m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
         forwardStraight.withVelocityX(0.5).withVelocityY(0))
     );
     m_driverController.pov(180).whileTrue(m_drivetrain.applyRequest(() ->
         forwardStraight.withVelocityX(-0.5).withVelocityY(0))
     );
+    */
 
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
