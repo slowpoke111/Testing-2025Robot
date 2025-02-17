@@ -175,6 +175,8 @@ public class RobotContainer {
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
     // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
+    m_operatorController.rightTrigger().onTrue(new InstantCommand(() -> m_claw.clawMotor.setPosition(0)));
+
     // failsafe for manual claw control
     manualClawTriggerUp.whileTrue(new ManualClawCommand(m_claw, ClawConstants.manualClawSpeed));
     manualClawTriggerDown.whileTrue(new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed));

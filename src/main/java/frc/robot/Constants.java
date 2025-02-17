@@ -46,7 +46,7 @@ public class Constants {
     public static final double intakeSpeed = -0.2;
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
     public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(1, Radian); 
-    public static final Angle L4ClawPosition = Angle.ofBaseUnits(56, Radian);
+    public static final Angle L4ClawPosition = Angle.ofBaseUnits(1.5, Radian);
     public static final double algaeClawPosition = 100; // 270 degrees out of 2048 encoder ticks
     public static final double limitClawPosition = 0;
     public static final double kP = 0.2;

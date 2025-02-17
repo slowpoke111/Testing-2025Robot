@@ -43,14 +43,18 @@ public class ClawToPositionCommand extends Command {
   @Override
   public void execute() {
     double speed = MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5);
-    if(speed > 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
+
+    if (speed < 0 && desiredPosition.in(Radian) < m_claw.getClawPosition().in(Radian)) {
+      m_claw.runClawMotor(0.5 * speed);
+    }
+    else if (speed > 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
       m_claw.runClawMotor(0.5 * speed);
     }
     else if (speed < 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
-      m_claw.runClawMotor(-0.5 * speed);
+      m_claw.runClawMotor(0.5 * speed);
     }
-    else {
-      m_claw.runClawMotor(0);
+    else if (speed > 0 && desiredPosition.in(Radian) < m_claw.getClawPosition().in(Radian)) {
+      m_claw.runClawMotor(0.5 * speed);
     }
     SmartDashboard.putNumber("Angle", m_claw.getClawPosition().in(Radian));
     SmartDashboard.putNumber("PID Speed", speed);

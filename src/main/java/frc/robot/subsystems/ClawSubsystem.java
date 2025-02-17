@@ -16,7 +16,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ClawSubsystem extends SubsystemBase {
-  private final TalonFX clawMotor = new TalonFX(ClawConstants.clawMotorID);
+  public final TalonFX clawMotor = new TalonFX(ClawConstants.clawMotorID);
   private final TalonFX shooterMotor = new TalonFX(ClawConstants.shooterMotorID);
 
   public ClawSubsystem() {
