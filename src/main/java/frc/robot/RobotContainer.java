@@ -198,7 +198,7 @@ public class RobotContainer {
 
     //ELEVATOR CONTROLS
     m_driverController.povLeft().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
-    m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0.143)));
+    m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0)));
     m_driverController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
     m_driverController.povRight().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
 
