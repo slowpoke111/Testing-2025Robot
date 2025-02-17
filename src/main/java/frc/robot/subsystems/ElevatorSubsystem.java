@@ -20,11 +20,11 @@ import com.revrobotics.RelativeEncoder;
 public class ElevatorSubsystem extends SubsystemBase {
   public final SparkMax m_elevatorMotor1;
   public final SparkMax m_elevatorMotor2;
-  public boolean limitSwitch = false;
+  public boolean isZeroed = false;
 
   public final SparkClosedLoopController m_elevatorFeedback;
   public DigitalInput elevatorLimit;
-  private double currentTarget = 0.143;
+  private double currentTarget = 0;
   private RelativeEncoder elevatorEncoder;
   
 
@@ -34,6 +34,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     m_elevatorFeedback = m_elevatorMotor1.getClosedLoopController();
     elevatorEncoder = m_elevatorMotor1.getEncoder();
+
+    elevatorLimit = new DigitalInput(0);
     
     m_elevatorMotor1.configure(Configs.ElevatorConfigs.elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_elevatorMotor2.configure(Configs.ElevatorConfigs.elevatorConfig.follow(m_elevatorMotor1), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -47,8 +49,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     currentTarget = position;
   }
 
-  public boolean getLimit(){
-    return elevatorLimit.get();
+  public void zeroEncoder(){
+    if(elevatorLimit.get() && !isZeroed){
+      elevatorEncoder.setPosition(0);
+      isZeroed = true;
+    }
+    else if(!elevatorLimit.get()){
+      isZeroed = false;
+    }
   }
   
     
@@ -58,6 +66,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
       System.out.println(m_elevatorMotor1.getEncoder().getPosition());
       m_elevatorFeedback.setReference(currentTarget, ControlType.kMAXMotionPositionControl);
+      zeroEncoder();
     }
   }
 
