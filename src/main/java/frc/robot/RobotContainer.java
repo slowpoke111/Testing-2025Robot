@@ -11,8 +11,10 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
@@ -68,6 +70,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Telemetry;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -175,10 +178,33 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
-    m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition));
-    m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
-    m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
+    //CLAW POSITION CONTROLS
+    m_operatorController.a().onTrue(
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new InstantCommand(() -> m_elevator.setPosition(0)), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition().in-0) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
+        )));
+    m_operatorController.b().onTrue(
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new InstantCommand(() -> m_elevator.setPosition(12.0)), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition().in-12) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        )));
+    m_operatorController.x().onTrue(
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new InstantCommand(() -> m_elevator.setPosition(29.0)), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition().in-29) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        )));
+    m_operatorController.y().onTrue(
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new InstantCommand(() -> m_elevator.setPosition(61.0)), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition().in-61) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
+        )));
+
+    //Algae claw position button removed
+    //m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
+
+
+
 
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
     // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
@@ -196,7 +222,7 @@ public class RobotContainer {
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
-    //ELEVATOR CONTROLS
+    //ELEVATOR CONTROLS (also combined with the claw position buttons)
     m_driverController.povLeft().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
     m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0)));
     m_driverController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));

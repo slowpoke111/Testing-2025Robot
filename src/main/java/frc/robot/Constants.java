@@ -98,5 +98,6 @@ public class Constants {
     public static final double level2HeightRatio = 0.2;
     public static final double coralPickupRatio = 0;
     public static final double targetSpeed = 0.0025;
+    public static final double elevatorPrecision = 1.0;
   }
 }
