@@ -49,6 +49,11 @@ public class Constants {
     public static final double limitClawPosition = 0;
     public static final double kP = 0.25;
     public static final double kD = 0.13;
+    public static final double kG = 0.15;
+    public static final double kS = 0.0;
+    public static final double kV = 0.88;
+    public static final double kA = 0.01;
+    public static final double feedforwardVelocity = 0.2;
     public static final double tolerance = 0.05;
     public static final double GEAR_RATIO = 46;
   }

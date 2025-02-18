@@ -13,11 +13,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static edu.wpi.first.units.Units.Radian;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ArmFeedforward;
 
 /** An example command that uses an example subsystem. */
 public class ClawToPositionCommand extends Command {
   private final ClawSubsystem m_claw;
-  private PIDController clawPID = new PIDController(ClawConstants.kP, 0, ClawConstants.kD);
+  private PIDController clawPID = new PIDController(
+    ClawConstants.kP, 
+    0, 
+    ClawConstants.kD);
+  private ArmFeedforward clawFeedforward = new ArmFeedforward(
+    ClawConstants.kS, 
+    ClawConstants.kG, 
+    ClawConstants.kV, 
+    ClawConstants.kA);
   private Angle desiredPosition;
   
   /**
@@ -37,49 +46,26 @@ public class ClawToPositionCommand extends Command {
   public void initialize() {
       clawPID.setTolerance(ClawConstants.tolerance);
       clawPID.setSetpoint(desiredPosition.in(Radian));
-      clawPID.enableContinuousInput(0, Math.PI * ClawConstants.GEAR_RATIO);
     }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5);
-
-   /* if (speed < 0 && desiredPosition.in(Radian) < m_claw.getClawPosition().in(Radian)) {
-      m_claw.runClawMotor(0.5 * speed);
-    }
-    else if (speed > 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
-      m_claw.runClawMotor(0.5 * speed);
-    }
-    else if (speed < 0 && desiredPosition.in(Radian) > m_claw.getClawPosition().in(Radian)) {
-      m_claw.runClawMotor(0.5 * speed);
-    }
-    else if (speed > 0 && desiredPosition.in(Radian) < m_claw.getClawPosition().in(Radian)) {
-      m_claw.runClawMotor(0.5 * speed);
-    } */
+    double speed = MathUtil.clamp(
+      clawPID.calculate(m_claw.getClawPosition().in(Radian)) + 
+      clawFeedforward.calculate(m_claw.getClawPosition().in(Radian), ClawConstants.feedforwardVelocity), 
+      -0.5, 0.5);
 
     m_claw.runClawMotor(0.5 * speed);
 
-    if (clawPID.atSetpoint()) {
-      m_claw.runClawMotor(0);
-    }
-    else {
-      m_claw.runClawMotor(MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5));
-    }
-
     SmartDashboard.putNumber("Angle", m_claw.getClawPosition().in(Radian));
-    SmartDashboard.putNumber("PID Speed", speed);
+    SmartDashboard.putNumber("Feedforward/back Speed", speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (clawPID.atSetpoint()) {
-      m_claw.runClawMotor(0);
-    }
-    else {
-      m_claw.runClawMotor(MathUtil.clamp(clawPID.calculate(m_claw.getClawPosition().in(Radian), desiredPosition.in(Radian)), -0.5, 0.5));
-    }
+    m_claw.runClawMotor(0);
   }
 
   // Returns true when the command should end.
