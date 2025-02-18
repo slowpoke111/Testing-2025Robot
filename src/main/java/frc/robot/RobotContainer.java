@@ -214,8 +214,8 @@ public class RobotContainer {
     manualClawTriggerDown.whileTrue(new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed));
 
     //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
-    m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
-    runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, -0.2));
+    m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
+    runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.intakeSpeed));
     m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
     DoubleSupplier leftY = () -> m_operatorController.getLeftY();
