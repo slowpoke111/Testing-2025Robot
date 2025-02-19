@@ -55,6 +55,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     m_elevatorMotor1.set(speed);
   }
 
+  public void setElevatorVoltage(double voltage){
+    m_elevatorMotor1.setVoltage(voltage);
+  }
+
   public void setPosition(double position){
     currentTarget = position;
   }
