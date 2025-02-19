@@ -226,8 +226,14 @@ public class RobotContainer {
     //m_driverController.povLeft().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
     m_driverController.povLeft().onTrue(new ElevatorToPositionCommand(m_elevator, 12.0));
     //m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0)));
+    m_driverController.povDown().onTrue(new ElevatorToPositionCommand(m_elevator, 0));
+
     //m_driverController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
+    m_driverController.povUp().onTrue(new ElevatorToPositionCommand(m_elevator, 61));
+
     //m_driverController.povRight().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
+    m_driverController.povRight().onTrue(new ElevatorToPositionCommand(m_elevator, 29));
+
 
     //TEMPORARY CLAW CONTROLS
     m_driverController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));

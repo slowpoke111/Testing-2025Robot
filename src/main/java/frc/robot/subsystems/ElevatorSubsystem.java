@@ -15,6 +15,7 @@ import frc.robot.Constants.ElevatorConstants;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -47,8 +48,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     elevatorLimit = new DigitalInput(0);
     
-    m_elevatorMotor1.configure(new SparkMaxConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_elevatorMotor2.configure(new SparkMaxConfig().follow(m_elevatorMotor1), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_elevatorMotor1.configure(new SparkMaxConfig().idleMode(IdleMode.kBrake), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    m_elevatorMotor2.configure(new SparkMaxConfig().follow(m_elevatorMotor1).idleMode(IdleMode.kBrake), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
  
   public void runElevatorMotorManual(double speed){
@@ -76,8 +77,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   public double getPosition(){
     return m_elevatorMotor1.getEncoder().getPosition();
   }
-  
-    
 
     @Override
     

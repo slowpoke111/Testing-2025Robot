@@ -80,20 +80,30 @@ public class Constants {
     /** All values are placeholders for now*/
     public static final double kP = 0.03;
     public static final double kI = 0.0;
-    public static final double kD = 0.007;
-    public static final double elevatorPosTolerance = 1;
-    public static final double elevatorVelTolerance = 1;
-    public static final double kElevatorMotorPort = 0;
-    public static final int[] kEncoderPorts = {0, 1};
-    public static final boolean kEncoderReversed = false;
-    public static final double kEncoderDistancePerPulse = 1;
+    public static final double kD = 0.15;
     public static final double kS = 0.0;
     public static final double kG = 0.3;
     public static final double kV = 10.52;
     public static final double kA = 0.05;
-    public static final double kElevatorToleranceRPS = 100;
+    public static final double feedforwardVelocity = 0.5;
+
+    public static final double targetSpeed = 0.0025;
+    public static final double elevatorPrecision = 1.0;
+    public static final double maxVelocity = 0.1;
+    public static final double maxAcceleration = 0.05;
+
+    public static final double elevatorPosTolerance = 0.5;
+    public static final double elevatorVelTolerance = 1;
+
+    public static final double kElevatorMotorPort = 0;
+    public static final int[] kEncoderPorts = {0, 1};
     public static final int kMotorID = 19;
     public static final int lMotorID = 20;
+
+    public static final boolean kEncoderReversed = false;
+    public static final double kEncoderDistancePerPulse = 1;
+    public static final double kElevatorToleranceRPS = 100;
+
     public static final double setpointLocation = 0.5;
     public static final double maxElevatorHeight = 1;
     public static final double level4HeightRatio = 0.9;
@@ -102,11 +112,7 @@ public class Constants {
     public static final double algaePickupLowRatio = 0.23;
     public static final double level2HeightRatio = 0.2;
     public static final double coralPickupRatio = 0;
-    public static final double targetSpeed = 0.0025;
-    public static final double elevatorPrecision = 1.0;
-    public static final double maxVelocity = 0.1;
-    public static final double maxAcceleration = 0.05;
+    
     public static final double sprocketCircumefrence = 0.1397; //Meters
-    public static final double feedforwardVelocity = 0.5;
   }
 }
