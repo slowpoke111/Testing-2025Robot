@@ -24,8 +24,6 @@ public class ElevatorToPositionCommand extends Command {
   private final ProfiledPIDController m_ElevatorPID = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD,constraints);
   private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV);
 
-  private final double setpoint;
-
   /**
    * Creates a new ExampleCommand.
    *
@@ -33,7 +31,6 @@ public class ElevatorToPositionCommand extends Command {
    */
   public ElevatorToPositionCommand(ElevatorSubsystem elevator, double pos) {
     m_Elevator = elevator;
-    setpoint = pos;
     
     m_ElevatorPID.setGoal(pos);
     m_ElevatorPID.setTolerance(ElevatorConstants.elevatorPosTolerance);
@@ -45,13 +42,18 @@ public class ElevatorToPositionCommand extends Command {
 
   @Override
   public void execute() {
-    double velocity = m_ElevatorPID.calculate(m_Elevator.getPosition())+m_ElevatorFeedforward.calculate(m_ElevatorPID.getSetpoint().velocity);
-    velocity = MathUtil.clamp(velocity, -0.2, 0.2);
-    m_Elevator.runElevatorMotorManual(velocity);
+  
+    double voltage = MathUtil.clamp(m_ElevatorPID.calculate(m_Elevator.getPosition())
+    +m_ElevatorFeedforward.calculate(m_ElevatorPID.getSetpoint().velocity),
+    -0.2, 0.2);
+    System.out.println("Elevator Voltage PID: "+voltage);
+    //m_Elevator.setElevatorVoltage(voltage);
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_Elevator.runElevatorMotorManual(0);
+  }
 
   @Override
   public boolean isFinished() {

@@ -36,19 +36,16 @@ public class ClawToPositionCommand extends Command {
    */
   public ClawToPositionCommand(ClawSubsystem claw, Angle desiredPosition) {
     m_claw = claw;
-    this.desiredPosition = desiredPosition;
+
+    clawPID.setTolerance(ClawConstants.tolerance);
+    clawPID.setSetpoint(desiredPosition.in(Radian));
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(claw);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-      clawPID.setTolerance(ClawConstants.tolerance);
-      clawPID.setSetpoint(desiredPosition.in(Radian));
-    }
+  public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double speed = MathUtil.clamp(
@@ -62,13 +59,11 @@ public class ClawToPositionCommand extends Command {
     SmartDashboard.putNumber("Feedforward/back Speed", speed);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_claw.runClawMotor(0);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return clawPID.atSetpoint();
