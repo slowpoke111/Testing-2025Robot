@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.Autos;
@@ -182,23 +183,23 @@ public class RobotContainer {
     m_operatorController.a().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new InstantCommand(() -> m_elevator.setPosition(0)), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
-        )));
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
+        ));
     m_operatorController.b().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new InstantCommand(() -> m_elevator.setPosition(12.0)), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
-        )));
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        ));
     m_operatorController.x().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new InstantCommand(() -> m_elevator.setPosition(29.0)), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
-        )));
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        ));
     m_operatorController.y().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new InstantCommand(() -> m_elevator.setPosition(61.0)), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < elevatorPrecision).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
-        )));
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
+        ));
 
     //Algae claw position button removed
     //m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));

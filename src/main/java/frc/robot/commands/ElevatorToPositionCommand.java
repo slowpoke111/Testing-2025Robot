@@ -47,7 +47,8 @@ public class ElevatorToPositionCommand extends Command {
   public void execute() {
     double velocity = m_ElevatorPID.calculate(m_Elevator.getPosition())+m_ElevatorFeedforward.calculate(m_ElevatorPID.getSetpoint().velocity);
     velocity = MathUtil.clamp(velocity, -0.2, 0.2);
-    m_Elevator.runElevatorMotorManual(velocity);
+    System.out.println("Elevator PID: "+velocity);
+    //m_Elevator.runElevatorMotorManual(velocity);
   }
 
   @Override
