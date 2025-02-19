@@ -9,7 +9,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import static edu.wpi.first.units.Units.Meter;
 
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.units.*;
 import frc.robot.Constants.ElevatorConstants;
@@ -46,6 +46,7 @@ public class ElevatorToPositionCommand extends Command {
   @Override
   public void execute() {
     double velocity = m_ElevatorPID.calculate(m_Elevator.getPosition())+m_ElevatorFeedforward.calculate(m_ElevatorPID.getSetpoint().velocity);
+    velocity = MathUtil.clamp(velocity, -0.2, 0.2);
     m_Elevator.runElevatorMotorManual(velocity);
   }
 
