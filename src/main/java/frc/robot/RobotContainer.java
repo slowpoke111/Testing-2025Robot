@@ -45,6 +45,7 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.commands.ClawToPositionCommand;
+import frc.robot.commands.ElevatorToPositionCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import static edu.wpi.first.units.Units.*;
 import java.util.function.BooleanSupplier;
@@ -149,7 +150,7 @@ public class RobotContainer {
         )
     );
 
-    m_driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
+    // m_driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
     m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
         point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
     ));
@@ -205,8 +206,6 @@ public class RobotContainer {
     //m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
 
 
-
-
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
     // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
@@ -224,10 +223,11 @@ public class RobotContainer {
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
     //ELEVATOR CONTROLS (also combined with the claw position buttons)
-    m_driverController.povLeft().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
-    m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0)));
-    m_driverController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
-    m_driverController.povRight().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
+    //m_driverController.povLeft().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
+    m_driverController.povLeft().onTrue(new ElevatorToPositionCommand(m_elevator, 12.0));
+    //m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0)));
+    //m_driverController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
+    //m_driverController.povRight().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
 
     //TEMPORARY CLAW CONTROLS
     m_driverController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));

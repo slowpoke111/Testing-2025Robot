@@ -27,7 +27,8 @@ public class ClawToPositionCommand extends Command {
     ClawConstants.kG, 
     ClawConstants.kV, 
     ClawConstants.kA);
-  private Angle desiredPosition;
+
+    double targetPos;
   
   /**
    * Creates a new ExampleCommand.
@@ -37,9 +38,11 @@ public class ClawToPositionCommand extends Command {
   public ClawToPositionCommand(ClawSubsystem claw, Angle desiredPosition) {
     m_claw = claw;
 
-    clawPID.setTolerance(ClawConstants.tolerance);
+    clawPID.setTolerance(ClawConstants.tolerance.in(Radian));
     clawPID.setSetpoint(desiredPosition.in(Radian));
-    // Use addRequirements() here to declare subsystem dependencies.
+
+    targetPos = desiredPosition.in(Radian);
+    
     addRequirements(claw);
   }
 
@@ -48,9 +51,10 @@ public class ClawToPositionCommand extends Command {
 
   @Override
   public void execute() {
+    double pidSpeed = clawPID.calculate(m_claw.getClawPosition().in(Radian));
     double speed = MathUtil.clamp(
-      clawPID.calculate(m_claw.getClawPosition().in(Radian)) + 
-      clawFeedforward.calculate(m_claw.getClawPosition().in(Radian), ClawConstants.feedforwardVelocity), 
+      pidSpeed + clawFeedforward.calculate(m_claw.getClawPosition().in(Radian), 
+      Math.signum(targetPos-m_claw.getClawPosition().in(Radian))*ClawConstants.feedforwardVelocity), 
       -0.5, 0.5);
 
     m_claw.runClawMotor(0.5 * speed);
@@ -61,7 +65,7 @@ public class ClawToPositionCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    m_claw.runClawMotor(0);
+    m_claw.runClawMotor(0); // find a way to fight gravity TODO
   }
 
   @Override

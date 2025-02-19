@@ -24,6 +24,7 @@ public class ElevatorToPositionCommand extends Command {
   private final ProfiledPIDController m_ElevatorPID = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD,constraints);
   private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV);
 
+  private final double targetPos;
   /**
    * Creates a new ExampleCommand.
    *
@@ -34,6 +35,9 @@ public class ElevatorToPositionCommand extends Command {
     
     m_ElevatorPID.setGoal(pos);
     m_ElevatorPID.setTolerance(ElevatorConstants.elevatorPosTolerance);
+    
+    targetPos = pos;
+
     addRequirements(elevator);
   }
 
@@ -44,10 +48,11 @@ public class ElevatorToPositionCommand extends Command {
   public void execute() {
   
     double voltage = MathUtil.clamp(m_ElevatorPID.calculate(m_Elevator.getPosition())
-    +m_ElevatorFeedforward.calculate(m_ElevatorPID.getSetpoint().velocity),
-    -0.2, 0.2);
+    +m_ElevatorFeedforward.calculate(
+      Math.signum(targetPos-m_Elevator.getPosition())*ElevatorConstants.feedforwardVelocity),
+    -2, 2);
     System.out.println("Elevator Voltage PID: "+voltage);
-    //m_Elevator.setElevatorVoltage(voltage);
+    m_Elevator.setElevatorVoltage(voltage);
   }
 
   @Override
