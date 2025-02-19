@@ -1,5 +1,4 @@
 package frc.robot;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Angle;
 import static edu.wpi.first.units.Units.Radian;
 
@@ -80,7 +79,7 @@ public class Constants {
     /** All values are placeholders for now*/
     public static final double kP = 0.03;
     public static final double kI = 0.0;
-    public static final double kD = 0.15;
+    public static final double kD = 0.2;
     public static final double kS = 0.0;
     public static final double kG = 0.3;
     public static final double kV = 10.52;

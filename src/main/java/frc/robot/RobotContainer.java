@@ -13,7 +13,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -21,8 +20,6 @@ import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlignCommand;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
 import frc.robot.commands.RunShooterCommand;
@@ -33,34 +30,14 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants.ShooterConstants;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.DoubleTopic;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
 import frc.robot.commands.ClawToPositionCommand;
 import frc.robot.commands.ElevatorToPositionCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import static edu.wpi.first.units.Units.*;
 import java.util.function.BooleanSupplier;
-
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ClawSubsystem;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
@@ -108,7 +85,8 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   DoubleSupplier yOperator = () -> m_operatorController.getRightY();
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
-  Trigger manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
+  Trigger 
+  manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
   Trigger manualClawTriggerDown = new Trigger(() -> yOperator.getAsDouble() < 0);
 
   private final SendableChooser<Command> autoChooser;
