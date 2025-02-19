@@ -52,7 +52,7 @@ public class Constants {
     public static final double kS = 0.0;
     public static final double kV = 0.88;
     public static final double kA = 0.01;
-    public static final double feedforwardVelocity = 0.3;
+    public static final double feedforwardVelocity = 1;
     public static final double tolerance = 0.05;
     public static final double GEAR_RATIO = 46;
   }
