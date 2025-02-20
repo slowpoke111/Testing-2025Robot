@@ -80,7 +80,7 @@ public class Constants {
     public static final double kP = 0.03;
     public static final double kI = 0.0;
     public static final double kD = 0.2;
-    public static final double kS = 0.0;
+    public static final double kS = 0.77;
     public static final double kG = 0.3;
     public static final double kV = 10.52;
     public static final double kA = 0.05;

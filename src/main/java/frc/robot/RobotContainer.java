@@ -161,22 +161,22 @@ public class RobotContainer {
     //CLAW POSITION CONTROLS
     m_operatorController.a().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new InstantCommand(() -> m_elevator.setPosition(0)), 
+        new ElevatorToPositionCommand(m_elevator,0), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
         ));
     m_operatorController.b().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new InstantCommand(() -> m_elevator.setPosition(12.0)), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        new ElevatorToPositionCommand(m_elevator,12.0), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition ()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
         ));
     m_operatorController.x().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new InstantCommand(() -> m_elevator.setPosition(29.0)), 
+        new ElevatorToPositionCommand(m_elevator,29.0), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
         ));
     m_operatorController.y().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new InstantCommand(() -> m_elevator.setPosition(61.0)), 
+        new ElevatorToPositionCommand(m_elevator,61.0), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
         ));
 
@@ -211,13 +211,6 @@ public class RobotContainer {
 
     //m_driverController.povRight().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
     m_driverController.povRight().onTrue(new ElevatorToPositionCommand(m_elevator, 29));
-
-
-    //TEMPORARY CLAW CONTROLS
-    m_driverController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
-    m_driverController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition));
-    m_driverController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
-    m_driverController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
 
     //m_operatorController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
     //m_operatorController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
