@@ -1,20 +1,14 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
-
-import org.w3c.dom.views.DocumentView;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.LimelightHelpers.RawFiducial;
 import edu.wpi.first.math.controller.PIDController;
 class PIDControllerConfigurable extends PIDController {
@@ -30,7 +24,6 @@ class PIDControllerConfigurable extends PIDController {
 public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_Limelight;
-  private final LEDSubsystem m_led;
 
   //private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.01);
   private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(VisionConstants.ROTATE_P, VisionConstants.ROTATE_I, VisionConstants.ROTATE_D, VisionConstants.TOLERANCE);
@@ -47,28 +40,25 @@ public class AlignCommand extends Command {
   public double velocityX = 0;
 
   //use whatever fiducial is closest
-  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, LEDSubsystem led) {
+  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
-    this.m_led = led;
     addRequirements(m_Limelight);
   }
 
-  //Overload for specific april tag
-  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, LEDSubsystem led, int ID) throws IllegalArgumentException{
+  //Overload for specific april tag by id
+
+  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int ID) throws IllegalArgumentException{
     this.m_drivetrain = drivetrain;
     this.m_Limelight = limelight;
-    this.m_led = led;
     if (ID<0){throw new IllegalArgumentException("april tag id cannot be negative");}
     tagID = ID;
     addRequirements(m_Limelight);
   }
 
-
+  //maybe set tagid by closest here instead of each execution to keep same tag
   @Override
-  public void initialize() {
-    m_led.LEDColor(LEDConstants.colorLimeGreen);
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {

@@ -1,23 +1,23 @@
 package frc.robot;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Angle;
+import static edu.wpi.first.units.Units.Radian;
 
 public class Constants {
   public static class UniversalConstants {
     public static final String bestProgrammer = "Gabriel Kuzowsky"; 
   }
-  public static class OperatorConstants {
+
+  public static class MultiversalConstants {
+    public static final String bestProgrammer = "Ben Bell";
+  }
+
+    public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
-  public static class ElevatorConstants {
-    public static final int kMotorID = 0;
-    public static final double kMotorCircumference = 0;
-    public static final double kP = 0.5;   // Strong correction
-    public static final double kI = 0.01;  // Slight accumulation
-    public static final double kD = 0.1;  // Moderate dampening
-    public static final double kTolerance = 0.05;
-  }
+
+
   public static class LEDConstants{
     public static final int LEDDriverOneID = 3;
     public static final double colorRed = 0.61;
@@ -37,22 +37,33 @@ public class Constants {
   }
 
   public static class ClawConstants {
-    public static final int clawMotorID = 30;
-    public static final int shooterMotorID = 31;
+    public static final int clawMotorID = 31;
     public static final int sensorID = 62;
-    public static final double clawSpeedLimit = 0.1;
-    public static final double manualClawSpeed = 0.2;
-    public static final double slowShooterSpeed = 0.1;
-    public static final double fastShooterSpeed = 0.6;
-    public static final double L1ClawPosition = 15;
-    public static final double L2L3ClawPosition = 45;
-    public static final double L4ClawPosition = 90;
-    public static final double algaeClawPosition = 270;
-    public static final double kP = 0.003;
-    public static final double kD = 0.08;
-    public static final double tolerance = 2;
+    public static final int gearRatio = 46;
+    public static final int encoderTicksWithRatio = 2048 * gearRatio;
+    public static final double manualClawSpeed = 0.1;
+    public static final double intakeSpeed = -0.2;
+    public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
+    public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
+    public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
+    public static final Angle algaeClawPosition = Angle.ofBaseUnits(1.75, Radian);
+    public static final double limitClawPosition = 0;
+    public static final double kP = 0.25;
+    public static final double kD = 0.13;
+    public static final double kG = 0.15;
+    public static final double kS = 0.0;
+    public static final double kV = 0.88;
+    public static final double kA = 0.01;
+    public static final double feedforwardVelocity = 0.2;
+    public static final double tolerance = 0.05;
+    public static final double GEAR_RATIO = 46;
   }
-
+  public static class ShooterConstants {
+    public static final int shooterMotorID = 30;
+    public static final double slowShooterSpeed = -0.3;
+    public static final double fastShooterSpeed = -0.6;
+  
+  }
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
 
@@ -65,5 +76,33 @@ public class Constants {
     public static final double ROTATE_D = 0.001000;
 
     public static final double TOLERANCE = 0.01;
+  }
+  public static class ElevatorConstants {
+    /** All values are placeholders for now*/
+    public static final double kP = 0.25;
+    public static final double kI = 0.0;
+    public static final double kD = 0.05;
+    public static final double elevatorPosTolerance = 1;
+    public static final double elevatorVelTolerance = 1;
+    public static final double kElevatorMotorPort = 0;
+    public static final int[] kEncoderPorts = {0, 1};
+    public static final boolean kEncoderReversed = false;
+    public static final double kEncoderDistancePerPulse = 1;
+    public static final double kS = 0.0;
+    public static final double kG = 0.0;
+    public static final double kV = 0.1;
+    public static final double kA = 0.0;
+    public static final double kElevatorToleranceRPS = 100;
+    public static final int kMotorID = 19;
+    public static final int lMotorID = 20;
+    public static final double setpointLocation = 0.5;
+    public static final double maxElevatorHeight = 1;
+    public static final double level4HeightRatio = 0.9;
+    public static final double algaePickupHighRatio = 0.53;
+    public static final double level3HeightRatio = 0.5;
+    public static final double algaePickupLowRatio = 0.23;
+    public static final double level2HeightRatio = 0.2;
+    public static final double coralPickupRatio = 0;
+    public static final double targetSpeed = 0.0025;
   }
 }

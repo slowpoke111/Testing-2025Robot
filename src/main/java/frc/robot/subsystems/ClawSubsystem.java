@@ -4,26 +4,43 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClawConstants;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import static edu.wpi.first.units.Units.Radian;
+import static edu.wpi.first.units.Units.Radians;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class ClawSubsystem extends SubsystemBase {
   private final TalonFX clawMotor = new TalonFX(ClawConstants.clawMotorID);
-  private final TalonFX shooterMotor = new TalonFX(ClawConstants.shooterMotorID);
-  private static final double fullRange = 360;
-  private static final double expectedZero = 0;
 
-  public ClawSubsystem() {}
+  public ClawSubsystem() {
 
-  public double getClawPosition() {
-    return MathUtil.clamp(
-      (clawMotor.getPosition().getValueAsDouble() - (int) clawMotor.getPosition().getValueAsDouble()) * 360, expectedZero, fullRange);
+    TalonFXConfigurator config = clawMotor.getConfigurator();
+    CurrentLimitsConfigs limitConfig = new CurrentLimitsConfigs();
+
+   // limitConfig.StatorCurrentLimit = 100;
+  //  limitConfig.StatorCurrentLimitEnable = true;
+    config.apply(limitConfig);
+
+    clawMotor.setNeutralMode(NeutralModeValue.Brake);
+    clawMotor.setPosition(Angle.ofBaseUnits(0, Radian));
+  }
+
+  public Angle getClawPosition() {
+    return Angle.ofBaseUnits(clawMotor.getPosition().getValue().in(Radian)%(2*Math.PI*ClawConstants.GEAR_RATIO), Radians);
   }
     
   public void runClawMotor(double speed) {
     clawMotor.set(speed);
   }
-
-  public void runShooterMotor(double speed) {
-    shooterMotor.set(speed);
+  
+  @Override
+  public void periodic() {
+    System.out.println("claw: " + getClawPosition().in(Radian));
   }
 }

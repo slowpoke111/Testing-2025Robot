@@ -4,23 +4,37 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.Constants.ClawConstants;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import static edu.wpi.first.units.Units.Radian;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ArmFeedforward;
 
 /** An example command that uses an example subsystem. */
 public class ClawToPositionCommand extends Command {
   private final ClawSubsystem m_claw;
-  private final PIDController clawPID = new PIDController(ClawConstants.kP, 0, ClawConstants.kD);
-  private double desiredPosition;
+  private PIDController clawPID = new PIDController(
+    ClawConstants.kP, 
+    0, 
+    ClawConstants.kD);
+  private ArmFeedforward clawFeedforward = new ArmFeedforward(
+    ClawConstants.kS, 
+    ClawConstants.kG, 
+    ClawConstants.kV, 
+    ClawConstants.kA);
+  private Angle desiredPosition;
   
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ClawToPositionCommand(ClawSubsystem claw, double desiredPosition) {
+  public ClawToPositionCommand(ClawSubsystem claw, Angle desiredPosition) {
     m_claw = claw;
     this.desiredPosition = desiredPosition;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,28 +44,23 @@ public class ClawToPositionCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    /* previousPosition = m_claw.getClawPosition();
-      while(Math.abs(m_claw.getClawPosition() - desiredPosition) > ClawConstants.tolerance) {
-        currentPosition = m_claw.getClawPosition();
-        currentVelocity = currentPosition - previousPosition;
-        speed = ClawConstants.kP * (desiredPosition - m_claw.getClawPosition()) - ClawConstants.kD * currentVelocity;
-        speed = MathUtil.clamp(speed, -ClawConstants.clawSpeedLimit, ClawConstants.clawSpeedLimit);
-        previousPosition = currentPosition;
-        m_claw.runClawMotor(speed);
-        System.out.println(speed);
-        System.out.println("Difference" + (Math.abs(currentPosition - desiredPosition)));
-      }
-        m_claw.runClawMotor(0);
-        */
-
       clawPID.setTolerance(ClawConstants.tolerance);
-      clawPID.setSetpoint(desiredPosition);
-      m_claw.runClawMotor(clawPID.calculate(m_claw.getClawPosition(), desiredPosition));
+      clawPID.setSetpoint(desiredPosition.in(Radian));
     }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double speed = MathUtil.clamp(
+      clawPID.calculate(m_claw.getClawPosition().in(Radian)) + 
+      clawFeedforward.calculate(m_claw.getClawPosition().in(Radian), ClawConstants.feedforwardVelocity), 
+      -0.5, 0.5);
+
+    m_claw.runClawMotor(0.5 * speed);
+
+    SmartDashboard.putNumber("Angle", m_claw.getClawPosition().in(Radian));
+    SmartDashboard.putNumber("Feedforward/back Speed", speed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
