@@ -26,7 +26,7 @@ public class ClawSubsystem extends SubsystemBase {
    // limitConfig.StatorCurrentLimit = 100;
   //  limitConfig.StatorCurrentLimitEnable = true;
     config.apply(limitConfig);
-
+                                         
     clawMotor.setNeutralMode(NeutralModeValue.Brake);
     clawMotor.setPosition(Angle.ofBaseUnits(0, Radian));
   }

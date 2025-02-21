@@ -200,18 +200,6 @@ public class RobotContainer {
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
-    //ELEVATOR CONTROLS (also combined with the claw position buttons)
-    //m_driverController.povLeft().whileTrue(new InstantCommand(() -> m_elevator.setPosition(12.0)));
-    m_driverController.povLeft().onTrue(new ElevatorToPositionCommand(m_elevator, 12.0));
-    //m_driverController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(0)));
-    m_driverController.povDown().onTrue(new ElevatorToPositionCommand(m_elevator, 0));
-
-    //m_driverController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(61.0)));
-    m_driverController.povUp().onTrue(new ElevatorToPositionCommand(m_elevator, 61));
-
-    //m_driverController.povRight().whileTrue(new InstantCommand(() -> m_elevator.setPosition(29.0)));
-    m_driverController.povRight().onTrue(new ElevatorToPositionCommand(m_elevator, 29));
-
     //m_operatorController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
     //m_operatorController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
     
