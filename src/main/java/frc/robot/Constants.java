@@ -11,12 +11,14 @@ public class Constants {
     public static final String bestProgrammer = "Ben Bell";
   }
 
-    public static class OperatorConstants {
+  public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
 
-
+  public static class SwerveSpeedConsts{
+    public static final double slowSpeed = 0.5;
+  }
   public static class LEDConstants{
     public static final int LEDDriverOneID = 3;
     public static final double colorRed = 0.61;
@@ -41,7 +43,9 @@ public class Constants {
     public static final int encoderTicksWithRatio = 2048 * gearRatio;
     public static final double manualClawSpeed = 0.1;
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
-    public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
+    //public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
+    public static final Angle L2ClawPosition = Radian.of(0.37);
+    public static final Angle L3ClawPosition = Radian.of(0.4);
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
     public static final Angle algaeClawPosition = Angle.ofBaseUnits(1.75, Radian);
     public static final double limitClawPosition = 0;
@@ -102,7 +106,7 @@ public class Constants {
     public static final boolean kEncoderReversed = false;
     public static final double kEncoderDistancePerPulse = 1;
     public static final double kElevatorToleranceRPS = 100;
-
+    /* 
     public static final double setpointLocation = 0.5;
     public static final double maxElevatorHeight = 1;
     public static final double level4HeightRatio = 0.9;
@@ -111,6 +115,13 @@ public class Constants {
     public static final double algaePickupLowRatio = 0.23;
     public static final double level2HeightRatio = 0.2;
     public static final double coralPickupRatio = 0;
+    */
+
+    public static final double L1Height = 0d;
+    //public static final double L2Height = 12d;
+    public static final double L2Height = 11.5;
+    public static final double L3Height = 29d;
+    public static final double L4Height = 61d;
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
   }

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.SwerveSpeedConsts;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
@@ -51,6 +52,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Telemetry;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -68,7 +71,6 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-  
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -92,9 +94,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   
-  private final VisionSubsystem m_Vision = new VisionSubsystem();
-
-  
+    private final VisionSubsystem m_Vision = new VisionSubsystem();
 
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
@@ -107,22 +107,22 @@ public class RobotContainer {
 
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,0), 
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L1Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
         ));
       NamedCommands.registerCommand("L2", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,12.0), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
         ));
       NamedCommands.registerCommand("L3", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,29.0), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L3Height), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
         ));
       NamedCommands.registerCommand("L4", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,61.0), 
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
         ));
 
@@ -144,9 +144,9 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         m_drivetrain.applyRequest(() ->
-            drive.withVelocityX(Math.pow(m_driverController.getLeftY() , 2.5) * MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(Math.pow(m_driverController.getLeftX() , 2.5) * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(Math.pow(-m_driverController.getRightX(), 2.5) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            drive.withVelocityX(-m_driverController.getLeftY() * 1) // Drive forward with negative Y (forward)
+                .withVelocityY(-m_driverController.getLeftX() * 1) // Drive left with negative X (left)
+                .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
         )
     );
 
@@ -157,22 +157,21 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
 
-    /* 
+    
     m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
-        forwardStraight.withVelocityX(0.5).withVelocityY(0))
+        forwardStraight.withVelocityX(SwerveSpeedConsts.slowSpeed).withVelocityY(0))
     );
     m_driverController.pov(180).whileTrue(m_drivetrain.applyRequest(() ->
-        forwardStraight.withVelocityX(-0.5).withVelocityY(0))
+        forwardStraight.withVelocityX(-SwerveSpeedConsts.slowSpeed).withVelocityY(0))
     );
 
     m_driverController.pov(90).whileTrue(m_drivetrain.applyRequest(() ->
-        forwardStraight.withVelocityX(0.5).withVelocityY(0))
+        forwardStraight.withVelocityX(0).withVelocityY(-SwerveSpeedConsts.slowSpeed))
     );
 
     m_driverController.pov(270).whileTrue(m_drivetrain.applyRequest(() ->
-        forwardStraight.withVelocityX(-0.5).withVelocityY(0))
-    );
-    */
+        forwardStraight.withVelocityX(0).withVelocityY(SwerveSpeedConsts.slowSpeed))
+    );    
 
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
@@ -195,22 +194,22 @@ public class RobotContainer {
     // CLAW AND ELEVATOR POSITION CONTROLS
     m_operatorController.a().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,0), 
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L1Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
         ));
     m_operatorController.b().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,12.0), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
         ));
     m_operatorController.x().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,29.0), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L3Height), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
         ));
     m_operatorController.y().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,61.0), 
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
         ));
 
@@ -227,7 +226,7 @@ public class RobotContainer {
     m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
     runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.intakeSpeed));
     m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
-      
+
   }
 
   public boolean coralPresent() {

@@ -41,5 +41,6 @@ public class ClawSubsystem extends SubsystemBase {
   
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Claw Angle: ", getClawPosition().in(Radian));
   }
 }

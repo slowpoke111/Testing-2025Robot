@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Configs.ElevatorConfigs;
@@ -83,6 +84,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
       //m_elevatorFeedback.setReference(currentTarget, ControlType.kMAXMotionPositionControl);
       zeroEncoder();
+      SmartDashboard.putNumber("Elevator Position: ", getPosition());
     }
   }
 
