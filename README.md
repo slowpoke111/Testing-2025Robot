@@ -25,3 +25,9 @@
 - **Manual Elevator** = Left Stick (Up and Down)
 - **Manual Claw** = Right Stick (Up and Down)
 - **Zero Claw Angle** = Left Bumper
+
+### LED Meanings:
+
+- **Lime Green** = Limelight is aligning
+- **White** = Coral is present
+- **Blue and Gold** = Match is over
