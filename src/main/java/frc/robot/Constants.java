@@ -34,6 +34,7 @@ public class Constants {
     public static final double colorBlue = 0.87;
     public static final double colorGold = 0.67;
     public static final double twinklesColorOneAndTwo = 0.51;
+    public static final long matchTimeInMilliseconds = 150000;
   }
 
   public static class ClawConstants {
