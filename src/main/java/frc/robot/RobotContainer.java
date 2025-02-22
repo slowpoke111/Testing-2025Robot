@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.function.DoubleSupplier;
+import java.util.jar.Attributes.Name;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -103,7 +104,28 @@ public class RobotContainer {
       }
 
       NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision).withTimeout(2));
-      
+
+      NamedCommands.registerCommand("L1", 
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new ElevatorToPositionCommand(m_elevator,0), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
+        ));
+      NamedCommands.registerCommand("L2", 
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new ElevatorToPositionCommand(m_elevator,12.0), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        ));
+      NamedCommands.registerCommand("L3", 
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new ElevatorToPositionCommand(m_elevator,29.0), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        ));
+      NamedCommands.registerCommand("L4", 
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
+        new ElevatorToPositionCommand(m_elevator,61.0), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
+        ));
+
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
        SmartDashboard.putData("Auto Mode", autoChooser);
@@ -158,7 +180,11 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    //CLAW POSITION CONTROLS
+    DoubleSupplier leftY = () -> m_operatorController.getLeftY();
+    Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
+    Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
+
+    // CLAW AND ELEVATOR POSITION CONTROLS
     m_operatorController.a().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,0), 
@@ -167,7 +193,7 @@ public class RobotContainer {
     m_operatorController.b().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,12.0), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition ()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2L3ClawPosition)))
         ));
     m_operatorController.x().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
@@ -180,32 +206,19 @@ public class RobotContainer {
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
         ));
 
-    //Algae claw position button removed
-    //m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition));
-
-
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
     // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
-    // failsafe for manual claw control
+    // failsafe for manual control
     manualClawTriggerUp.whileTrue(new ManualClawCommand(m_claw, ClawConstants.manualClawSpeed));
     manualClawTriggerDown.whileTrue(new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed));
+    MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.15));
+    MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.03));
 
-    //m_operatorController.rightTrigger().whileTrue(new InstantCommand(() -> m_claw.runShooterMotor(ClawConstants.fastShooterSpeed)));
+    // SHOOTER AND INTAKE CONTROLS
     m_operatorController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
     runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.intakeSpeed));
     m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
-
-    DoubleSupplier leftY = () -> m_operatorController.getLeftY();
-    Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
-    Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
-
-    //m_operatorController.povUp().whileTrue(new InstantCommand(() -> m_elevator.setPosition(44.0)));
-    //m_operatorController.povDown().whileTrue(new InstantCommand(() -> m_elevator.setPosition(26.0)));
-    
-
-    MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.15));
-    MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.03));
       
   }
 
