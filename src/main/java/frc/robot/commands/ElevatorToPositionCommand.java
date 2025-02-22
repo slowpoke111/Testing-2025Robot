@@ -43,7 +43,7 @@ public class ElevatorToPositionCommand extends Command {
     double voltage = MathUtil.clamp(m_ElevatorPID.calculate(m_Elevator.getPosition())
     +m_ElevatorFeedforward.calculate(
       Math.signum(targetPos-m_Elevator.getPosition())*ElevatorConstants.feedforwardVelocity),
-    -2, 2);
+    -3, 3);
     System.out.println(targetPos-m_Elevator.getPosition());
     SmartDashboard.putNumber("Elevator Voltage PID",voltage);
     SmartDashboard.putNumber("Elevator Position", m_Elevator.getPosition());

@@ -18,6 +18,10 @@ public class Constants {
 
   public static class SwerveSpeedConsts{
     public static final double slowSpeed = 0.5;
+    public static final double L4Speed = 1d;
+    public static final double L3Speed = 1d;
+    public static final double L2Speed = 3d;
+    public static final double L1Speed = 3d;
   }
   public static class LEDConstants{
     public static final int LEDDriverOneID = 3;
@@ -45,10 +49,12 @@ public class Constants {
     public static final double manualClawSpeed = 0.1;
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
     //public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
-    public static final Angle L2ClawPosition = Radian.of(0.37);
-    public static final Angle L3ClawPosition = Radian.of(0.4);
+    public static final Angle L2ClawPosition = Radian.of(0.4);
+    public static final Angle L3ClawPosition = Radian.of(0.37);
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
-    public static final Angle algaeClawPosition = Angle.ofBaseUnits(1.75, Radian);
+    public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.3, Radian);
+    public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
+    public static final Angle algaeClawPos = Radian.of(2.75);
     public static final double limitClawPosition = 0;
     public static final double kP = 0.25;
     public static final double kD = 0.13;
@@ -63,7 +69,7 @@ public class Constants {
   public static class ShooterConstants {
     public static final int shooterMotorID = 30;
     public static final double intakeSpeed = -0.2;
-    public static final double slowShooterSpeed = -0.3;
+    public static final double slowShooterSpeed = -0.4;
     public static final double fastShooterSpeed = -0.6;
   
   }
@@ -123,6 +129,8 @@ public class Constants {
     public static final double L2Height = 11.5;
     public static final double L3Height = 29d;
     public static final double L4Height = 61d;
+    public static final double A1Height = 15.5;
+    public static final double A2Height = 35;
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
   }
