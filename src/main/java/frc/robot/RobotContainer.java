@@ -68,6 +68,8 @@ public class RobotContainer {
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
 
+
+  private DoubleSupplier swerveSpeed = () -> m_elevator.getSwerveSpeed();
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -108,22 +110,22 @@ public class RobotContainer {
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L1Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L1Height) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
         ));
       NamedCommands.registerCommand("L2", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
         ));
       NamedCommands.registerCommand("L3", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L3Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L3Height) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
         ));
       NamedCommands.registerCommand("L4", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
         ));
 
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
@@ -144,11 +146,10 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         m_drivetrain.applyRequest(() ->
-            drive.withVelocityX(-m_driverController.getLeftY() * 1) // Drive forward with negative Y (forward)
-                .withVelocityY(-m_driverController.getLeftX() * 1) // Drive left with negative X (left)
-                .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        )
-    );
+            drive.withVelocityX(-m_driverController.getLeftY() * swerveSpeed.getAsDouble()) // Drive forward with negative Y (forward)
+                 .withVelocityY(-m_driverController.getLeftX() *  swerveSpeed.getAsDouble()) // Drive left with negative X (left)
+                 .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
 
     // m_driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
     m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
@@ -157,7 +158,6 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
 
-    
     m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
         forwardStraight.withVelocityX(SwerveSpeedConsts.slowSpeed).withVelocityY(0))
     );
@@ -190,27 +190,31 @@ public class RobotContainer {
     DoubleSupplier leftY = () -> m_operatorController.getLeftY();
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
-
+    
     // CLAW AND ELEVATOR POSITION CONTROLS
     m_operatorController.a().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L1Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-0) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L1Height) < ElevatorConstants.elevatorPrecision)).andThen(
+        new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
         ));
     m_operatorController.b().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-12) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision)).andThen(
+        new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
         ));
     m_operatorController.x().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L3Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-29) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L3Height) < ElevatorConstants.elevatorPrecision)).andThen(
+        new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
         ));
     m_operatorController.y().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-61) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision)).andThen(
+        new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
         ));
 
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH

@@ -93,12 +93,14 @@ public class Robot extends TimedRobot {
     }
 
     // Sets the LED color to gold after match ends
+    /* 
     endOfMatchTimer.schedule(new TimerTask() {
       @Override
       public void run() {
         m_led.LEDColor(LEDConstants.twinklesColorOneAndTwo);
       }
     }, new Date().getTime() + LEDConstants.matchTimeInMilliseconds);
+    */
   }
 
   /** This function is called periodically during operator control. */

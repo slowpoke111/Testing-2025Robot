@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.Constants;
 import frc.robot.Configs.ElevatorConfigs;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.SwerveSpeedConsts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -65,6 +67,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     currentTarget = position;
   }
 
+  public double getSwerveSpeed(){
+    return SwerveSpeedConsts.L4Speed+
+    (Math.pow(((ElevatorConstants.L4Height-getPosition())/ElevatorConstants.L4Height),2)
+    *(SwerveSpeedConsts.L1Speed-SwerveSpeedConsts.L4Speed));
+  }
+ 
   public void zeroEncoder(){
     if(elevatorLimit.get() && !isZeroed){
       elevatorEncoder.setPosition(0);
