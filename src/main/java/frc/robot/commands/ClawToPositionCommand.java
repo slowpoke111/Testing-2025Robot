@@ -27,7 +27,8 @@ public class ClawToPositionCommand extends Command {
     ClawConstants.kG, 
     ClawConstants.kV, 
     ClawConstants.kA);
-  private Angle desiredPosition;
+
+    double targetPos;
   
   /**
    * Creates a new ExampleCommand.
@@ -36,24 +37,24 @@ public class ClawToPositionCommand extends Command {
    */
   public ClawToPositionCommand(ClawSubsystem claw, Angle desiredPosition) {
     m_claw = claw;
-    this.desiredPosition = desiredPosition;
-    // Use addRequirements() here to declare subsystem dependencies.
+
+    clawPID.setTolerance(ClawConstants.tolerance.in(Radian));
+    clawPID.setSetpoint(desiredPosition.in(Radian));
+
+    targetPos = desiredPosition.in(Radian);
+    
     addRequirements(claw);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-      clawPID.setTolerance(ClawConstants.tolerance);
-      clawPID.setSetpoint(desiredPosition.in(Radian));
-    }
+  public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double pidSpeed = clawPID.calculate(m_claw.getClawPosition().in(Radian));
     double speed = MathUtil.clamp(
-      clawPID.calculate(m_claw.getClawPosition().in(Radian)) + 
-      clawFeedforward.calculate(m_claw.getClawPosition().in(Radian), ClawConstants.feedforwardVelocity), 
+      pidSpeed + clawFeedforward.calculate(m_claw.getClawPosition().in(Radian), 
+      Math.signum(targetPos-m_claw.getClawPosition().in(Radian))*ClawConstants.feedforwardVelocity), 
       -0.5, 0.5);
 
     m_claw.runClawMotor(0.5 * speed);
@@ -62,13 +63,11 @@ public class ClawToPositionCommand extends Command {
     SmartDashboard.putNumber("Feedforward/back Speed", speed);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_claw.runClawMotor(0);
+    m_claw.runClawMotor(0); // find a way to fight gravity TODO
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return clawPID.atSetpoint();
