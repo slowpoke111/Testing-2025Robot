@@ -104,6 +104,7 @@ public class RobotContainer {
       }
 
       NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision).withTimeout(2));
+      NamedCommands.registerCommand("Shoot", new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
 
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPosition).andThen(Commands.parallel(
@@ -227,6 +228,7 @@ public class RobotContainer {
     runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.intakeSpeed));
     m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
+    m_operatorController.rightBumper().whileTrue(new InstantCommand(() -> m_claw.motorVoltage(ClawConstants.kS)));
   }
 
   public boolean coralPresent() {

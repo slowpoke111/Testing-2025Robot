@@ -38,6 +38,10 @@ public class ClawSubsystem extends SubsystemBase {
   public void runClawMotor(double speed) {
     clawMotor.set(speed);
   }
+
+  public void motorVoltage(double voltage) {
+    clawMotor.setVoltage(voltage);
+  }
   
   @Override
   public void periodic() {
