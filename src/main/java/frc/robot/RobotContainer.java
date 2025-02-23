@@ -133,7 +133,7 @@ public class RobotContainer {
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A1Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
       ));
-      NamedCommands.registerCommand("A1", 
+      NamedCommands.registerCommand("A2", 
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A2Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
