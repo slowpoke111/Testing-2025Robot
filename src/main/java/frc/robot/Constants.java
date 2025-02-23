@@ -65,6 +65,7 @@ public class Constants {
     public static final double feedforwardVelocity = 1;
     public static final Angle tolerance = Angle.ofBaseUnits(0.05, Radian);
     public static final double GEAR_RATIO = 46;
+    public static final double kSVoltage = -0.2;
   }
   public static class ShooterConstants {
     public static final int shooterMotorID = 30;
