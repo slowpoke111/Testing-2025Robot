@@ -11,6 +11,10 @@ public class Constants {
     public static final String bestProgrammer = "Ben Bell";
   }
 
+  public static class GodConstants{
+    public static final String bestProgrammer = "Michael Stauffer";
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
@@ -46,7 +50,7 @@ public class Constants {
     public static final int sensorID = 62;
     public static final int gearRatio = 46;
     public static final int encoderTicksWithRatio = 2048 * gearRatio;
-    public static final double manualClawSpeed = 0.1;
+    public static final double manualClawSpeed = 0.05;
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
     //public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
     public static final Angle L2ClawPosition = Radian.of(0.4);
@@ -71,6 +75,7 @@ public class Constants {
     public static final int shooterMotorID = 30;
     public static final double intakeSpeed = -0.2;
     public static final double slowShooterSpeed = -0.4;
+    public static final double algaeSpeed = -0.2;
     public static final double fastShooterSpeed = -0.6;
   
   }
@@ -91,7 +96,9 @@ public class Constants {
     /** All values are placeholders for now*/
     public static final double kP = 0.03;
     public static final double kI = 0.0;
-    public static final double kD = 0.2;
+    //public static final double kD = 0.2;
+    public static final double kD = 0.001;
+
     public static final double kS = 0.77;
     public static final double kG = 0.3;
     public static final double kV = 10.52;
@@ -128,7 +135,7 @@ public class Constants {
     public static final double L1Height = 0d;
     //public static final double L2Height = 12d;
     public static final double L2Height = 11.5;
-    public static final double L3Height = 29d;
+    public static final double L3Height = 31d;
     public static final double L4Height = 61d;
     public static final double A1Height = 15.5;
     public static final double A2Height = 35;
