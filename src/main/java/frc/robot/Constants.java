@@ -11,6 +11,10 @@ public class Constants {
     public static final String bestProgrammer = "Ben Bell";
   }
 
+  public static class GodConstants{
+    public static final String bestProgrammer = "Michael Stauffer";
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
@@ -71,6 +75,7 @@ public class Constants {
     public static final int shooterMotorID = 30;
     public static final double intakeSpeed = -0.2;
     public static final double slowShooterSpeed = -0.4;
+    public static final double algaeSpeed = -0.2;
     public static final double fastShooterSpeed = -0.6;
   
   }
