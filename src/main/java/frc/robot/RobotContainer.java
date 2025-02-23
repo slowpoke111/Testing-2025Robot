@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.SwerveSpeedConsts;
@@ -200,71 +201,57 @@ public class RobotContainer {
 
     DoubleSupplier leftY = () -> m_operatorController.getLeftY();
     DoubleSupplier elevatorPosition = () -> m_elevator.getPosition();
+
+    BooleanSupplier elevatorAtL1 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L1Height) < ElevatorConstants.elevatorPrecision);
+    BooleanSupplier elevatorAtL2 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision);
+    BooleanSupplier elevatorAtL3 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L3Height) < ElevatorConstants.elevatorPrecision);
+    BooleanSupplier elevatorAtL4 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision);
+
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
     // CLAW AND ELEVATOR POSITION CONTROLS
-    if(elevatorPosition.getAsDouble() == ElevatorConstants.L1Height){
-      m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
-    }
-    else{
-      m_operatorController.a().onTrue(
-        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L1Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L1Height) < ElevatorConstants.elevatorPrecision)).andThen(
-        new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
-        ));
-    }
+    m_operatorController.a().onTrue(new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition), 
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L1Height), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L1Height) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
+      ), elevatorAtL1));
 
-    if(elevatorPosition.getAsDouble() == ElevatorConstants.L2Height){
-      m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition));
-    }
-    else{
-      m_operatorController.b().onTrue(
-        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision)).andThen(
-        new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
-        ));
-    }
-
-    if(elevatorPosition.getAsDouble() == ElevatorConstants.L3Height){
-      m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition));
-    }
-    else{
-      m_operatorController.x().onTrue(
-        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L3Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L3Height) < ElevatorConstants.elevatorPrecision)).andThen(
-        new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
-        ));
-    }
-
-    if(elevatorPosition.getAsDouble() == ElevatorConstants.L4Height){
-      m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
-    }
-    else{
-    m_operatorController.y().onTrue(
-        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision)).andThen(
-        new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
-        ));
-    }
+    m_operatorController.b().onTrue(new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition),
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
+      ), elevatorAtL2));
     
-      m_operatorController.povUp().onTrue(
-        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A2Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision)).andThen(
-        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
-      ));
+    m_operatorController.x().onTrue(new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition),
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L3Height), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L3Height) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
+      ), elevatorAtL3));
+    
+    m_operatorController.y().onTrue(new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition),
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
+      ), elevatorAtL4));
 
-      m_operatorController.povDown().onTrue(
-        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
-        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A1Height), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision)).andThen(
-        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
-      ));
+    m_operatorController.povUp().onTrue(
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A2Height), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
+    ));
+
+    m_operatorController.povDown().onTrue(
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A1Height), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
+    ));
 
 
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
