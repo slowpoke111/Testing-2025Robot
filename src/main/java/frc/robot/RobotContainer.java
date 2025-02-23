@@ -258,8 +258,8 @@ public class RobotContainer {
     // m_operatorController.rightBumper().onTrue(new ClawToPositionCommand(m_claw, 0));
 
     // failsafe for manual control
-    manualClawTriggerUp.whileTrue(new ManualClawCommand(m_claw, ClawConstants.manualClawSpeed));
-    manualClawTriggerDown.whileTrue(new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed));
+    manualClawTriggerUp.whileTrue(new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed));
+    manualClawTriggerDown.whileTrue(new ManualClawCommand(m_claw, ClawConstants.manualClawSpeed));
     MannualElevatorUp.whileTrue(new MannualElevatorCommand(m_elevator, 0.15));
     MannualElevatorDown.whileTrue(new MannualElevatorCommand(m_elevator, -0.03));
 
