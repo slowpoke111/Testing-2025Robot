@@ -58,7 +58,7 @@ public class Constants {
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
     public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.3, Radian);
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
-    public static final Angle algaeClawPos = Radian.of(2.75);
+    public static final Angle algaeClawPos = Radian.of(2.8);
     public static final double limitClawPosition = 0;
     public static final double kP = 0.25;
     public static final double kD = 0.13;
@@ -75,7 +75,7 @@ public class Constants {
     public static final int shooterMotorID = 30;
     public static final double intakeSpeed = -0.2;
     public static final double slowShooterSpeed = -0.4;
-    public static final double algaeSpeed = -0.2;
+    public static final double algaeSpeed = 0.3;
     public static final double fastShooterSpeed = -0.6;
   
   }
@@ -137,8 +137,8 @@ public class Constants {
     public static final double L2Height = 11.5;
     public static final double L3Height = 31d;
     public static final double L4Height = 61d;
-    public static final double A1Height = 15.5;
-    public static final double A2Height = 35;
+    public static final double A1Height = 18d;
+    public static final double A2Height = 33d;
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
   }
