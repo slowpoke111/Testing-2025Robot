@@ -199,34 +199,58 @@ public class RobotContainer {
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     DoubleSupplier leftY = () -> m_operatorController.getLeftY();
+    DoubleSupplier elevatorPosition = () -> m_elevator.getPosition();
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
     // CLAW AND ELEVATOR POSITION CONTROLS
-    m_operatorController.a().onTrue(
+    if(elevatorPosition.getAsDouble() == ElevatorConstants.L1Height){
+      m_operatorController.a().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition));
+    }
+    else{
+      m_operatorController.a().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L1Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L1Height) < ElevatorConstants.elevatorPrecision)).andThen(
         new ClawToPositionCommand(m_claw, ClawConstants.L1ClawPosition)))
         ));
-    m_operatorController.b().onTrue(
+    }
+
+    if(elevatorPosition.getAsDouble() == ElevatorConstants.L2Height){
+      m_operatorController.b().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition));
+    }
+    else{
+      m_operatorController.b().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision)).andThen(
         new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
         ));
-    m_operatorController.x().onTrue(
+    }
+
+    if(elevatorPosition.getAsDouble() == ElevatorConstants.L3Height){
+      m_operatorController.x().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition));
+    }
+    else{
+      m_operatorController.x().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L3Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L3Height) < ElevatorConstants.elevatorPrecision)).andThen(
         new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition)))
         ));
+    }
+
+    if(elevatorPosition.getAsDouble() == ElevatorConstants.L4Height){
+      m_operatorController.y().onTrue(new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition));
+    }
+    else{
     m_operatorController.y().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision)).andThen(
         new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
         ));
+    }
     
       m_operatorController.povUp().onTrue(
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
