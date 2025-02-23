@@ -281,7 +281,9 @@ public class RobotContainer {
     runIndexerTrigger.whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.intakeSpeed));
     m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
-    m_operatorController.rightBumper().whileTrue(new InstantCommand(() -> m_claw.motorVoltage(ClawConstants.kS)));
+    // BRAKE CLAW USING VOLTAGE
+    m_operatorController.rightBumper().toggleOnTrue(new InstantCommand(() -> m_claw.motorVoltage(ClawConstants.kSVoltage)));
+
     //Algae Controls
     m_driverController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
     m_driverController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
