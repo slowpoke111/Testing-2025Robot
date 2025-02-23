@@ -207,6 +207,9 @@ public class RobotContainer {
     BooleanSupplier elevatorAtL3 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L3Height) < ElevatorConstants.elevatorPrecision);
     BooleanSupplier elevatorAtL4 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision);
 
+    BooleanSupplier elevatorAtA1 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision);
+    BooleanSupplier elevatorAtA2 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision);
+
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
@@ -240,18 +243,20 @@ public class RobotContainer {
       ), elevatorAtL4));
 
     m_operatorController.povUp().onTrue(
+      new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos), 
       new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
       new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A2Height), 
-      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision)).andThen(
-      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
-    ));
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision))).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos))
+      ), elevatorAtA2));
 
     m_operatorController.povDown().onTrue(
+      new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos), 
       new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
       new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A1Height), 
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision)).andThen(
       new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)))
-    ));
+      ), elevatorAtA1));
 
 
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
@@ -269,10 +274,11 @@ public class RobotContainer {
     m_operatorController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
     // BRAKE CLAW USING VOLTAGE
-    m_operatorController.rightBumper().toggleOnTrue(new InstantCommand(() -> m_claw.motorVoltage(ClawConstants.kSVoltage)));
+    m_operatorController.povRight().toggleOnTrue(new InstantCommand(() -> m_claw.motorVoltage(ClawConstants.kSVoltage)));
+    m_operatorController.povLeft().toggleOnTrue(new InstantCommand(() -> m_claw.motorVoltage(0)));
 
     //Algae Controls
-    m_driverController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
+    m_driverController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, -ShooterConstants.algaeSpeed));
     m_driverController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
   }
