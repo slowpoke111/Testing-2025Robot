@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import java.util.function.DoubleSupplier;
 import java.util.jar.Attributes.Name;
 
+import frc.robot.commands.AlignSlide;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -173,6 +174,7 @@ public class RobotContainer {
     ));
 
     m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
+    m_driverController.a().onTrue(new AlignSlide(m_drivetrain, 1, 1, 0.5));
 
     m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
         forwardStraight.withVelocityX(SwerveSpeedConsts.slowSpeed).withVelocityY(0))
@@ -201,7 +203,6 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     DoubleSupplier leftY = () -> m_operatorController.getLeftY();
     DoubleSupplier elevatorPosition = () -> m_elevator.getPosition();

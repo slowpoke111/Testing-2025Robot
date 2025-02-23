@@ -5,6 +5,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -74,12 +75,12 @@ public class AlignCommand extends Command {
       }
        
 
-      rotationalRate = rotationalPidController.calculate(fiducial.txnc, 0.0) * RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.9; // Max speed is 90 percnet of max rotate
+      rotationalRate = rotationalPidController.calculate(fiducial.txnc, 0.0) * RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.1; // Max speed is 90 percnet of max rotate
       
-      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.5) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7; //Max speed is 70 percnet of max drive
+      final double velocityX = xPidController.calculate(fiducial.distToRobot, 1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.6; //Max speed is 70 percnet of max drive
         
       if (rotationalPidController.atSetpoint() && xPidController.atSetpoint()) { //At target dist
-        this.end(true);
+        this.end(false);
       }
 
       SmartDashboard.putNumber("txnc", fiducial.txnc);
@@ -109,6 +110,5 @@ public class AlignCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_drivetrain.applyRequest(() -> idleRequest);
-    
   }
 }
