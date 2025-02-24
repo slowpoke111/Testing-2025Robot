@@ -75,7 +75,7 @@ public class Constants {
     public static final int shooterMotorID = 30;
     public static final double intakeSpeed = -0.2;
     public static final double slowShooterSpeed = -0.4;
-    public static final double algaeSpeed = 0.3;
+    public static final double algaeSpeed = 0.2;
     public static final double fastShooterSpeed = -0.6;
   
   }
