@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
@@ -252,8 +253,7 @@ public class RobotContainer {
       new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
       new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A2Height), 
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision))).andThen(
-      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)).andThen(
-      new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
+      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos)
       )), elevatorAtA2));
 
     m_operatorController.povDown().onTrue(
@@ -261,9 +261,9 @@ public class RobotContainer {
       new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
       new ElevatorToPositionCommand(m_elevator,ElevatorConstants.A1Height), 
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision)).andThen(
-      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos))).andThen(
-        new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
-    )), elevatorAtA1));
+      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos))
+      )), elevatorAtA1));
+    
 
 
     // zero the claw angle . . . MAKE SURE TO DO THIS BEFORE DISABLING THE BOT OR GOING INTO A MATCH
@@ -285,7 +285,7 @@ public class RobotContainer {
     m_operatorController.povLeft().toggleOnTrue(new InstantCommand(() -> m_claw.motorVoltage(0)));
 
     //Algae Controls
-    m_driverController.leftTrigger().whileTrue(new RunShooterCommand(m_shooter, -ShooterConstants.algaeSpeed));
+    m_driverController.leftTrigger().whileTrue(new AlgaeIntakeCommand(m_shooter));
     m_driverController.rightTrigger().whileTrue(new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
   }
