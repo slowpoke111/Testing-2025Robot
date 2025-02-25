@@ -28,7 +28,7 @@ public class AlgaeIntakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.runShooterMotor(-ShooterConstants.algaeSpeed);
+    shooter.runShooterMotor(ShooterConstants.algaeSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,7 +38,7 @@ public class AlgaeIntakeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.runShooterMotor(-0.025);
+    shooter.runShooterMotor(0.025);
   }
 
   // Returns true when the command should end.
