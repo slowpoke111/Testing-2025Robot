@@ -27,7 +27,7 @@ public class AlignCommand extends Command {
   private final VisionSubsystem m_Limelight;
 
   //private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.01);
-  private static final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(VisionConstants.ROTATE_P, VisionConstants.ROTATE_I, VisionConstants.ROTATE_D, VisionConstants.TOLERANCE);
+  private static PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(VisionConstants.ROTATE_P, VisionConstants.ROTATE_I, VisionConstants.ROTATE_D, VisionConstants.TOLERANCE);
   //private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.01);
   private static final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(VisionConstants.MOVE_P, VisionConstants.MOVE_I, VisionConstants.MOVE_D, VisionConstants.TOLERANCE);
 
@@ -63,6 +63,8 @@ public class AlignCommand extends Command {
 
   @Override
   public void execute() {
+
+    rotationalPidController = new PIDControllerConfigurable(SmartDashboard.getNumber("Rotate P", 0.0), VisionConstants.ROTATE_I, SmartDashboard.getNumber("Rotate D", 0.0), VisionConstants.TOLERANCE);
     
     RawFiducial fiducial; //Tracked fiducual 
 
@@ -75,9 +77,9 @@ public class AlignCommand extends Command {
       }
        
 
-      rotationalRate = rotationalPidController.calculate(fiducial.txnc, 0.0) * RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.1; // Max speed is 90 percnet of max rotate
+      rotationalRate = rotationalPidController.calculate(2*fiducial.txnc, 0.0) * RotationsPerSecond.of(0.75).in(RadiansPerSecond) * -0.1; // Max speed is 90 percnet of max rotate
       
-      final double velocityX = xPidController.calculate(fiducial.distToRobot, 1) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.6; //Max speed is 70 percnet of max drive
+      final double velocityX = xPidController.calculate(fiducial.distToRobot, 0.3) * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.6; //Max speed is 70 percnet of max drive
         
       if (rotationalPidController.atSetpoint() && xPidController.atSetpoint()) { //At target dist
         this.end(false);
@@ -93,10 +95,8 @@ public class AlignCommand extends Command {
 
     } catch (VisionSubsystem.NoSuchTargetException nste) { 
       System.out.println("No apriltag found");
-      if ((rotationalRate != 0) && (velocityX != 0)){ //Todo - don't move after x seconds without seeing fiducial
         m_drivetrain.setControl(
-          alignRequest.withRotationalRate(-rotationalRate).withVelocityX(-velocityX)); //Continue moving after losing sight temporarily 
-        }
+          alignRequest.withRotationalRate(-1.5*rotationalRate).withVelocityX(-1.5*velocityX)); //Continue moving after losing sight temporarily 
       }
       
     }

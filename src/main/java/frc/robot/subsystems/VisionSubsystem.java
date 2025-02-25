@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.LimelightHelpers.*;
@@ -30,12 +31,15 @@ public class VisionSubsystem extends SubsystemBase {
         -0.5,
         0);
     LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {0,1,3,5,6,8,9,10,11,12});
+
+    SmartDashboard.putNumber("Rotate P",0.0);
+    SmartDashboard.putNumber("Rotate D",0.0);
+
   }
 
   @Override
   public void periodic() {
     fiducials = LimelightHelpers.getRawFiducials("");
-
   }
   public RawFiducial getClosestFiducial() {
     if (fiducials == null || fiducials.length == 0) {
