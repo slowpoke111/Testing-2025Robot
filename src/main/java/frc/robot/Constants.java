@@ -137,8 +137,8 @@ public class Constants {
     public static final double L2Height = 11.5;
     public static final double L3Height = 31d;
     public static final double L4Height = 61d;
-    public static final double A1Height = 18d;
-    public static final double A2Height = 33d;
+    public static final double A1Height = 20d;
+    public static final double A2Height = 35d;
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
   }
