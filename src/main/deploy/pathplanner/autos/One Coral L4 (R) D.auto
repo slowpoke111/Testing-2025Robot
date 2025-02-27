@@ -5,9 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Score First Coral (L) (L1)"
+            "pathName": "Score Coral (L) (L4)"
           }
         },
         {
@@ -21,11 +27,23 @@
           "data": {
             "name": "Shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back Up (L4) (R)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L1"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "LEFT AUTOS",
+  "folder": "RIGHT AUTOS",
   "choreoAuto": false
 }

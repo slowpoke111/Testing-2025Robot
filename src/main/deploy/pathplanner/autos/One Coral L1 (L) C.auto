@@ -5,15 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "L4"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Score Coral (R) (L4)"
+            "pathName": "Score First Coral (R) (L1)"
           }
         },
         {
@@ -32,6 +26,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "RIGHT AUTOS",
+  "folder": "LEFT AUTOS",
   "choreoAuto": false
 }

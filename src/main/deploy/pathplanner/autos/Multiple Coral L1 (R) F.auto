@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Score First Coral (R) (L1)"
+            "pathName": "Score First Coral (L) (L1)"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Grab Coral After Scoring L1 (R)"
+            "pathName": "Grab Coral After Scoring L1 (L)"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go Back to L1 (R)"
+            "pathName": "Go Back to L1 (L)"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Grab Coral After Scoring L1 (R)"
+            "pathName": "Grab Coral After Scoring L1 (L)"
           }
         }
       ]

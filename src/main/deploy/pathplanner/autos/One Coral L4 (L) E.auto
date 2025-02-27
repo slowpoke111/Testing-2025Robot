@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Score Coral (L) (L4)"
+            "pathName": "Score Coral (R) (L4)"
           }
         },
         {
@@ -26,6 +26,18 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back Up (L4) (L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L1"
           }
         }
       ]
