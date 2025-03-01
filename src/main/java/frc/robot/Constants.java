@@ -56,7 +56,7 @@ public class Constants {
     public static final Angle L2ClawPosition = Radian.of(0.4);
     public static final Angle L3ClawPosition = Radian.of(0.37);
     //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
-    public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.91, Radian);
+    public static final Angle L4ClawPosition = Angle.ofBaseUnits(1, Radian); // original 0.91 rad
     public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.3, Radian);
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
     public static final Angle algaeClawPos = Radian.of(2.8);
@@ -139,8 +139,8 @@ public class Constants {
     //public static final double L3Height = 31d;
     public static final double L3Height = 29.75d;
     public static final double L4Height = 61d;
-    public static final double A1Height = 20d;
-    public static final double A2Height = 35d;
+    public static final double A1Height = 21d; // original 20
+    public static final double A2Height = 36d; // original 35
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
   }

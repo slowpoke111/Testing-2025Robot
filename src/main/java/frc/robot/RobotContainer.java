@@ -34,6 +34,8 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.SteerRequestType;
+
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants.ShooterConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -162,6 +164,7 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     //new Trigger(m_exampleSubsystem::exampleCondition)
     //.onTrue(new ExampleCommand(m_exampleSubsystem));
+    m_drivetrain.registerTelemetry(new Telemetry(MaxSpeed)::telemeterize); // experiment with this telemetry TODO
     m_drivetrain.setDefaultCommand(
         // Drivetrain will execute this command periodically
         m_drivetrain.applyRequest(() ->
