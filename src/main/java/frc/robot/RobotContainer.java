@@ -27,6 +27,7 @@ import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
+import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.commands.RunShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -152,6 +153,8 @@ public class RobotContainer {
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
        SmartDashboard.putData("Auto Mode", autoChooser);
+
+       CameraServer.startAutomaticCapture();
  
        configureBindings();
    }
