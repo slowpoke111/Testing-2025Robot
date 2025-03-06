@@ -96,13 +96,12 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   DoubleSupplier yOperator = () -> m_operatorController.getRightY();
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
-  Trigger 
-  manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
+  Trigger manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
   Trigger manualClawTriggerDown = new Trigger(() -> yOperator.getAsDouble() < 0);
 
   private final SendableChooser<Command> autoChooser;
   
-    private final VisionSubsystem m_Vision = new VisionSubsystem();
+  private final VisionSubsystem m_Vision = new VisionSubsystem();
 
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
@@ -111,8 +110,15 @@ public class RobotContainer {
           PortForwarder.add(port, "limelight.local", port);
       }
 
-      NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision).withTimeout(2));
-      NamedCommands.registerCommand("Shoot", new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
+      NamedCommands.registerCommand("Align", 
+        new AlignCommand(m_drivetrain, m_Vision).withTimeout(2));
+        
+      NamedCommands.registerCommand("Shoot", 
+        new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
+      
+      NamedCommands.registerCommand("Intake", 
+        new WaitUntilCommand(this::coralPresent).andThen(
+        new RunShooterCommand(m_shooter, ShooterConstants.slowShooterSpeed).until(()->!coralPresent())));
 
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
