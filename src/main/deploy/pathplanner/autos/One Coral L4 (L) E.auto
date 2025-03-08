@@ -29,15 +29,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Back Up (L4) (L)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Go Get Second Coral (L4) (L)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "L1"
+                }
+              }
+            ]
           }
         }
       ]

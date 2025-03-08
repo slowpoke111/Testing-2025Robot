@@ -98,15 +98,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Back Up From Second L4 (L)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Go Back to Source (L)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "L1"
+                }
+              }
+            ]
           }
         }
       ]
