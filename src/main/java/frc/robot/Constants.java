@@ -122,6 +122,7 @@ public class Constants {
     public static final boolean kEncoderReversed = false;
     public static final double kEncoderDistancePerPulse = 1;
     public static final double kElevatorToleranceRPS = 100;
+
     /* 
     public static final double setpointLocation = 0.5;
     public static final double maxElevatorHeight = 1;
