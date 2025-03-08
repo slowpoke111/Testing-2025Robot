@@ -4,20 +4,17 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private final TalonFX shooterMotor = new TalonFX(ShooterConstants.shooterMotorID);
+  private final SparkFlex shooterMotor = new SparkFlex(Constants.ShooterConstants.shooterMotorID, MotorType.kBrushless);
   
   public ShooterSubsystem() {
-    shooterMotor.setNeutralMode(NeutralModeValue.Brake);
+    
   }
   
   public void runShooterMotor(double speed) {
