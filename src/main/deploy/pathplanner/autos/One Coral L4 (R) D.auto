@@ -29,15 +29,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Back Up (L4) (R)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Get Coral After Scoring (L4) (L)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "L1"
+                }
+              }
+            ]
           }
         }
       ]

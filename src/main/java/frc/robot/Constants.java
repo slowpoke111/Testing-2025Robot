@@ -63,9 +63,9 @@ public class Constants {
     public static final double limitClawPosition = 0;
     public static final double kP = 0.25;
     public static final double kD = 0.13;
-    public static final double kG = 0.22;
+    public static final double kG = 0.08; // 0.22
     public static final double kS = 0.0;
-    public static final double kV = 0.88;
+    public static final double kV = 0.91; // 0.88
     public static final double kA = 0.01;
     public static final double feedforwardVelocity = 1;
     public static final Angle tolerance = Angle.ofBaseUnits(0.05, Radian);
