@@ -11,10 +11,11 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private final SparkFlex shooterMotor = new SparkFlex(Constants.ShooterConstants.shooterMotorID, MotorType.kBrushless);
+  private final SparkFlex shooterMotor;
   
   public ShooterSubsystem() {
-    
+    shooterMotor = new SparkFlex(Constants.ShooterConstants.shooterMotorID, MotorType.kBrushless);
+  
   }
   
   public void runShooterMotor(double speed) {

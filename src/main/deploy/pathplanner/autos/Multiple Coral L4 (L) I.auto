@@ -39,18 +39,31 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "L1"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L1"
+                      }
+                    }
+                  ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.5
           }
         },
         {
@@ -108,9 +121,22 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "L1"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L1"
+                      }
+                    }
+                  ]
                 }
               }
             ]

@@ -4,23 +4,27 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
+import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunShooterCommand extends Command {
+public class CoralIntakeCommand extends Command {
   private final ShooterSubsystem m_shooter;
   private final double speed;
-  
+  private final BooleanSupplier coralPresent;
  
-  public RunShooterCommand(ShooterSubsystem shooter, double speed) {
+  public CoralIntakeCommand(ShooterSubsystem shooter, double speed, BooleanSupplier coralPresent) {
     m_shooter = shooter;
     this.speed = speed;
+    this.coralPresent = coralPresent;
     addRequirements(shooter);
   }
 
   @Override
   public void initialize() {
       m_shooter.runShooterMotor(speed);
+      ShooterConstants.confirmAuton = ()->false;
     }
 
   @Override
@@ -29,10 +33,12 @@ public class RunShooterCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_shooter.runShooterMotor(0);
+    System.out.println("Coral Intake Command Ended");
+    ShooterConstants.confirmAuton = ()->true;
   }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return !coralPresent.getAsBoolean();
   }
 }

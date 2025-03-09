@@ -57,7 +57,7 @@ public class Constants {
     public static final Angle L3ClawPosition = Radian.of(0.37);
     //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(1, Radian); // original 0.91 rad
-    public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.3, Radian);
+    public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.6, Radian);
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
     public static final Angle algaeClawPos = Radian.of(2.8);
     public static final double limitClawPosition = 0;
@@ -71,6 +71,7 @@ public class Constants {
     public static final Angle tolerance = Angle.ofBaseUnits(0.05, Radian);
     public static final double GEAR_RATIO = 46;
     public static final double kSVoltage = -0.2;
+    public static final double clampRangeforSpeed = 0.25;
   }
   public static class ShooterConstants {
     public static final int shooterMotorID = 30;
@@ -78,7 +79,8 @@ public class Constants {
     public static final double slowShooterSpeed = -0.4;
     public static final double algaeSpeed = 0.2;
     public static final double fastShooterSpeed = -0.6;
-  
+    public static final double slowAlgaeSpeed = 0.1;
+    public static boolean confirmAuton;
   }
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
@@ -97,7 +99,6 @@ public class Constants {
     /** All values are placeholders for now*/
     public static final double kP = 0.03;
     public static final double kI = 0.0;
-    //public static final double kD = 0.2;
     public static final double kD = 0.001;
 
     public static final double kS = 0.77;
@@ -134,7 +135,7 @@ public class Constants {
     public static final double coralPickupRatio = 0;
     */
 
-    public static final double L1Height = 0d;
+    public static final double L1Height = 1;
     //public static final double L2Height = 12d;
     public static final double L2Height = 11.5;
     //public static final double L3Height = 31d;
@@ -144,5 +145,6 @@ public class Constants {
     public static final double A2Height = 37d; // original 35
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
+    public static final double clampRangeForSpeed = 4;
   }
 }

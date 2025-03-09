@@ -53,6 +53,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     m_elevatorMotor1.configure(new SparkMaxConfig().idleMode(IdleMode.kBrake), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     m_elevatorMotor2.configure(new SparkMaxConfig().follow(m_elevatorMotor1).idleMode(IdleMode.kBrake), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    elevatorEncoder.setPosition(0);
   }
  
   public void runElevatorMotorManual(double speed){
@@ -91,7 +92,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     
     public void periodic() {
       //m_elevatorFeedback.setReference(currentTarget, ControlType.kMAXMotionPositionControl);
-      zeroEncoder();
+      //zeroEncoder();
       SmartDashboard.putNumber("Elevator Position: ", getPosition());
     }
   }

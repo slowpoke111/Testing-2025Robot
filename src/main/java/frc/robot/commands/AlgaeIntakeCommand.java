@@ -38,7 +38,7 @@ public class AlgaeIntakeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.runShooterMotor(0.025);
+    shooter.runShooterMotor(ShooterConstants.slowAlgaeSpeed);
   }
 
   // Returns true when the command should end.

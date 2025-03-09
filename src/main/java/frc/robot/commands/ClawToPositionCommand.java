@@ -54,9 +54,9 @@ public class ClawToPositionCommand extends Command {
     double speed = MathUtil.clamp(
       pidSpeed + clawFeedforward.calculate(m_claw.getClawPosition().in(Radian), 
       Math.signum(targetPos-m_claw.getClawPosition().in(Radian))*ClawConstants.feedforwardVelocity), 
-      -0.5, 0.5);
+      -ClawConstants.clampRangeforSpeed, ClawConstants.clampRangeforSpeed);
 
-    m_claw.runClawMotor(0.5 * speed);
+    m_claw.runClawMotor(speed);
 
     SmartDashboard.putNumber("Angle", m_claw.getClawPosition().in(Radian));
     SmartDashboard.putNumber("Feedforward/back Speed", speed);
