@@ -156,6 +156,13 @@ public class RobotContainer {
         new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
         ))
       ));
+      NamedCommands.registerCommand("Procesor",         
+        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos)).andThen(
+        new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
+        ))
+      ));
 
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -232,6 +239,8 @@ public class RobotContainer {
     BooleanSupplier elevatorAtA1 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision);
     BooleanSupplier elevatorAtA2 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision);
 
+    BooleanSupplier elevatorAtProcessor = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision);
+
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
 
@@ -279,6 +288,14 @@ public class RobotContainer {
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A1Height) < ElevatorConstants.elevatorPrecision)).andThen(
       new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos))
       )), elevatorAtA1));
+
+      m_driverController.leftBumper().onTrue(      
+      new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos), 
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos))
+      )), elevatorAtProcessor));
     
 
 
