@@ -83,7 +83,7 @@ public class Constants {
     public static final double algaeSpeed = 0.2;
     public static final double fastShooterSpeed = -0.6;
     public static final double slowAlgaeSpeed = 0.1;
-    public static BooleanSupplier confirmAuton;
+    public static BooleanSupplier confirmAuton = ()->false;
   }
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";

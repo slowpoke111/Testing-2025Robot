@@ -117,15 +117,12 @@ public class RobotContainer {
       NamedCommands.registerCommand("Align", 
         new AlignCommand(m_drivetrain, m_Vision, true).withTimeout(2));
 
-
       NamedCommands.registerCommand("Shoot", 
         new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
       
       NamedCommands.registerCommand("Intake", 
-        new WaitUntilCommand(ShooterConstants.confirmAuton).withTimeout(1.5)); //.andThen(
+        new WaitUntilCommand(()->false).withTimeout(1.5)); //.andThen(
        // new CoralIntakeCommand(m_shooter, ShooterConstants.slowShooterSpeed, ()->coralPresent())));
-
-        NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision,true).withTimeout(2));
 
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
@@ -165,7 +162,7 @@ public class RobotContainer {
         new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
         ))
       ));
-      NamedCommands.registerCommand("Procesor",         
+      NamedCommands.registerCommand("Processor",         
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos)).andThen(

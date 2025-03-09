@@ -15,7 +15,6 @@ public class ShooterSubsystem extends SubsystemBase {
   
   public ShooterSubsystem() {
     shooterMotor = new SparkFlex(Constants.ShooterConstants.shooterMotorID, MotorType.kBrushless);
-  
   }
   
   public void runShooterMotor(double speed) {
