@@ -170,8 +170,6 @@ public class RobotContainer {
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
        SmartDashboard.putData("Auto Mode", autoChooser);
-
-       CameraServer.startAutomaticCapture();
  
        configureBindings();
    }
