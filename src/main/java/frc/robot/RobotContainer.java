@@ -7,9 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.function.DoubleSupplier;
-import java.util.jar.Attributes.Name;
 
-import frc.robot.commands.AlignSlide;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,7 +33,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.SteerRequestType;
 
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants.ShooterConstants;
@@ -47,21 +44,15 @@ import frc.robot.commands.ClawToPositionCommand;
 import frc.robot.commands.CoralIntakeCommand;
 import frc.robot.commands.ElevatorToPositionCommand;
 import java.util.function.BooleanSupplier;
-import java.util.List;
 import frc.robot.subsystems.ClawSubsystem;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Telemetry;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+
 
 
 /**
@@ -98,7 +89,12 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   DoubleSupplier yOperator = () -> m_operatorController.getRightY();
-  Trigger runIndexerTrigger = new Trigger(this::coralPresent);
+  
+  public BooleanSupplier isTeleop = () -> false;
+  public BooleanSupplier coralPresent = this::coralPresent;
+  public BooleanSupplier canRunIntake = () -> isTeleop.getAsBoolean() && coralPresent.getAsBoolean();
+  Trigger runIndexerTrigger = new Trigger(canRunIntake);
+
   Trigger manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
   Trigger manualClawTriggerDown = new Trigger(() -> yOperator.getAsDouble() < 0);
 
@@ -121,7 +117,8 @@ public class RobotContainer {
         new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
       
       NamedCommands.registerCommand("Intake", 
-        new WaitUntilCommand(()->false).withTimeout(1.5)); //.andThen(
+        new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(0.6));
+        // new WaitUntilCommand(()->false).withTimeout(1.5)); //.andThen(
        // new CoralIntakeCommand(m_shooter, ShooterConstants.slowShooterSpeed, ()->coralPresent())));
 
       NamedCommands.registerCommand("L1", 
