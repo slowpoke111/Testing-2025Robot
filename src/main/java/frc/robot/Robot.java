@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.Constants.LEDConstants;
 
 import java.util.Timer;
 import java.util.Date;
@@ -23,7 +21,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-  private final LEDSubsystem m_led;
   Timer endOfMatchTimer = new Timer();
 
   /**
@@ -34,12 +31,10 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_led = new LEDSubsystem();
   }
 
   public void RobotInit() {
     // Sets the LED color to blue when the robot turns on
-    m_led.LEDColor(LEDConstants.colorBlue);
   }
 
   /**
@@ -105,7 +100,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    
+  }
 
   @Override
   public void testInit() {

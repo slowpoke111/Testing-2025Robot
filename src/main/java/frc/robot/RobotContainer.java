@@ -104,8 +104,9 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   
-  private final VisionSubsystem m_Vision = new VisionSubsystem();
 
+  private final VisionSubsystem m_Vision = new VisionSubsystem();
+  
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 
    public RobotContainer() {
@@ -114,7 +115,8 @@ public class RobotContainer {
       }
 
       NamedCommands.registerCommand("Align", 
-        new AlignCommand(m_drivetrain, m_Vision).withTimeout(2));
+        new AlignCommand(m_drivetrain, m_Vision, true).withTimeout(2));
+
 
       NamedCommands.registerCommand("Shoot", 
         new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
@@ -122,6 +124,8 @@ public class RobotContainer {
       NamedCommands.registerCommand("Intake", 
         new WaitUntilCommand(ShooterConstants.confirmAuton).withTimeout(1.5)); //.andThen(
        // new CoralIntakeCommand(m_shooter, ShooterConstants.slowShooterSpeed, ()->coralPresent())));
+
+        NamedCommands.registerCommand("Align", new AlignCommand(m_drivetrain, m_Vision,true).withTimeout(2));
 
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
@@ -200,8 +204,7 @@ public class RobotContainer {
         point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
     ));
 
-    m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision));
-    m_driverController.a().onTrue(new AlignSlide(m_drivetrain, 1, 1, 0.5));
+    m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision,true));
 
     m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
         forwardStraight.withVelocityX(SwerveSpeedConsts.slowSpeed).withVelocityY(0))

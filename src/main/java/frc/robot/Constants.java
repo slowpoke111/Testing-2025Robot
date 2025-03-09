@@ -2,6 +2,8 @@ package frc.robot;
 import edu.wpi.first.units.measure.Angle;
 import static edu.wpi.first.units.Units.Radian;
 
+import java.util.function.BooleanSupplier;
+
 public class Constants {
   public static class UniversalConstants {
     public static final String bestProgrammer = "Gabriel Kuzowsky"; 
@@ -28,7 +30,7 @@ public class Constants {
     public static final double L1Speed = 3d;
   }
   public static class LEDConstants{
-    public static final int LEDDriverOneID = 3;
+    public static final int LEDDriverOneID = 1;
     public static final double colorRed = 0.61;
     public static final double colorHotPink = 0.57;
     public static final double colorYellow = 0.69;
@@ -52,10 +54,10 @@ public class Constants {
     public static final int encoderTicksWithRatio = 2048 * gearRatio;
     public static final double manualClawSpeed = 0.05;
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
-    //public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
+  //public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
     public static final Angle L2ClawPosition = Radian.of(0.4);
     public static final Angle L3ClawPosition = Radian.of(0.37);
-    //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
+  //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(1, Radian); // original 0.91 rad
     public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.6, Radian);
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
@@ -81,11 +83,11 @@ public class Constants {
     public static final double algaeSpeed = 0.2;
     public static final double fastShooterSpeed = -0.6;
     public static final double slowAlgaeSpeed = 0.1;
-    public static boolean confirmAuton;
+    public static BooleanSupplier confirmAuton;
   }
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
-
+    /* 
     public static final double MOVE_P = 0.300000;
     public static final double MOVE_I = 0.000000;
     public static final double MOVE_D = 0.000600;
@@ -93,6 +95,21 @@ public class Constants {
     public static final double ROTATE_P = 0.030000;
     public static final double ROTATE_I = 0.000000;
     public static final double ROTATE_D = 0.000100;
+    */
+
+    public static final double X_REEF_ALIGNMENT_P = 0.15;
+    public static final double Y_REEF_ALIGNMENT_P = 0.5;
+    public static final double ROT_REEF_ALIGNMENT_P = 0.03;
+    
+    public static final double ROT_SETPOINT_REEF_ALIGNMENT = 0;  
+    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 0.5;
+    public static final double X_SETPOINT_REEF_ALIGNMENT = -0.5;  
+    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.005;
+    public static final double Y_SETPOINT_REEF_ALIGNMENT = 0.4;  
+    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.0005;
+  
+    public static final double waitTime = 1;
+    public static final double validationTime = 0.3;
 
     public static final double TOLERANCE = 0.01;
   }
@@ -100,6 +117,8 @@ public class Constants {
     /** All values are placeholders for now*/
     public static final double kP = 0.03;
     public static final double kI = 0.0;
+
+  //public static final double kD = 0.2;
     public static final double kD = 0.001;
 
     public static final double kS = 0.77;
@@ -136,10 +155,11 @@ public class Constants {
     public static final double coralPickupRatio = 0;
     */
 
-    public static final double L1Height = 1;
+    public static final double L1Height = 1d;
     //public static final double L2Height = 12d;
+  //public static final double L2Height = 12d;
     public static final double L2Height = 11.5;
-    //public static final double L3Height = 31d;
+  //public static final double L3Height = 31d;
     public static final double L3Height = 29.75d;
     public static final double L4Height = 61d;
     public static final double A1Height = 22d; // original 20
