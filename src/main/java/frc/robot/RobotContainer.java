@@ -165,7 +165,7 @@ public class RobotContainer {
         new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
         ))
       ));
-      NamedCommands.registerCommand("Procesor",         
+      NamedCommands.registerCommand("Processor",         
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos)).andThen(
