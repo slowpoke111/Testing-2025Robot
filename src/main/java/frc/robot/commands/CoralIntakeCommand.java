@@ -24,7 +24,7 @@ public class CoralIntakeCommand extends Command {
   @Override
   public void initialize() {
       m_shooter.runShooterMotor(speed);
-      ShooterConstants.confirmAuton = ()->false;
+      
     }
 
   @Override
@@ -34,7 +34,7 @@ public class CoralIntakeCommand extends Command {
   public void end(boolean interrupted) {
     m_shooter.runShooterMotor(0);
     System.out.println("Coral Intake Command Ended");
-    ShooterConstants.confirmAuton = ()->true;
+    
   }
 
   @Override

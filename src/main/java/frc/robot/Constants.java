@@ -115,14 +115,12 @@ public class Constants {
   }
   public static class ElevatorConstants {
     /** All values are placeholders for now*/
-    public static final double kP = 0.03;
+    public static final double kP = 0.75; // 0.03
     public static final double kI = 0.0;
+    public static final double kD = 0.1; // 0.001 new 0.13
 
-  //public static final double kD = 0.2;
-    public static final double kD = 0.001;
-
-    public static final double kS = 0.77;
-    public static final double kG = 0.3;
+    public static final double kS = 0.24;
+    public static final double kG = 1.01;
     public static final double kV = 10.52;
     public static final double kA = 0.05;
     public static final double feedforwardVelocity = 0.5;
@@ -132,8 +130,7 @@ public class Constants {
     public static final double maxVelocity = 0.1;
     public static final double maxAcceleration = 0.05;
 
-    public static final double elevatorPosTolerance = 0.5;
-    public static final double elevatorVelTolerance = 1;
+    public static final double elevatorPosTolerance = 0.2;
 
     public static final double kElevatorMotorPort = 0;
     public static final int[] kEncoderPorts = {0, 1};
@@ -155,7 +152,7 @@ public class Constants {
     public static final double coralPickupRatio = 0;
     */
 
-    public static final double L1Height = 1d;
+    public static final double L1Height = 1.5d;
     //public static final double L2Height = 12d;
   //public static final double L2Height = 12d;
     public static final double L2Height = 11.5;
@@ -167,6 +164,6 @@ public class Constants {
     public static final double processorHeight = 7d;  
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
-    public static final double clampRangeForSpeed = 4;
+    public static final double clampRangeForSpeed = 6;
   }
 }

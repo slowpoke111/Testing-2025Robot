@@ -90,11 +90,12 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   DoubleSupplier yOperator = () -> m_operatorController.getRightY();
   
-  public BooleanSupplier isTeleop = () -> false;
+ /*  public BooleanSupplier isTeleop = () -> false;
   public BooleanSupplier coralPresent = this::coralPresent;
   public BooleanSupplier canRunIntake = () -> isTeleop.getAsBoolean() && coralPresent.getAsBoolean();
-  Trigger runIndexerTrigger = new Trigger(canRunIntake);
-
+  Trigger runIndexerTrigger = new Trigger(canRunIntake); 
+  */
+  Trigger runIndexerTrigger = new Trigger(this::coralPresent);
   Trigger manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
   Trigger manualClawTriggerDown = new Trigger(() -> yOperator.getAsDouble() < 0);
 
@@ -117,9 +118,9 @@ public class RobotContainer {
         new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
       
       NamedCommands.registerCommand("Intake", 
-        new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(0.6));
-        // new WaitUntilCommand(()->false).withTimeout(1.5)); //.andThen(
-       // new CoralIntakeCommand(m_shooter, ShooterConstants.slowShooterSpeed, ()->coralPresent())));
+       // new CoralShootCommand(m_shooter, ShooterConstants.intakeSpeed).withTimeout(0.4));
+        new WaitUntilCommand(this::coralPresent).andThen(
+        new CoralIntakeCommand(m_shooter, ShooterConstants.slowShooterSpeed, this::coralPresent)));
 
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
@@ -321,6 +322,7 @@ public class RobotContainer {
     m_driverController.leftTrigger().whileTrue(new AlgaeIntakeCommand(m_shooter));
     m_driverController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
+    m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
   }
 
   public boolean coralPresent() {
