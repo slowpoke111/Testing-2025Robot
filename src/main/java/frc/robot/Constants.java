@@ -60,9 +60,10 @@ public class Constants {
     public static final Angle L3ClawPosition = Radian.of(0.6);
   //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(1, Radian); // original 0.91 rad
+    public static final Angle AutonL4Claw = Angle.ofBaseUnits(1.1, Radian);
     public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.6, Radian);
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
-    public static final Angle processorClawPos = Radian.of(3.25d); 
+    public static final Angle processorClawPos = Radian.of(3.25d);
     public static final Angle algaeClawPos = Radian.of(2.9);
     public static final double limitClawPosition = 0;
     public static final double kP = 0.25;
@@ -81,7 +82,7 @@ public class Constants {
     public static final int shooterMotorID = 30;
     public static final double intakeSpeed = -0.2;
     public static final double slowShooterSpeed = -0.4;
-    public static final double algaeSpeed = 0.2;
+    public static final double algaeSpeed = 0.4;
     public static final double fastShooterSpeed = -0.6;
     public static final double slowAlgaeSpeed = 0.1;
     public static BooleanSupplier confirmAuton = ()->false;
@@ -153,7 +154,7 @@ public class Constants {
     public static final double coralPickupRatio = 0;
     */
 
-    public static final double L1Height = 1.5d;
+    public static final double L1Height = 1d;
     //public static final double L2Height = 12d;
   //public static final double L2Height = 12d;
     //public static final double L2Height = 11.5;

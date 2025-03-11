@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.SwerveSpeedConsts;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -116,7 +117,9 @@ public class RobotContainer {
       NamedCommands.registerCommand("Intake", 
        // new CoralShootCommand(m_shooter, ShooterConstants.intakeSpeed).withTimeout(0.4));
         new WaitUntilCommand(this::coralPresent).andThen(
-        new CoralIntakeCommand(m_shooter, ShooterConstants.slowShooterSpeed, this::coralPresent)));
+        new CoralIntakeCommand(m_shooter, ShooterConstants.intakeSpeed, this::coralPresent)).andThen(
+        new WaitCommand(0.3)
+        ));
 
       NamedCommands.registerCommand("L1", 
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
@@ -140,7 +143,7 @@ public class RobotContainer {
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L4Height), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L4Height) < ElevatorConstants.elevatorPrecision)).andThen(
-        new ClawToPositionCommand(m_claw, ClawConstants.L4ClawPosition)))
+        new ClawToPositionCommand(m_claw, ClawConstants.AutonL4Claw)))
         ));
       NamedCommands.registerCommand("A1", 
         new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
