@@ -55,14 +55,15 @@ public class Constants {
     public static final double manualClawSpeed = 0.05;
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
   //public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
-    public static final Angle L2ClawPosition = Radian.of(0.4);
-    public static final Angle L3ClawPosition = Radian.of(0.37);
+    //public static final Angle L2ClawPosition = Radian.of(0.4);
+    public static final Angle L2ClawPosition = Radian.of(0.5);
+    public static final Angle L3ClawPosition = Radian.of(0.6);
   //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(1, Radian); // original 0.91 rad
     public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.6, Radian);
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
     public static final Angle processorClawPos = Radian.of(3.25d); 
-    public static final Angle algaeClawPos = Radian.of(2.8);
+    public static final Angle algaeClawPos = Radian.of(2.9);
     public static final double limitClawPosition = 0;
     public static final double kP = 0.25;
     public static final double kD = 0.13;
@@ -155,15 +156,16 @@ public class Constants {
     public static final double L1Height = 1.5d;
     //public static final double L2Height = 12d;
   //public static final double L2Height = 12d;
-    public static final double L2Height = 11.5;
+    //public static final double L2Height = 11.5;
+    public static final double L2Height = 11d;
   //public static final double L3Height = 31d;
-    public static final double L3Height = 29.75d;
+    public static final double L3Height = 32d;
     public static final double L4Height = 61d;
     public static final double A1Height = 22d; // original 20
     public static final double A2Height = 37d; // original 35
     public static final double processorHeight = 7d;  
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
-    public static final double clampRangeForSpeed = 6;
+    public static final double clampRangeForSpeed = 5;
   }
 }
