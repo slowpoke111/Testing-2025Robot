@@ -56,7 +56,7 @@ public class Constants {
     public static final Angle L1ClawPosition = Angle.ofBaseUnits(0, Radian); 
   //public static final Angle L2L3ClawPosition = Angle.ofBaseUnits(0.4, Radian); 
     //public static final Angle L2ClawPosition = Radian.of(0.4);
-    public static final Angle L2ClawPosition = Radian.of(0.5);
+    public static final Angle L2ClawPosition = Radian.of(0.6);
     public static final Angle L3ClawPosition = Radian.of(0.6);
   //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
     public static final Angle L4ClawPosition = Angle.ofBaseUnits(1, Radian); // original 0.91 rad
@@ -74,7 +74,7 @@ public class Constants {
     public static final double feedforwardVelocity = 1;
     public static final Angle tolerance = Angle.ofBaseUnits(0.05, Radian);
     public static final double GEAR_RATIO = 46;
-    public static final double kSVoltage = -0.2;
+    public static final double kSVoltage = -0.15;
     public static final double clampRangeforSpeed = 0.25;
   }
   public static class ShooterConstants {
@@ -116,7 +116,7 @@ public class Constants {
   }
   public static class ElevatorConstants {
     /** All values are placeholders for now*/
-    public static final double kP = 0.75; // 0.03
+    public static final double kP = 0.6; // 0.03
     public static final double kI = 0.0;
     public static final double kD = 0.1; // 0.001 new 0.13
 
@@ -157,7 +157,7 @@ public class Constants {
     //public static final double L2Height = 12d;
   //public static final double L2Height = 12d;
     //public static final double L2Height = 11.5;
-    public static final double L2Height = 11d;
+    public static final double L2Height = 13d;
   //public static final double L3Height = 31d;
     public static final double L3Height = 32d;
     public static final double L4Height = 61d;

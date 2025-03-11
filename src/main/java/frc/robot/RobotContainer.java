@@ -25,7 +25,6 @@ import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
-import edu.wpi.first.cameraserver.CameraServer;
 import frc.robot.commands.CoralShootCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -52,8 +51,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -101,7 +98,6 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   
-
   private final VisionSubsystem m_Vision = new VisionSubsystem();
   
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
@@ -259,6 +255,13 @@ public class RobotContainer {
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision)).andThen(
       new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
       ), elevatorAtL2));
+
+    m_operatorController.b().onTrue(new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition),
+      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.L2Height), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.L2Height) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.L2ClawPosition)))
+    ), elevatorAtL2));
     
     m_operatorController.x().onTrue(new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.L3ClawPosition),
       new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
@@ -331,6 +334,5 @@ public class RobotContainer {
     boolean isPresent = coralPresent.getAsBoolean();
     return isPresent;
   }
-
 
 }
