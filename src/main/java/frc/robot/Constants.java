@@ -108,10 +108,13 @@ public class Constants {
     public static final double X_SETPOINT_REEF_ALIGNMENT = -0.5;  
     public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.005;
     public static final double Y_SETPOINT_REEF_ALIGNMENT = 0.4;  
-    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.005;
+    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.1;
   
     public static final double waitTime = 1;
     public static final double validationTime = 0.3;
+
+    public static final double branchAngle = 22d; //Degrees
+    public static final double branchTolerance = 2.2; //Degrees
 
     public static final double TOLERANCE = 0.01;
   }
