@@ -90,7 +90,7 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {//Debug
   }
 
   public boolean isAligned(){
-    if (Math.abs(getTYAngle().in(Radian)-5)>4) {return false;}
+    if (Math.abs(getTYAngle().in(Radian)-5)>0.2) {return false;}
     if (Math.abs(getTXAngle().in(Radian)-VisionConstants.Y_SETPOINT_REEF_ALIGNMENT)<VisionConstants.Y_TOLERANCE_REEF_ALIGNMENT){return true;} //Left
     if (Math.abs(getTXAngle().in(Radian)+VisionConstants.Y_SETPOINT_REEF_ALIGNMENT)<VisionConstants.Y_TOLERANCE_REEF_ALIGNMENT){return true;} //Right
     return false;
