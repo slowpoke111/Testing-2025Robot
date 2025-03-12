@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -85,6 +88,13 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {//Debug
   throw new NoSuchTargetException("Cannot find: " + id + ". IN view:: " + availableIds.toString());
   }
 
+  public boolean isAligned(){
+    if (Math.abs(getTYAngle().in(Radian)-5)>4) {return false;}
+    if (Math.abs(getTXAngle().in(Radian)-VisionConstants.Y_SETPOINT_REEF_ALIGNMENT)<VisionConstants.Y_TOLERANCE_REEF_ALIGNMENT){return true;} //Left
+    if (Math.abs(getTXAngle().in(Radian)+VisionConstants.Y_SETPOINT_REEF_ALIGNMENT)<VisionConstants.Y_TOLERANCE_REEF_ALIGNMENT){return true;} //Right
+    return false;
+  }
+
   //Get values
   public double getTX(){
     return LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME);
@@ -92,6 +102,14 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {//Debug
   public double getTY(){
     return LimelightHelpers.getTY(VisionConstants.LIMELIGHT_NAME);
   }
+
+  public Angle getTXAngle(){
+    return Degrees.of(LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME));
+  }
+  public Angle getTYAngle(){
+    return Degrees.of(LimelightHelpers.getTY(VisionConstants.LIMELIGHT_NAME));
+  }
+
   public double getTA(){
     return LimelightHelpers.getTA(VisionConstants.LIMELIGHT_NAME);
   }
