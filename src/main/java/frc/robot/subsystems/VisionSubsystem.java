@@ -43,6 +43,7 @@ public class VisionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     fiducials = LimelightHelpers.getRawFiducials("");
+    SmartDashboard.putBoolean("Is aligned:", isAligned());
   }
   public RawFiducial getClosestFiducial() {
     if (fiducials == null || fiducials.length == 0) {
