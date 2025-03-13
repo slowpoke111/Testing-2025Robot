@@ -10,6 +10,7 @@ import frc.robot.subsystems.LimelightHelpers.*;
 
 public class VisionSubsystem extends SubsystemBase {
   private RawFiducial[] fiducials;
+  private final LEDSubsystem m_LEDs = new LEDSubsystem();
 
   public VisionSubsystem() {
     config();
@@ -44,6 +45,12 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     fiducials = LimelightHelpers.getRawFiducials("");
     SmartDashboard.putBoolean("Is aligned:", isAligned());
+    if (isAligned()){
+      m_LEDs.runLEDs(0.73);
+    }
+    else {
+      m_LEDs.runLEDs(0.87);
+    }
   }
   public RawFiducial getClosestFiducial() {
     if (fiducials == null || fiducials.length == 0) {
