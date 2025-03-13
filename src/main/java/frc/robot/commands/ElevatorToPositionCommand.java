@@ -55,7 +55,7 @@ public class ElevatorToPositionCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    m_Elevator.setElevatorVoltage(.38);
+    m_Elevator.setElevatorVoltage(ElevatorConstants.elevatorHoldVoltage);
   }
 
   @Override

@@ -146,6 +146,9 @@ public class Constants {
     public static final double kEncoderDistancePerPulse = 1;
     public static final double kElevatorToleranceRPS = 100;
 
+    public static final double elevatorHoldVoltage = 0.38;
+    public static final double elevatorManualHoldVoltage = 0.1;
+
     /* 
     public static final double setpointLocation = 0.5;
     public static final double maxElevatorHeight = 1;
@@ -163,10 +166,10 @@ public class Constants {
     //public static final double L2Height = 11.5;
     public static final double L2Height = 13d;
   //public static final double L3Height = 31d;
-    public static final double L3Height = 32d;
+    public static final double L3Height = 31d;
     public static final double L4Height = 61d;
     public static final double A1Height = 22d; // original 20
-    public static final double A2Height = 37d; // original 35
+    public static final double A2Height = 40d; // original 35
     public static final double processorHeight = 7d;  
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
