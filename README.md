@@ -28,6 +28,5 @@
 
 ### LED Meanings:
 
-- **Lime Green** = Limelight is aligning
-- **White** = Coral is present
-- **Blue and Gold** = Match is over
+- **Lime Green** = Robot is aligned to branch
+- **Blue** = Idle
