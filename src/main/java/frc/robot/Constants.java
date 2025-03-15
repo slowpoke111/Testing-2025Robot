@@ -84,7 +84,8 @@ public class Constants {
     public static final double slowShooterSpeed = -0.4;
     public static final double algaeSpeed = 0.4;
     public static final double fastShooterSpeed = -0.6;
-    public static final double slowAlgaeSpeed = 0.1;
+    public static final double slowAlgaeSpeed = 0.2;
+    public static final double slowAlgaeOut = -0.2;
     public static BooleanSupplier confirmAuton = ()->false;
   }
   public static class VisionConstants {
@@ -113,8 +114,8 @@ public class Constants {
     public static final double waitTime = 1;
     public static final double validationTime = 0.3;
 
-    public static final double branchAngle = 22d; //Degrees
-    public static final double branchTolerance = 2.2; //Degrees
+    public static final double branchAngle = 21d; //Degrees
+    public static final double branchTolerance = 2.5; //Degrees
 
     public static final double TOLERANCE = 0.01;
   }
@@ -160,7 +161,7 @@ public class Constants {
     public static final double coralPickupRatio = 0;
     */
 
-    public static final double L1Height = 1d;
+    public static final double L1Height = 0.7;
     //public static final double L2Height = 12d;
   //public static final double L2Height = 12d;
     //public static final double L2Height = 11.5;

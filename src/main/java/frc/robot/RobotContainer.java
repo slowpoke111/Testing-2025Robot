@@ -160,7 +160,7 @@ public class RobotContainer {
         ))
       ));
       NamedCommands.registerCommand("Processor",         
-        new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos)).andThen(
         new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
@@ -298,7 +298,7 @@ public class RobotContainer {
 
       m_driverController.leftBumper().onTrue(      
       new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos), 
-      new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos).andThen(Commands.parallel(
+      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos).andThen(Commands.parallel(
       new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(
       new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos))
@@ -326,7 +326,7 @@ public class RobotContainer {
 
     //Algae Controls
     m_driverController.leftTrigger().whileTrue(new AlgaeIntakeCommand(m_shooter));
-    m_driverController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
+    m_driverController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowAlgaeOut));
 
     m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
   }

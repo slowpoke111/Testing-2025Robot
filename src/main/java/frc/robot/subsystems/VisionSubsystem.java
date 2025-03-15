@@ -34,7 +34,7 @@ public class VisionSubsystem extends SubsystemBase {
         0,
         -0.5,
         0);
-    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {0,1,3,5,6,8,9,10,11,12});
+    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {6,7,8,9,10,11,17,18,19,20,21,22});
 
     SmartDashboard.putNumber("Rotate P",0.0);
     SmartDashboard.putNumber("Rotate D",0.0);
@@ -105,6 +105,7 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {//Debug
   //Get values
   public double getTX(){
     return LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME);
+
   }
   public double getTY(){
     return LimelightHelpers.getTY(VisionConstants.LIMELIGHT_NAME);
