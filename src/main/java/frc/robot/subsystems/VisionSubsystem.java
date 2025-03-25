@@ -46,7 +46,7 @@ public class VisionSubsystem extends SubsystemBase {
     fiducials = LimelightHelpers.getRawFiducials("");
     SmartDashboard.putBoolean("Is aligned:", isAligned());
     if (isAligned()){
-      m_LEDs.runLEDs(0.73);
+      m_LEDs.runLEDs(0.77);
     }
     else {
       m_LEDs.runLEDs(0.87);

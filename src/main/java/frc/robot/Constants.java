@@ -59,7 +59,7 @@ public class Constants {
     public static final Angle L2ClawPosition = Radian.of(0.6);
     public static final Angle L3ClawPosition = Radian.of(0.6);
   //public static final Angle L4ClawPosition = Angle.ofBaseUnits(0.75, Radian);
-    public static final Angle L4ClawPosition = Angle.ofBaseUnits(1, Radian); // original 0.91 rad
+    public static final Angle L4ClawPosition = Angle.ofBaseUnits(1.05, Radian); // original 0.91 rad
     public static final Angle AutonL4Claw = Angle.ofBaseUnits(1.1, Radian);
     public static final Angle intermediateClawPos = Angle.ofBaseUnits(1.6, Radian);
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
@@ -168,7 +168,7 @@ public class Constants {
     public static final double L2Height = 13d;
   //public static final double L3Height = 31d;
     public static final double L3Height = 31d;
-    public static final double L4Height = 61d;
+    public static final double L4Height = 60.5;
     public static final double A1Height = 22d; // original 20
     public static final double A2Height = 40d; // original 35
     public static final double processorHeight = 7d;  

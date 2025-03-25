@@ -117,7 +117,7 @@ public class RobotContainer {
       NamedCommands.registerCommand("Intake", 
        // new CoralShootCommand(m_shooter, ShooterConstants.intakeSpeed).withTimeout(0.4));
         new WaitUntilCommand(this::coralPresent).andThen(
-        new CoralIntakeCommand(m_shooter, ShooterConstants.intakeSpeed, this::coralPresent)).andThen(
+        new CoralIntakeCommand(m_shooter, m_elevator, ShooterConstants.intakeSpeed, this::coralPresent)).andThen(
         new WaitCommand(0.3)
         ));
 
@@ -160,7 +160,7 @@ public class RobotContainer {
         ))
       ));
       NamedCommands.registerCommand("Processor",         
-        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos).andThen(Commands.parallel(
+        new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
         new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos)).andThen(
         new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
@@ -298,7 +298,7 @@ public class RobotContainer {
 
       m_driverController.leftBumper().onTrue(      
       new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos), 
-      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos).andThen(Commands.parallel(
+      new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos).andThen(Commands.parallel(
       new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(
       new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos))
@@ -317,7 +317,7 @@ public class RobotContainer {
 
     // SHOOTER AND INTAKE CONTROLS
     m_operatorController.leftTrigger().whileTrue(new CoralShootCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
-    runIndexerTrigger.whileTrue(new CoralIntakeCommand(m_shooter, ShooterConstants.intakeSpeed, ()->coralPresent()));
+    runIndexerTrigger.whileTrue(new CoralIntakeCommand(m_shooter, m_elevator, ShooterConstants.intakeSpeed, ()->coralPresent()));
     m_operatorController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
 
     // BRAKE CLAW USING VOLTAGE

@@ -5,17 +5,20 @@
 package frc.robot.commands;
 
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class CoralIntakeCommand extends Command {
   private final ShooterSubsystem m_shooter;
+  private final ElevatorSubsystem m_elevator;
   private final double speed;
   private final BooleanSupplier coralPresent;
  
-  public CoralIntakeCommand(ShooterSubsystem shooter, double speed, BooleanSupplier coralPresent) {
+  public CoralIntakeCommand(ShooterSubsystem shooter, ElevatorSubsystem elevator, double speed, BooleanSupplier coralPresent) {
     m_shooter = shooter;
+    m_elevator = elevator;
     this.speed = speed;
     this.coralPresent = coralPresent;
     addRequirements(shooter);
@@ -24,7 +27,7 @@ public class CoralIntakeCommand extends Command {
   @Override
   public void initialize() {
       m_shooter.runShooterMotor(speed);
-      
+      //m_elevator.m_elevatorMotor1.set(-0.1);
     }
 
   @Override
@@ -34,6 +37,7 @@ public class CoralIntakeCommand extends Command {
   public void end(boolean interrupted) {
     m_shooter.runShooterMotor(0);
     System.out.println("Coral Intake Command Ended");
+    //m_elevator.m_elevatorMotor1.set(0);
     
   }
 
