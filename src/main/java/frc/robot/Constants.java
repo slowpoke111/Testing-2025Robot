@@ -2,8 +2,6 @@ package frc.robot;
 import edu.wpi.first.units.measure.Angle;
 import static edu.wpi.first.units.Units.Radian;
 
-import java.util.function.BooleanSupplier;
-
 public class Constants {
   public static class UniversalConstants {
     public static final String bestProgrammer = "Gabriel Kuzowsky"; 
@@ -83,10 +81,8 @@ public class Constants {
     public static final double intakeSpeed = -0.2;
     public static final double slowShooterSpeed = -0.4;
     public static final double algaeSpeed = 0.4;
-    public static final double fastShooterSpeed = -0.6;
-    public static final double slowAlgaeSpeed = 0.2;
-    public static final double slowAlgaeOut = -0.2;
-    public static BooleanSupplier confirmAuton = ()->false;
+    public static final double fastAlgaeShooterSpeed = 0.6;
+    public static final double slowAlgaeSpeed = 0.1;
   }
   public static class VisionConstants {
     public static final String LIMELIGHT_NAME = "";
