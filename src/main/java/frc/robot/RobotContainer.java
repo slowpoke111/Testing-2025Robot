@@ -67,6 +67,7 @@ public class RobotContainer {
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
 
+
   private DoubleSupplier swerveSpeed = () -> m_elevator.getSwerveSpeed();
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -327,6 +328,7 @@ public class RobotContainer {
     //Algae Controls
     m_driverController.leftTrigger().whileTrue(new AlgaeIntakeCommand(m_shooter));
     m_driverController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
+    m_operatorController.rightBumper().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.fastAlgaeShooterSpeed));
 
     m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
   }
