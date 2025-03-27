@@ -63,6 +63,7 @@ public class Constants {
     public static final Angle magicIntermediatedClawPos = Angle.ofBaseUnits(0.372, Radian);
     public static final Angle processorClawPos = Radian.of(3.25d);
     public static final Angle algaeClawPos = Radian.of(2.9);
+    public static final Angle bargeClawPos = Radian.of(1.34);
     public static final double limitClawPosition = 0;
     public static final double kP = 0.25;
     public static final double kD = 0.13;
@@ -81,7 +82,7 @@ public class Constants {
     public static final double intakeSpeed = -0.2;
     public static final double slowShooterSpeed = -0.4;
     public static final double algaeSpeed = 0.4;
-    public static final double fastAlgaeShooterSpeed = 0.6;
+    public static final double bargeAlgaeShooterSpeed = -0.15;
     public static final double slowAlgaeSpeed = 0.1;
   }
   public static class VisionConstants {
@@ -168,6 +169,7 @@ public class Constants {
     public static final double A1Height = 22d; // original 20
     public static final double A2Height = 40d; // original 35
     public static final double processorHeight = 7d;  
+    public static final double bargeHeight = 63d;
     
     public static final double sprocketCircumefrence = 0.1397; //Meters
     public static final double clampRangeForSpeed = 5;

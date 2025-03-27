@@ -193,9 +193,9 @@ public class RobotContainer {
         ));
 
     // m_driverController.a().whileTrue(m_drivetrain.applyRequest(() -> brake));
-    m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
-        point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
-    ));
+    //m_driverController.b().whileTrue(m_drivetrain.applyRequest(() ->
+    //    point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
+    //));
 
     m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision,true));
 
@@ -241,6 +241,7 @@ public class RobotContainer {
     BooleanSupplier elevatorAtA2 = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.A2Height) < ElevatorConstants.elevatorPrecision);
 
     BooleanSupplier elevatorAtProcessor = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision);
+    BooleanSupplier elevatorAtBarge = () -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.bargeHeight) < ElevatorConstants.elevatorPrecision);
 
     Trigger MannualElevatorUp = new Trigger(() -> leftY.getAsDouble() < -0.8);
     Trigger MannualElevatorDown = new Trigger(() -> leftY.getAsDouble() > 0.8);
@@ -297,13 +298,22 @@ public class RobotContainer {
       new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos))
       )), elevatorAtA1));
 
-      m_driverController.leftBumper().onTrue(      
+    m_driverController.leftBumper().onTrue(      
       new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos), 
       new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos).andThen(Commands.parallel(
       new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
       new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(
       new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos))
       )), elevatorAtProcessor));
+
+    m_operatorController.leftBumper().onTrue(      
+      new ConditionalCommand(new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos), 
+      new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos).andThen(Commands.parallel(
+      new ElevatorToPositionCommand(m_elevator,ElevatorConstants.bargeHeight), 
+      new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.bargeHeight) < ElevatorConstants.elevatorPrecision)).andThen(
+      new ClawToPositionCommand(m_claw, ClawConstants.bargeClawPos))
+      )), elevatorAtBarge));
+  
     
 
 
@@ -328,9 +338,13 @@ public class RobotContainer {
     //Algae Controls
     m_driverController.leftTrigger().whileTrue(new AlgaeIntakeCommand(m_shooter));
     m_driverController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
-    m_operatorController.rightBumper().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.fastAlgaeShooterSpeed));
+    m_operatorController.rightBumper().whileTrue(Commands.parallel(
+      new CoralShootCommand(m_shooter, ShooterConstants.bargeAlgaeShooterSpeed), 
+      new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed)));
 
-    m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
+    //m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
+
+    m_driverController.b().whileTrue(new MannualElevatorCommand(m_elevator, -0.3));
   }
 
   public boolean coralPresent() {

@@ -70,7 +70,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public double getSwerveSpeed(){
     return SwerveSpeedConsts.L4Speed+
-    (Math.pow(((ElevatorConstants.L4Height-getPosition())/ElevatorConstants.L4Height),2)
+    (Math.pow(((ElevatorConstants.L4Height-getPosition())/ElevatorConstants.bargeHeight),2)
     *(SwerveSpeedConsts.L1Speed-SwerveSpeedConsts.L4Speed));
   }
  
