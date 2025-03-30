@@ -33,6 +33,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+
 import com.ctre.phoenix6.SignalLogger;
 
 import frc.robot.subsystems.ShooterSubsystem;
@@ -116,7 +117,6 @@ public class RobotContainer {
         new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
       
       NamedCommands.registerCommand("Intake", 
-       // new CoralShootCommand(m_shooter, ShooterConstants.intakeSpeed).withTimeout(0.4));
         new WaitUntilCommand(this::coralPresent).andThen(
         new CoralIntakeCommand(m_shooter, m_elevator, ShooterConstants.intakeSpeed, this::coralPresent)).andThen(
         new WaitCommand(0.3)
@@ -163,10 +163,26 @@ public class RobotContainer {
       NamedCommands.registerCommand("Processor",         
         new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos).andThen(Commands.parallel(
         new ElevatorToPositionCommand(m_elevator,ElevatorConstants.processorHeight), 
-        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos)).andThen(
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.processorHeight) < ElevatorConstants.elevatorPrecision)).andThen(
+        new ClawToPositionCommand(m_claw, ClawConstants.processorClawPos)).andThen(
         new InstantCommand(() -> m_shooter.runShooterMotor(ShooterConstants.algaeSpeed))
         ))
       ));
+
+      NamedCommands.registerCommand("BargePos", 
+        new ClawToPositionCommand(m_claw, ClawConstants.algaeClawPos).andThen(Commands.parallel(
+        new ElevatorToPositionCommand(m_elevator,ElevatorConstants.bargeHeight), 
+        new WaitUntilCommand(() -> (Math.abs(m_elevator.getPosition()-ElevatorConstants.bargeHeight) < ElevatorConstants.elevatorPrecision)).andThen(
+        new ClawToPositionCommand(m_claw, ClawConstants.bargeClawPos)).andThen(
+        ))
+      ));
+
+      NamedCommands.registerCommand("BargeShot", Commands.parallel(
+        new CoralShootCommand(m_shooter, ShooterConstants.bargeAlgaeShooterSpeed), 
+        new ManualClawCommand(m_claw, -ClawConstants.bargeClawSpeed)).withTimeout(0.25));
+
+      NamedCommands.registerCommand("ElevatorDown", 
+        new MannualElevatorCommand(m_elevator, -0.03).withTimeout(1.5));
 
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -338,9 +354,9 @@ public class RobotContainer {
     //Algae Controls
     m_driverController.leftTrigger().whileTrue(new AlgaeIntakeCommand(m_shooter));
     m_driverController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
-    m_operatorController.rightBumper().whileTrue(Commands.parallel(
-      new CoralShootCommand(m_shooter, ShooterConstants.bargeAlgaeShooterSpeed), 
-      new ManualClawCommand(m_claw, -ClawConstants.manualClawSpeed)));
+    m_operatorController.rightBumper().onTrue(Commands.parallel(
+      new ManualClawCommand(m_claw, -ClawConstants.bargeClawSpeed), 
+      new CoralShootCommand(m_shooter, ShooterConstants.bargeAlgaeShooterSpeed)).withTimeout(0.25));
 
     //m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
 

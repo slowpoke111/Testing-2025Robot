@@ -1,0 +1,85 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go to L4 (C)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back Up (C)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "A1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Get Algae for Barge (C)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back Up From Algae (C)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Score Barge (C)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BargePos"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BargeShot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Back Up From Barge (C)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L1"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "CENTER AUTOS",
+  "choreoAuto": false
+}
