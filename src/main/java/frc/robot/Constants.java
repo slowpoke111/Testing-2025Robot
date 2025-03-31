@@ -115,6 +115,9 @@ public class Constants {
     public static final double branchAngle = 21d; //Degrees
     public static final double branchTolerance = 2.5; //Degrees
 
+    public static final double AlgaeAngle = 0d; //Degrees
+    public static final double AlgaeTolerance = 3d; //Degrees
+
     public static final double TOLERANCE = 0.01;
   }
   public static class ElevatorConstants {

@@ -101,7 +101,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   
-  private final VisionSubsystem m_Vision = new VisionSubsystem();
+  public final VisionSubsystem m_Vision = new VisionSubsystem();
   
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 

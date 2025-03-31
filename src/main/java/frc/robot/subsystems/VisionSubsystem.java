@@ -10,7 +10,7 @@ import frc.robot.subsystems.LimelightHelpers.*;
 
 public class VisionSubsystem extends SubsystemBase {
   private RawFiducial[] fiducials;
-  private final LEDSubsystem m_LEDs = new LEDSubsystem();
+  public final LEDSubsystem m_LEDs = new LEDSubsystem();
 
   public VisionSubsystem() {
     config();
@@ -48,13 +48,33 @@ public class VisionSubsystem extends SubsystemBase {
     if (isAligned()){
       m_LEDs.runLEDs(0.77);
     }
+    else if (isAlgaeAligned()){
+      m_LEDs.runLEDs(0.93);
+    }
     else {
-      m_LEDs.runLEDs(0.87);
+      m_LEDs.runLEDs(0.85);
     }
   }
   public RawFiducial getClosestFiducial() {
     if (fiducials == null || fiducials.length == 0) {
         throw new NoSuchTargetException("No fiducials found.");
+    }
+
+    RawFiducial closest = fiducials[0];
+    double minDistance = closest.ta;
+    //Linear search for close
+    for (RawFiducial fiducial : fiducials) {
+        if (fiducial.ta > minDistance) {
+            closest = fiducial;
+            minDistance = fiducial.ta;
+        }
+    }
+    return closest;
+  }
+
+  public RawFiducial getClosestFiducial(boolean throwErr) {
+    if (fiducials == null || fiducials.length == 0) {
+      return null;
     }
 
     RawFiducial closest = fiducials[0];
@@ -97,9 +117,23 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {//Debug
   }
 
   public boolean isAligned(){
-    if (Math.abs(getTX()-VisionConstants.branchAngle)<VisionConstants.branchTolerance){return true;} //Left
-    if (Math.abs(getTX()+VisionConstants.branchAngle)<VisionConstants.branchTolerance){return true;} //Right
+    try {
+      if (Math.abs(getTX()-VisionConstants.branchAngle)<VisionConstants.branchTolerance && getClosestFiducial().distToRobot<0.75){return true;} //Left
+      if (Math.abs(getTX()+VisionConstants.branchAngle)<VisionConstants.branchTolerance && getClosestFiducial().distToRobot<0.75){return true;} //Right
+    }
+    catch (Exception e){
+      return false;
+    }
     return false;
+  }
+
+  public boolean isAlgaeAligned(){
+    try{
+      if (Math.abs(getTX()-VisionConstants.AlgaeAngle)<VisionConstants.AlgaeTolerance && getClosestFiducial().distToRobot<0.75){return true;} 
+    }
+    catch (Exception e){return false;}
+    return false;
+
   }
 
   //Get values
