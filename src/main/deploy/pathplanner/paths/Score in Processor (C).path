@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.384,
-        "y": 4.201
+        "x": 6.38370044849537,
+        "y": 4.033
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.712117983217593,
-        "y": 2.705469979745369
+        "x": 6.309454571759258,
+        "y": 2.4631579137731476
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "back up from algae"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 0.6572652633101848
       },
       "prevControl": {
-        "x": 6.163117404513888,
-        "y": 1.3208195891203705
+        "x": 5.948241102430555,
+        "y": 1.3739272280092587
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "back up from processor"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": "CENTER",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.82324204292158
+    "rotation": -179.92063628797388
   },
   "useDefaultConstraints": true
 }
