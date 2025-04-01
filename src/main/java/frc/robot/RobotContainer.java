@@ -100,8 +100,9 @@ public class RobotContainer {
   Trigger manualClawTriggerDown = new Trigger(() -> yOperator.getAsDouble() < 0);
 
   private final SendableChooser<Command> autoChooser;
-  
-  public final VisionSubsystem m_Vision = new VisionSubsystem();
+
+  public final LEDSubsystem m_LEDs = new LEDSubsystem();
+  public final VisionSubsystem m_Vision = new VisionSubsystem(m_LEDs);
   
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
 

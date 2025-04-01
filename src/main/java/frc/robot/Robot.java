@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 
 import java.util.Timer;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -68,7 +69,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+    m_autonomousCommand = new PathPlannerAuto(m_robotContainer.getAutonomousCommand()).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
     
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
