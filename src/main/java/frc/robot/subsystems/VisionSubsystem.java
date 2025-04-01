@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,7 +40,6 @@ public class VisionSubsystem extends SubsystemBase {
     //SmartDashboard.putNumber("Rotate P", 0.0);
     //SmartDashboard.putNumber("Rotate D", 0.0);
 
-
   }
 
   @Override
@@ -55,7 +53,6 @@ public class VisionSubsystem extends SubsystemBase {
     } else {
       m_LEDs.runLEDs(0.85);
     }
-
   }
 
   public RawFiducial getClosestFiducial() {
@@ -112,14 +109,13 @@ public class VisionSubsystem extends SubsystemBase {
       } // Error reporting
       availableIds.append(fiducial.id);
 
-
       if (fiducial.id == id) {
         return fiducial;
       }
     }
     throw new NoSuchTargetException("Cannot find: " + id + ". IN view:: " + availableIds.toString());
   }
-
+  //Withing 2.5 deg of 21 or -21 deg and less than 0.75 m away
   public boolean isAligned() {
     try {
       if (Math.abs(getTX() - VisionConstants.branchAngle) < VisionConstants.branchTolerance
@@ -136,7 +132,6 @@ public class VisionSubsystem extends SubsystemBase {
     return false;
   }
   //Withing 2.5 deg of 0 deg and less than 0.75 m away
-
   public boolean isAlgaeAligned() {
     try {
       if (Math.abs(getTX() - VisionConstants.AlgaeAngle) < VisionConstants.AlgaeTolerance
@@ -152,7 +147,6 @@ public class VisionSubsystem extends SubsystemBase {
 
   // Get values
   //Of closest
-
   public double getTX() {
     return LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME);
 
@@ -169,6 +163,7 @@ public class VisionSubsystem extends SubsystemBase {
   public Angle getTYAngle() {
     return Angle.ofBaseUnits(LimelightHelpers.getTY(VisionConstants.LIMELIGHT_NAME), Degrees);
   }
+  //Of closest
   public double getTA() {
     return LimelightHelpers.getTA(VisionConstants.LIMELIGHT_NAME);
   }
@@ -188,7 +183,7 @@ public class VisionSubsystem extends SubsystemBase {
   public double getClosestTA() {
     return getClosestFiducial().ta;
   }
-
+  //Returns value on an id
   public double getID_TX(int ID) {
     return getFiducialWithId(ID).txnc;
   }

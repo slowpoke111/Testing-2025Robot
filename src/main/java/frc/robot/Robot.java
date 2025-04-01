@@ -4,29 +4,15 @@
 
 package frc.robot;
 
-
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LimelightHelpers;
 
 import java.util.Timer;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.ctre.phoenix6.hardware.Pigeon2;
-
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -39,18 +25,6 @@ public class Robot extends TimedRobot {
   private final RobotContainer m_robotContainer;
   Timer endOfMatchTimer = new Timer();
 
-  private SwerveDrivePoseEstimator m_poseEstimator;
-
-// Kinematics and Odometry
-  private SwerveDriveKinematics m_kinematics;
-  private SwerveModulePosition[] m_modulePositions;
-
-  // Gyro (replace with actual gyro object if using a different one)
-  private Pigeon2 gyro;
-
-  // Vision Measurement Standard Deviations
-  private static final double[] VISION_MEASUREMENT_STD_DEVS = {0.7, 0.7, 9999999};
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -61,40 +35,9 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
   }
 
-@Override
-public void robotInit() {
-    gyro = new Pigeon2(25);
-
-    // Define kinematics for swerve drive based on module locations
-    m_kinematics = new SwerveDriveKinematics(
-        new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY), // Front-left module
-        new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY), // Front-right module
-        new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY), // Back-left module
-        new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY) // Back-right module
-    );
-
-    m_modulePositions = new SwerveModulePosition[] {
-        new SwerveModulePosition(0.0, new Rotation2d()),
-        new SwerveModulePosition(0.0, new Rotation2d()),
-        new SwerveModulePosition(0.0, new Rotation2d()),
-        new SwerveModulePosition(0.0, new Rotation2d())
-    };
-
-    // Initialize pose estimator
-    m_poseEstimator = new SwerveDrivePoseEstimator(
-        m_kinematics,
-        Rotation2d.fromDegrees(gyro.getAngle()), // Initial gyro reading
-        m_modulePositions,
-        new Pose2d(),
-        VecBuilder.fill(0.05, 0.05, 0.01), // Odometry standard deviations
-        VecBuilder.fill(0.7,0.7,9999999) // Vision standard deviations
-    );
-
-}
-
-
+  public void RobotInit() {
     // Sets the LED color to blue when the robot turns on
-  
+  }
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -103,49 +46,15 @@ public void robotInit() {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
- @Override
-public void robotPeriodic() {
-  CommandScheduler.getInstance().run();
-    // Update module positions periodically
-    m_modulePositions = new SwerveModulePosition[] {m_robotContainer.m_drivetrain.getModule(0).getPosition(true),
-      m_robotContainer.m_drivetrain.getModule(1).getPosition(true),
-      m_robotContainer.m_drivetrain.getModule(2).getPosition(true),
-      m_robotContainer.m_drivetrain.getModule(3).getPosition(true)};
-
-    // Update pose estimator with odometry
-    m_poseEstimator.update(
-        Rotation2d.fromDegrees(gyro.getAngle()), 
-        m_modulePositions
-    );
-
-    // Update vision measurement (if available)
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-
-    boolean doRejectUpdate = false;
-
-    // Ignore vision updates if gyro angular velocity is too high
-    if (Math.abs(gyro.getRate()) > 360) {
-        doRejectUpdate = true;
-    }
-
-    // Ignore vision updates if no valid tags detected
-    if (mt2.tagCount == 0) {
-        doRejectUpdate = true;
-    }
-
-    // Apply vision update if conditions are met
-    if (!doRejectUpdate) {
-        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
-        m_poseEstimator.addVisionMeasurement(
-            mt2.pose, 
-            mt2.timestampSeconds
-        );
-    }
-
-    // Publish pose to SmartDashboard
-    SmartDashboard.putString("Estimated Pose", m_poseEstimator.getEstimatedPosition().toString());
-}
-
+  @Override
+  public void robotPeriodic() {
+    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
+    // commands, running already-scheduled commands, removing finished or interrupted commands,
+    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // block in order for anything in the Command-based framework to work.
+    CommandScheduler.getInstance().run();
+    SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
+  }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
