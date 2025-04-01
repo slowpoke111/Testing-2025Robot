@@ -11,6 +11,7 @@
 - **Outtake Algae** = Right Trigger
 - **Encoder (Tuner-Generated)** = B button
 - **Brakes (Tuner-Generated)** = A button
+- **Processor Position** = Left Bumper
 
 ### Operator Controller:
 
@@ -21,12 +22,15 @@
 - **A1 Position** = D-Pad down
 - **A2 Position** = D-Pad up
 - **Shoot on L1 (Slow)** = Left Trigger
-- **Shoot on L2, L3, L4 (Fast)** = Right Trigger
+- **Pull Coral Back** = Right Trigger
 - **Manual Elevator** = Left Stick (Up and Down)
 - **Manual Claw** = Right Stick (Up and Down)
 - **Zero Claw Angle** = Left Bumper
+- **Lock Claw Position** = D-Pad Right 
+- **Unlock Claw Position** = D-Pad Left 
 
 ### LED Meanings:
 
 - **Lime Green** = Robot is aligned to branch
+- **White** = Robot is aligned for algae
 - **Blue** = Idle
