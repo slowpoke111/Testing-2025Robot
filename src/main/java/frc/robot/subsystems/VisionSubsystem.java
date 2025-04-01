@@ -135,7 +135,7 @@ public class VisionSubsystem extends SubsystemBase {
   public boolean isAlgaeAligned() {
     try {
       if (Math.abs(getTX() - VisionConstants.AlgaeAngle) < VisionConstants.AlgaeTolerance
-          && getClosestFiducial().distToRobot < 0.75) {
+          && getClosestFiducial().distToRobot < 1.5) {
         return true;
       }
     } catch (Exception e) {
