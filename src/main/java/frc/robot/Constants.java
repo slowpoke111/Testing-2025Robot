@@ -22,6 +22,7 @@ public class Constants {
 
   public static class SwerveSpeedConsts{
     public static final double slowSpeed = 0.5;
+    public static final double bargeSpeed = 1d;
     public static final double L4Speed = 1d;
     public static final double L3Speed = 1d;
     public static final double L2Speed = 3d;
