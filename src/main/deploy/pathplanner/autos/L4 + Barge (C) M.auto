@@ -5,15 +5,35 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "L4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Go to L4 (C)"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "L4"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.75
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Go to L4 (C)"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
