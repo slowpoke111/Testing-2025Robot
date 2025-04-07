@@ -3,15 +3,12 @@
 ## Controls:
 
 ### Driver Controller:
-
-- **Align with April Tag** = X button
-- **Left Align** = Left Bumper
-- **Right Align** = Right Bumper
 - **Intake Algae** = Left Trigger
 - **Outtake Algae** = Right Trigger
 - **Encoder (Tuner-Generated)** = B button
 - **Brakes (Tuner-Generated)** = A button
 - **Processor Position** = Left Bumper
+- **Score L1** - Right bumper
 
 ### Operator Controller:
 
