@@ -98,6 +98,8 @@ public class RobotContainer {
   Trigger runIndexerTrigger = new Trigger(this::coralPresent);
   Trigger manualClawTriggerUp = new Trigger(() -> yOperator.getAsDouble() > 0);
   Trigger manualClawTriggerDown = new Trigger(() -> yOperator.getAsDouble() < 0);
+  Trigger elevatorL1 = new Trigger(()->Math.abs(m_elevator.getPosition()-ElevatorConstants.L1Height) < ElevatorConstants.elevatorPrecision);
+
 
   private final SendableChooser<Command> autoChooser;
 
@@ -105,6 +107,8 @@ public class RobotContainer {
   public final VisionSubsystem m_Vision = new VisionSubsystem(m_LEDs);
   
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
+  private final BooleanSupplier intermediatePos = () -> Math.abs((m_claw.getClawPosition().minus(ClawConstants.intermediateClawPos)).in(Radian))<ClawConstants.tolerance.in(Radian);
+  public final Trigger clawAtIntermediate = new Trigger(intermediatePos);
 
    public RobotContainer() {
       for (int port = 5800; port <= 5809; port++) {
@@ -347,6 +351,8 @@ public class RobotContainer {
     m_operatorController.leftTrigger().whileTrue(new CoralShootCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
     runIndexerTrigger.whileTrue(new CoralIntakeCommand(m_shooter, m_elevator, ShooterConstants.intakeSpeed, ()->coralPresent()));
     m_operatorController.rightTrigger().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
+    m_driverController.rightBumper().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.L1ShooterSpeed));
+
 
     // BRAKE CLAW USING VOLTAGE
     m_operatorController.povRight().toggleOnTrue(new InstantCommand(() -> m_claw.motorVoltage(ClawConstants.kSVoltage)));
@@ -361,7 +367,18 @@ public class RobotContainer {
 
     //m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
 
-    //m_driverController.b().whileTrue(new MannualElevatorCommand(m_elevator, -0.3));
+    // m_driverController.b().whileTrue(
+    //   new ConditionalCommand(
+    //     new ConditionalCommand(
+    //       new MannualElevatorCommand(m_elevator, 0),
+    //       new MannualElevatorCommand(m_elevator, -0.5), elevatorAtL1),
+    //     new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos), clawAtIntermediate));
+
+   /* m_driverController.b().whileTrue(
+      new ConditionalCommand(
+        new MannualElevatorCommand(m_elevator, 0.0), 
+        new MannualElevatorCommand(m_elevator, -0.5), elevatorL1)); */
+      
   }
 
   public boolean coralPresent() {

@@ -67,6 +67,12 @@
                       "data": {
                         "name": "L1"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ElevatorDown"
+                      }
                     }
                   ]
                 }
