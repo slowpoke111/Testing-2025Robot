@@ -24,6 +24,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.AutonAdjustCommand;
 import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
 import frc.robot.commands.CoralShootCommand;
@@ -40,6 +41,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants.ShooterConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
 import frc.robot.commands.ClawToPositionCommand;
@@ -115,8 +118,8 @@ public class RobotContainer {
           PortForwarder.add(port, "limelight.local", port);
       }
 
-      NamedCommands.registerCommand("Align", 
-        new AlignCommand(m_drivetrain, m_Vision, true).withTimeout(2));
+      //NamedCommands.registerCommand("Align", 
+      //  new AlignCommand(m_drivetrain, m_Vision, true).withTimeout(2));
 
       NamedCommands.registerCommand("Shoot", 
         new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed).withTimeout(1));
@@ -188,6 +191,8 @@ public class RobotContainer {
 
       NamedCommands.registerCommand("ElevatorDown", 
         new MannualElevatorCommand(m_elevator, -0.03).withTimeout(1.5));
+
+      NamedCommands.registerCommand("Align", new AutonAdjustCommand(m_Vision, m_drivetrain, true));
 
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -374,10 +379,12 @@ public class RobotContainer {
     //       new MannualElevatorCommand(m_elevator, -0.5), elevatorAtL1),
     //     new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos), clawAtIntermediate));
 
-   /* m_driverController.b().whileTrue(
-      new ConditionalCommand(
-        new MannualElevatorCommand(m_elevator, 0.0), 
-        new MannualElevatorCommand(m_elevator, -0.5), elevatorL1)); */
+  //  m_driverController.b().whileTrue(
+  //     new ConditionalCommand(
+  //       new MannualElevatorCommand(m_elevator, -0.1), 
+  //       new MannualElevatorCommand(m_elevator, -0.95), elevatorL1)); 
+
+    m_driverController.b().whileTrue(new AutonAdjustCommand(m_Vision, m_drivetrain, true));
       
   }
 

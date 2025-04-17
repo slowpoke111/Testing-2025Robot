@@ -143,22 +143,10 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Back Up From Barge (C)"
+                  "pathName": "Back Up Actually (C)"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Back Up from Algae Again (C)"
           }
         }
       ]

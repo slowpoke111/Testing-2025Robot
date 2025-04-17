@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.00869006849315,
-        "y": 5.264619006849315
+        "x": 5.663369864004629,
+        "y": 4.201443142361111
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.167251712328767,
-        "y": 5.580158390410959
+        "x": 5.549572984950595,
+        "y": 3.9788442422794583
       },
       "isLocked": false,
-      "linkedName": "barge"
+      "linkedName": "center L4"
     },
     {
       "anchor": {
-        "x": 5.063655821917808,
-        "y": 5.009182363013698
+        "x": 5.678091404362596,
+        "y": 4.192095702368976
       },
       "prevControl": {
-        "x": 6.025299657534246,
-        "y": 6.6770333904109584
+        "x": 5.549048697503985,
+        "y": 3.977974288664969
+      },
+      "nextControl": {
+        "x": 5.807134111221207,
+        "y": 4.406217116072984
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.663369864004629,
+        "y": 4.201443142361111
+      },
+      "prevControl": {
+        "x": 5.816424184013242,
+        "y": 4.399115535797072
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "right algae"
+      "linkedName": "center L4"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -121.60750224624888
+    "rotation": -179.36524847913478
   },
   "reversed": false,
   "folder": "CENTER",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.86449584700614
+    "rotation": -179.36524847913478
   },
   "useDefaultConstraints": true
 }

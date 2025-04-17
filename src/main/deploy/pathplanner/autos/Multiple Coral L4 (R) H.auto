@@ -53,6 +53,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -140,6 +146,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Shoot"
           }
         },
@@ -151,6 +163,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "Go Back to Source (L)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
                 }
               },
               {
