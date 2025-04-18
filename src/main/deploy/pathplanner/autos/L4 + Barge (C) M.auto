@@ -87,6 +87,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Algae Align"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Get Algae for Barge (C)"

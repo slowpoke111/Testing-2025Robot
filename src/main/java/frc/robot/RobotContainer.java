@@ -25,6 +25,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutonAdjustCommand;
+import frc.robot.commands.AutonAlgaeAlignCommand;
 import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
 import frc.robot.commands.CoralShootCommand;
@@ -195,6 +196,8 @@ public class RobotContainer {
         new MannualElevatorCommand(m_elevator, -0.03).withTimeout(1.5));
 
       NamedCommands.registerCommand("Align", new AutonAdjustCommand(m_Vision, m_drivetrain, true));
+      NamedCommands.registerCommand("Algae Align", new AutonAlgaeAlignCommand(m_Vision, m_drivetrain));
+
 
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
        autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -391,6 +394,7 @@ public class RobotContainer {
    // m_driverController.y().whileTrue(new CoralShootCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
 
    m_driverController.a().and(m_driverController.y()).onTrue(new InstantCommand(() -> m_elevator.fastModeBool=!m_elevator.fastModeBool));
+   //m_driverController.a().whileTrue(new AutonAlgaeAlignCommand(m_Vision, m_drivetrain));
 
 
 

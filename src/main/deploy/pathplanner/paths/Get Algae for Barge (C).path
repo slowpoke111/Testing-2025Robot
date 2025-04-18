@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.384,
-        "y": 4.201
+        "x": 6.175556506849315,
+        "y": 4.017487157534247
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.633809316666974,
-        "y": 4.210762443668444
+        "x": 6.425365823516288,
+        "y": 4.0272496012026915
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "back up from algae"
     },
     {
       "anchor": {
-        "x": 5.589554794520548,
-        "y": 3.8972816780821917
+        "x": 5.529452054794521,
+        "y": 4.017487157534247
       },
       "prevControl": {
-        "x": 5.839316583451984,
-        "y": 3.908192626243049
+        "x": 5.779213843725957,
+        "y": 4.028398105695104
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "CENTER",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.73018745408004
+    "rotation": -179.92063628797388
   },
   "useDefaultConstraints": true
 }

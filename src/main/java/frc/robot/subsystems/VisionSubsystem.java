@@ -14,7 +14,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   public VisionSubsystem(LEDSubsystem leds) {
     m_LEDs = leds;
-    
+
     config();
   }
 
@@ -36,7 +36,7 @@ public class VisionSubsystem extends SubsystemBase {
         0,
         0,
         0);
-    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22 });
+    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {3, 6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22 });
 
     //SmartDashboard.putNumber("Rotate P", 0.0);
     //SmartDashboard.putNumber("Rotate D", 0.0);

@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 6.38370044849537,
-        "y": 4.201
+        "x": 6.175556506849315,
+        "y": 4.017487157534247
       },
       "prevControl": {
-        "x": 6.633462237426806,
-        "y": 4.211910948160858
+        "x": 6.425318295780751,
+        "y": 4.028398105695105
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "back up from algae"
     }
   ],
   "rotationTargets": [],
