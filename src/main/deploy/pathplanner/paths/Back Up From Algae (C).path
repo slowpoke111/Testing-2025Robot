@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.581,
-        "y": 4.033
+        "x": 5.589554794520548,
+        "y": 3.8972816780821917
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.830809316666974,
-        "y": 4.042762443668445
+        "x": 5.839364111187521,
+        "y": 3.907044121750636
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "center algae"
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "folder": "CENTER",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.73018745408004
+    "rotation": -179.92063628797388
   },
   "useDefaultConstraints": true
 }

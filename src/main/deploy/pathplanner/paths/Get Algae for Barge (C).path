@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 5.581087962962962,
-        "y": 4.033
+        "x": 5.589554794520548,
+        "y": 3.8972816780821917
       },
       "prevControl": {
-        "x": 5.830849751894398,
-        "y": 4.043910948160858
+        "x": 5.839316583451984,
+        "y": 3.908192626243049
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "center algae"
     }
   ],
   "rotationTargets": [],

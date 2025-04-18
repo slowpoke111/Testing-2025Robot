@@ -12,6 +12,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -42,16 +43,17 @@ public class AutonAdjustCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (m_Vision.getTX()<setpoint){
-        m_Swerve.setControl(alignRequest.withVelocityY(0.2));
+        m_Swerve.setControl(alignRequest.withVelocityY(VisionConstants.alignSpeed));
     }
     else if (m_Vision.getTX()>setpoint){
-        m_Swerve.setControl(alignRequest.withVelocityY(-0.2));
+        m_Swerve.setControl(alignRequest.withVelocityY(-VisionConstants.alignSpeed));
     }
   }
 

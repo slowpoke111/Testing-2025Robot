@@ -72,7 +72,7 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
 
 
-  private DoubleSupplier swerveSpeed = () -> m_elevator.getSwerveSpeed();
+
   private final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -92,7 +92,9 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   DoubleSupplier yOperator = () -> m_operatorController.getRightY();
-  
+
+    private DoubleSupplier swerveSpeed = () -> m_elevator.getSwerveSpeed();
+    
  /*  public BooleanSupplier isTeleop = () -> false;
   public BooleanSupplier coralPresent = this::coralPresent;
   public BooleanSupplier canRunIntake = () -> isTeleop.getAsBoolean() && coralPresent.getAsBoolean();
@@ -223,7 +225,7 @@ public class RobotContainer {
     //    point.withModuleDirection(new Rotation2d(-m_driverController.getLeftY(), -m_driverController.getLeftX()))
     //));
 
-    m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision,true));
+    //m_driverController.x().whileTrue(new AlignCommand(m_drivetrain, m_Vision,true));
 
     m_driverController.pov(0).whileTrue(m_drivetrain.applyRequest(() ->
         forwardStraight.withVelocityX(SwerveSpeedConsts.slowSpeed).withVelocityY(0))
@@ -242,12 +244,12 @@ public class RobotContainer {
 
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
-    m_driverController.start().onTrue(Commands.runOnce(SignalLogger::start));
-    m_driverController.back().onTrue(Commands.runOnce(SignalLogger::stop));
-    m_driverController.rightBumper().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
-    m_driverController.rightBumper().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
-    m_driverController.leftBumper().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
-    m_driverController.leftBumper().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
+    // m_driverController.start().onTrue(Commands.runOnce(SignalLogger::start));
+    // m_driverController.back().onTrue(Commands.runOnce(SignalLogger::stop));
+    // m_driverController.rightBumper().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kForward));
+    // m_driverController.rightBumper().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdDynamic(Direction.kReverse));
+    // m_driverController.leftBumper().and(m_driverController.y()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kForward));
+    // m_driverController.leftBumper().and(m_driverController.x()).whileTrue(m_drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // reset the field-centric heading on left bumper press
     //m_driverController.leftBumper().onTrue(m_drivetrain.runOnce(() -> m_drivetrain.seedFieldCentric()));
@@ -371,7 +373,7 @@ public class RobotContainer {
       new CoralShootCommand(m_shooter, ShooterConstants.bargeAlgaeShooterSpeed)).withTimeout(0.25));
 
     //m_driverController.a().toggleOnTrue(new InstantCommand(() -> m_elevator.setElevatorVoltage(1.25)));
-
+    
     // m_driverController.b().whileTrue(
     //   new ConditionalCommand(
     //     new ConditionalCommand(
@@ -379,12 +381,19 @@ public class RobotContainer {
     //       new MannualElevatorCommand(m_elevator, -0.5), elevatorAtL1),
     //     new ClawToPositionCommand(m_claw, ClawConstants.intermediateClawPos), clawAtIntermediate));
 
-  //  m_driverController.b().whileTrue(
-  //     new ConditionalCommand(
-  //       new MannualElevatorCommand(m_elevator, -0.1), 
-  //       new MannualElevatorCommand(m_elevator, -0.95), elevatorL1)); 
+    //  m_driverController.b().whileTrue(
+    //     new ConditionalCommand(
+    //       new MannualElevatorCommand(m_elevator, -0.1), 
+    //       new MannualElevatorCommand(m_elevator, -0.95), elevatorL1)); 
 
-    m_driverController.b().whileTrue(new AutonAdjustCommand(m_Vision, m_drivetrain, true));
+    m_driverController.x().whileTrue(new AutonAdjustCommand(m_Vision, m_drivetrain, true));
+   // m_driverController.a().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
+   // m_driverController.y().whileTrue(new CoralShootCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
+
+   m_driverController.a().and(m_driverController.y()).onTrue(new InstantCommand(() -> m_elevator.fastModeBool=!m_elevator.fastModeBool));
+
+
+
       
   }
 

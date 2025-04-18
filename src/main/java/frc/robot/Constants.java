@@ -121,7 +121,10 @@ public class Constants {
     public static final double AlgaeTolerance = 3.5d; //Degrees
 
     public static final double TOLERANCE = 0.01;
+
+    public static final double alignSpeed = 0.35;
   }
+
   public static class ElevatorConstants {
     /** All values are placeholders for now*/
     public static final double kP = 0.6; // 0.03
