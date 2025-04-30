@@ -193,7 +193,7 @@ public class RobotContainer {
         new ManualClawCommand(m_claw, -ClawConstants.bargeClawSpeed)).withTimeout(0.25));
 
       NamedCommands.registerCommand("ElevatorDown", 
-        new MannualElevatorCommand(m_elevator, -0.03).withTimeout(1.5));
+        new MannualElevatorCommand(m_elevator, -0.03).withTimeout(1));
 
       NamedCommands.registerCommand("Align", new AutonAdjustCommand(m_Vision, m_drivetrain, true));
       NamedCommands.registerCommand("Algae Align", new AutonAlgaeAlignCommand(m_Vision, m_drivetrain));
