@@ -10,6 +10,7 @@
 - **Processor Position** = Left Bumper
 - **Score L1** - Right bumper
 - **Fast Mode** = A + Y Buttons (Toggle)
+- **Slow Movement (Robot Oriented)** - D-Pad
 
 ### Operator Controller:
 
