@@ -9,6 +9,7 @@
 - **Brakes (Tuner-Generated)** = A button
 - **Processor Position** = Left Bumper
 - **Score L1** - Right bumper
+- **Fast Mode** = A + Y Buttons (Toggle)
 
 ### Operator Controller:
 
