@@ -5,191 +5,140 @@ import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.LimelightHelpers.*;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.ByteArrayOutputStream;
+import java.util.function.Supplier;
+
+import javax.imageio.ImageIO;
+
+import org.opencv.core.Mat;
+import org.opencv.core.CvType;
+import org.opencv.imgproc.Imgproc;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 
 public class VisionSubsystem extends SubsystemBase {
-  private RawFiducial[] fiducials;
-  public final LEDSubsystem m_LEDs;
+  private HttpCamera camera;
+  private CvSink cvSink;
 
-  public VisionSubsystem(LEDSubsystem leds) {
-    m_LEDs = leds;
+  private final VisionSystemSim visionSim = new VisionSystemSim("main");
+  private final PhotonCameraSim cameraSim;
+  private final LEDSubsystem leds; // Assuming you have an LED subsystem for status indication
+  private final Supplier<Pose2d> robotPoseSupplier; // Supplier for the robot's pose, if needed
 
-    config();
+  public VisionSubsystem(LEDSubsystem leds, Supplier<Pose2d> robotPoseSupplier) {
+    AprilTagFieldLayout tagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+    visionSim.addAprilTags(tagLayout);
+
+    this.leds = leds;
+    this.robotPoseSupplier = robotPoseSupplier;
+
+
+    SimCameraProperties cameraProps = new SimCameraProperties();
+    cameraProps.setCalibration(640, 480, Rotation2d.fromDegrees(90));
+    cameraProps.setFPS(20);
+    cameraProps.setAvgLatencyMs(30);
+    cameraProps.setLatencyStdDevMs(5);
+    cameraProps.setCalibError(0.3, 0.05);
+
+    PhotonCamera camera1 = new PhotonCamera("TestCam");
+    cameraSim = new PhotonCameraSim(camera1, cameraProps);
+
+    Transform3d robotToCamera = new Transform3d(
+      new Translation3d(0, 0, 1),           // 1m above ground
+      new Rotation3d(0, 0.5, 0)             // Slight pitch forward
+    );
+    visionSim.addCamera(cameraSim, robotToCamera);
+
+    cameraSim.enableRawStream(true);
+    cameraSim.enableDrawWireframe(true); // Optional: expensive
+
+    // Initialize camera connection to the external stream
+    camera = new HttpCamera("stream", "http://localhost:1181/stream.mjpg", HttpCamera.HttpCameraKind.kMJPGStreamer);
+    CameraServer.addCamera(camera);
+    cvSink = CameraServer.getVideo(camera);
   }
 
-  public static class NoSuchTargetException extends RuntimeException { // No fiducial fonund
+  public static class NoSuchTargetException extends RuntimeException {
     public NoSuchTargetException(String message) {
       super(message);
     }
   }
 
-  public void config() {
-    // Enable if fps is an issue
-    // LimelightHelpers.setCropWindow("", -0.5, 0.5, -0.5, 0.5);
-
-    LimelightHelpers.setCameraPose_RobotSpace( // maybe put in consts.java
-        "",
-        0,
-        0,
-        0.3048,
-        0,
-        0,
-        0);
-    LimelightHelpers.SetFiducialIDFiltersOverride("", new int[] {3, 6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22 });
-
-    //SmartDashboard.putNumber("Rotate P", 0.0);
-    //SmartDashboard.putNumber("Rotate D", 0.0);
-
-  }
-
   @Override
   public void periodic() {
-    fiducials = LimelightHelpers.getRawFiducials("");
-    SmartDashboard.putBoolean("Is aligned:", isAligned());
-    if (isAligned()) {
-      m_LEDs.runLEDs(0.77);
-    } else if (isAlgaeAligned()) {
-      m_LEDs.runLEDs(0.93);
-    } else {
-      m_LEDs.runLEDs(0.85);
-    }
+    // Simulate a static robot pose (only needed once if no motion)
+    visionSim.update(robotPoseSupplier.get());
   }
 
-  public RawFiducial getClosestFiducial() {
-    if (fiducials == null || fiducials.length == 0) {
-      throw new NoSuchTargetException("No fiducials found.");
-    }
-
-    RawFiducial closest = fiducials[0];
-    double minDistance = closest.ta;
-    // Linear search for close
-    for (RawFiducial fiducial : fiducials) {
-      if (fiducial.ta > minDistance) {
-        closest = fiducial;
-        minDistance = fiducial.ta;
-      }
-    }
-    return closest;
-  }
-
-  public RawFiducial getClosestFiducial(boolean throwErr) {
-    if (fiducials == null || fiducials.length == 0) {
+  public BufferedImage getImage() {
+    Mat mat = new Mat();
+    if (cvSink.grabFrame(mat) == 0) {
+      System.err.println("Error getting frame: " + cvSink.getError());
       return null;
     }
 
-    RawFiducial closest = fiducials[0];
-    double minDistance = closest.ta;
-    // Linear search for close
-    for (RawFiducial fiducial : fiducials) {
-      if (fiducial.ta > minDistance) {
-        closest = fiducial;
-        minDistance = fiducial.ta;
-      }
-    }
-    return closest;
+    return matToBufferedImage(mat);
   }
 
-  // Linear searcgh by id
-  public RawFiducial getFiducialWithId(int id) {
-
-    for (RawFiducial fiducial : fiducials) {
-      if (fiducial.id == id) {
-        return fiducial;
-      }
-    }
-    throw new NoSuchTargetException("Can't find ID: " + id);
-  }
-
-  public RawFiducial getFiducialWithId(int id, boolean verbose) {// Debug
-    StringBuilder availableIds = new StringBuilder();
-
-    for (RawFiducial fiducial : fiducials) {
-      if (availableIds.length() > 0) {
-        availableIds.append(", ");
-      } // Error reporting
-      availableIds.append(fiducial.id);
-
-      if (fiducial.id == id) {
-        return fiducial;
-      }
-    }
-    throw new NoSuchTargetException("Cannot find: " + id + ". IN view:: " + availableIds.toString());
-  }
-  //Withing 2.5 deg of 21 or -21 deg and less than 0.75 m away
-  public boolean isAligned() {
+  private BufferedImage matToBufferedImage(Mat mat) {
     try {
-      if (Math.abs(getTX() - VisionConstants.branchAngle) < VisionConstants.branchTolerance
-          && getClosestFiducial().distToRobot < 0.75) {
-        return true;
-      } // Left
-      if (Math.abs(getTX() + VisionConstants.branchAngle) < VisionConstants.branchTolerance
-          && getClosestFiducial().distToRobot < 0.75) {
-        return true;
-      } // Right
-    } catch (Exception e) {
-      return false;
-    }
-    return false;
-  }
-  //Withing 2.5 deg of 0 deg and less than 0.75 m away
-  public boolean isAlgaeAligned() {
-    try {
-      if (Math.abs(getTX() - VisionConstants.AlgaeAngle) < VisionConstants.AlgaeTolerance
-          && getClosestFiducial().distToRobot < 1.5) {
-        return true;
+      Mat converted = new Mat();
+      if (mat.channels() == 1) {
+        Imgproc.cvtColor(mat, converted, Imgproc.COLOR_GRAY2BGR);
+      } else {
+        Imgproc.cvtColor(mat, converted, Imgproc.COLOR_RGB2BGR);
       }
+
+      int width = converted.width();
+      int height = converted.height();
+      byte[] data = new byte[width * height * (int)converted.elemSize()];
+      converted.get(0, 0, data);
+
+      BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+      final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+      System.arraycopy(data, 0, targetPixels, 0, data.length);
+
+      return image;
     } catch (Exception e) {
-      return false;
+      System.err.println("Error converting Mat to BufferedImage: " + e.getMessage());
+      e.printStackTrace();
+      return null;
     }
-    return false;
-
   }
 
-  // Get values
-  //Of closest
-  public double getTX() {
-    return LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME);
+  public byte[] getImageBytes() {
+    try {
+      BufferedImage image = getImage();
+      if (image == null) {
+        System.err.println("Failed to retrieve image from camera");
+        return new byte[0];
+      }
 
-  }
-//Of closest
-  public double getTY() {
-    return LimelightHelpers.getTY(VisionConstants.LIMELIGHT_NAME);
-  }
-//Of closest
-  public Angle getTXAngle() {
-    return Angle.ofBaseUnits(LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME), Degrees);
-  }
-//Of closest
-  public Angle getTYAngle() {
-    return Angle.ofBaseUnits(LimelightHelpers.getTY(VisionConstants.LIMELIGHT_NAME), Degrees);
-  }
-  //Of closest
-  public double getTA() {
-    return LimelightHelpers.getTA(VisionConstants.LIMELIGHT_NAME);
-  }
-
-  public boolean getTV() {
-    return LimelightHelpers.getTV(VisionConstants.LIMELIGHT_NAME);
-  }
-
-  public double getClosestTX() {
-    return getClosestFiducial().txnc;
-  }
-
-  public double getClosestTY() {
-    return getClosestFiducial().tync;
-  }
-
-  public double getClosestTA() {
-    return getClosestFiducial().ta;
-  }
-  //Returns value on an id
-  public double getID_TX(int ID) {
-    return getFiducialWithId(ID).txnc;
-  }
-
-  public double getID_TY(int ID) {
-    return getFiducialWithId(ID).tync;
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      ImageIO.write(image, "jpg", outputStream);
+      return outputStream.toByteArray();
+    } catch (Exception e) {
+      System.err.println("Error converting image to bytes: " + e.getMessage());
+      e.printStackTrace();
+      return new byte[0];
+    }
   }
 }

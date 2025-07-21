@@ -23,9 +23,7 @@ import frc.robot.Constants.ClawConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
-import frc.robot.commands.AlignCommand;
-import frc.robot.commands.AutonAdjustCommand;
-import frc.robot.commands.AutonAlgaeAlignCommand;
+
 import frc.robot.commands.MannualElevatorCommand;
 import frc.robot.commands.ManualClawCommand;
 import frc.robot.commands.CoralShootCommand;
@@ -44,12 +42,16 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.PortForwarder;
 import frc.robot.commands.ClawToPositionCommand;
 import frc.robot.commands.CoralIntakeCommand;
 import frc.robot.commands.ElevatorToPositionCommand;
+import frc.robot.commands.LLMDriveCommand;
+
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 import frc.robot.subsystems.ClawSubsystem;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
@@ -109,8 +111,10 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
+  private final Supplier<Pose2d> getPose = () -> m_drivetrain.getState().Pose; 
+
   public final LEDSubsystem m_LEDs = new LEDSubsystem();
-  public final VisionSubsystem m_Vision = new VisionSubsystem(m_LEDs);
+  public final VisionSubsystem m_Vision = new VisionSubsystem(m_LEDs, (Supplier<Pose2d>) getPose);
   
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
   private final BooleanSupplier intermediatePos = () -> Math.abs((m_claw.getClawPosition().minus(ClawConstants.intermediateClawPos)).in(Radian))<ClawConstants.tolerance.in(Radian);
@@ -195,8 +199,6 @@ public class RobotContainer {
       NamedCommands.registerCommand("ElevatorDown", 
         new MannualElevatorCommand(m_elevator, -0.03).withTimeout(1));
 
-      NamedCommands.registerCommand("Align", new AutonAdjustCommand(m_Vision, m_drivetrain, true));
-      NamedCommands.registerCommand("Algae Align", new AutonAlgaeAlignCommand(m_Vision, m_drivetrain));
 
 
        m_rangeSensor.setRangingMode(RangingMode.Short, 24);
@@ -408,12 +410,12 @@ public class RobotContainer {
     //       new MannualElevatorCommand(m_elevator, -0.1), 
     //       new MannualElevatorCommand(m_elevator, -0.95), elevatorL1)); 
 
-    m_driverController.x().whileTrue(new AutonAdjustCommand(m_Vision, m_drivetrain, true));
    // m_driverController.a().whileTrue(new CoralShootCommand(m_shooter, ShooterConstants.slowShooterSpeed));
    // m_driverController.y().whileTrue(new CoralShootCommand(m_shooter, -ShooterConstants.slowShooterSpeed));
 
    m_driverController.a().and(m_driverController.y()).onTrue(new InstantCommand(() -> m_elevator.fastModeBool=!m_elevator.fastModeBool));
    //m_driverController.a().whileTrue(new AutonAlgaeAlignCommand(m_Vision, m_drivetrain));
+   m_driverController.a().onTrue(new LLMDriveCommand(m_drivetrain, m_Vision));
 
 
 
