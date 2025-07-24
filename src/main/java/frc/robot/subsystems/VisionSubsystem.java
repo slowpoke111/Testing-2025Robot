@@ -38,40 +38,35 @@ public class VisionSubsystem extends SubsystemBase {
   private HttpCamera camera;
   private CvSink cvSink;
 
-  private final VisionSystemSim visionSim = new VisionSystemSim("main");
-  private final PhotonCameraSim cameraSim;
-  private final LEDSubsystem leds; // Assuming you have an LED subsystem for status indication
-  private final Supplier<Pose2d> robotPoseSupplier; // Supplier for the robot's pose, if needed
+  public VisionSubsystem() {
+    // AprilTagFieldLayout tagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+    // visionSim.addAprilTags(tagLayout);
 
-  public VisionSubsystem(LEDSubsystem leds, Supplier<Pose2d> robotPoseSupplier) {
-    AprilTagFieldLayout tagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
-    visionSim.addAprilTags(tagLayout);
-
-    this.leds = leds;
-    this.robotPoseSupplier = robotPoseSupplier;
+    // this.leds = leds;
+    // this.robotPoseSupplier = robotPoseSupplier;
 
 
-    SimCameraProperties cameraProps = new SimCameraProperties();
-    cameraProps.setCalibration(640, 480, Rotation2d.fromDegrees(90));
-    cameraProps.setFPS(20);
-    cameraProps.setAvgLatencyMs(30);
-    cameraProps.setLatencyStdDevMs(5);
-    cameraProps.setCalibError(0.3, 0.05);
+    // SimCameraProperties cameraProps = new SimCameraProperties();
+    // // cameraProps.setCalibration(640, 480, Rotation2d.fromDegrees(90));
+    // cameraProps.setFPS(20);
+    // cameraProps.setAvgLatencyMs(30);
+    // cameraProps.setLatencyStdDevMs(5);
+    // cameraProps.setCalibError(0.3, 0.05);
 
-    PhotonCamera camera1 = new PhotonCamera("TestCam");
-    cameraSim = new PhotonCameraSim(camera1, cameraProps);
+    // PhotonCamera camera1 = new PhotonCamera("TestCam");
+    // cameraSim = new PhotonCameraSim(camera1, cameraProps);
 
-    Transform3d robotToCamera = new Transform3d(
-      new Translation3d(0, 0, 1),           // 1m above ground
-      new Rotation3d(0, 0.5, 0)             // Slight pitch forward
-    );
-    visionSim.addCamera(cameraSim, robotToCamera);
+    // Transform3d robotToCamera = new Transform3d(
+    //   new Translation3d(0, 0, 1),           // 1m above ground
+    //   new Rotation3d(0, 0.5, 0)             // Slight pitch forward
+    // );
+    // visionSim.addCamera(cameraSim, robotToCamera);
 
-    cameraSim.enableRawStream(true);
-    cameraSim.enableDrawWireframe(true); // Optional: expensive
+    // cameraSim.enableRawStream(true);
+    // cameraSim.enableDrawWireframe(true); // Optional: expensive
 
     // Initialize camera connection to the external stream
-    camera = new HttpCamera("stream", "http://localhost:1181/stream.mjpg", HttpCamera.HttpCameraKind.kMJPGStreamer);
+    camera = new HttpCamera("stream", "http://10.51.81.11:5800/stream.mjpg", HttpCamera.HttpCameraKind.kMJPGStreamer);
     CameraServer.addCamera(camera);
     cvSink = CameraServer.getVideo(camera);
   }
@@ -85,7 +80,6 @@ public class VisionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Simulate a static robot pose (only needed once if no motion)
-    visionSim.update(robotPoseSupplier.get());
   }
 
   public BufferedImage getImage() {

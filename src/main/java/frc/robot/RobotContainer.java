@@ -114,7 +114,7 @@ public class RobotContainer {
   private final Supplier<Pose2d> getPose = () -> m_drivetrain.getState().Pose; 
 
   public final LEDSubsystem m_LEDs = new LEDSubsystem();
-  public final VisionSubsystem m_Vision = new VisionSubsystem(m_LEDs, (Supplier<Pose2d>) getPose);
+  public final VisionSubsystem m_Vision = new VisionSubsystem();
   
   private final TimeOfFlight m_rangeSensor = new TimeOfFlight(ClawConstants.sensorID);
   private final BooleanSupplier intermediatePos = () -> Math.abs((m_claw.getClawPosition().minus(ClawConstants.intermediateClawPos)).in(Radian))<ClawConstants.tolerance.in(Radian);
