@@ -12,6 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import java.awt.Desktop.Action;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -46,7 +50,7 @@ public class LLMDriveCommand extends Command {
     private Future<?> currentTask;
 
     private boolean firstExecution = true;
-
+ 
     public LLMDriveCommand(CommandSwerveDrivetrain swerve, VisionSubsystem vision) {
         m_Swerve = swerve;
         m_Vision = vision;
@@ -138,16 +142,16 @@ public class LLMDriveCommand extends Command {
 
         switch (action) {
             case "forward":
-                m_Swerve.setControl(drive.withVelocityX(3));
+                m_Swerve.setControl(drive.withVelocityX(MetersPerSecond.of(1)));
                 break;
             case "back":
-                m_Swerve.setControl(drive.withVelocityX(-3));
+                m_Swerve.setControl(drive.withVelocityX(MetersPerSecond.of(-1)));
                 break;
             case "rotate_left":
-                m_Swerve.setControl(drive.withRotationalRate(-0.5));
+                m_Swerve.setControl(drive.withRotationalRate(RadiansPerSecond.of(-Math.PI/4))); // turn 45 degrees
                 break;
             case "rotate_right":
-                m_Swerve.setControl(drive.withRotationalRate(0.5));
+                m_Swerve.setControl(drive.withRotationalRate(RadiansPerSecond.of(Math.PI/4)));
                 break;
             default:
                 System.out.println("Unknown action: " + action);
